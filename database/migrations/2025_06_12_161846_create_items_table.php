@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('label');
             $table->integer('quantity');
-            $table->foreignUuid('luggage_id')->constrained('luggages')->cascadeOnDelete();
+            $table->foreignUuid('luggage_id')->constrained('luggage')->cascadeOnDelete();
             $table->timestamps();
         });
     }
