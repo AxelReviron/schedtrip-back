@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
+use ApiPlatform\Metadata\ApiResource;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use PharIo\Manifest\Author;
 
+#[ApiResource]
 class Trip extends Model
 {
     use HasFactory, HasUuids;
@@ -39,7 +40,7 @@ class Trip extends Model
         return $this->hasMany(Stop::class);
     }
 
-    public function users(): BelongsToMany
+    public function participants(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'user_trip');
     }
