@@ -13,7 +13,7 @@ class AuthController extends Controller
      */
     public function login(Request $request): Response
     {
-        $credentials = $request->validate([
+        $credentials = $request->validate([// TODO: Use FormRequest
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
@@ -32,12 +32,19 @@ class AuthController extends Controller
      */
     public function logout(Request $request): Response
     {
-        Auth::logout();
+        Auth::guard('web')->logout();
 
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
 
         return response(204);
+    }
+
+    //TODO: Implement register method
+
+    public function user(Request $request): Response
+    {
+        return response($request->user(), 200);
     }
 }
