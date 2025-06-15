@@ -62,7 +62,7 @@ return [
         'pagination_items_per_page' => 30,
         'pagination_maximum_items_per_page' => 30,
         'route_prefix' => '/api',
-        'middleware' => [],
+        'middleware' => ['web', 'auth'],
     ],
 
     'pagination' => [
