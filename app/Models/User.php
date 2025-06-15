@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\QueryParameter;
 use ApiPlatform\Laravel\Eloquent\Filter\PartialSearchFilter;
 use ApiPlatform\Laravel\Eloquent\Filter\OrderFilter;
+use Spatie\Permission\Traits\HasRoles;
 
 #[ApiResource]
 #[QueryParameter(key: 'sort[:property]', filter: OrderFilter::class)]
@@ -21,7 +22,7 @@ use ApiPlatform\Laravel\Eloquent\Filter\OrderFilter;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasUuids;
+    use HasFactory, Notifiable, HasUuids, HasRoles;
 
     /**
      * The attributes that are mass assignable.
