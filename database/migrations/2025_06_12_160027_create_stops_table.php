@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('stops', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->uuid('id')->primary()->unique();
             $table->string('label');
             $table->string('description')->nullable();
             $table->foreignUuid('trip_id')->constrained('trips')->onDelete('cascade');
