@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use ApiPlatform\Metadata\ApiResource;
+use App\Http\Requests\StoreTripRequest;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +11,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[ApiResource]
+#[ApiResource(
+    rules: StoreTripRequest::class
+)]
 class Trip extends Model
 {
     use HasFactory, HasUuids;
@@ -27,8 +30,12 @@ class Trip extends Model
         'duration',
         'is_public',
         'geojson',
-        'author_id'
     ];
+
+    protected $casts = [
+        'is_public' => 'boolean',
+    ];
+
 
     public function author(): BelongsTo
     {
