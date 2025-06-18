@@ -3,9 +3,10 @@
 namespace App\Http\Requests;
 
 use App\Models\Trip;
+use App\Rules\MustBeCurrentUser;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateTripRequest extends FormRequest
+class TripParticipantsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,8 +14,9 @@ class UpdateTripRequest extends FormRequest
     public function authorize(): bool
     {
         $trip = Trip::find($this->route('id'));
-        return $this->user()->can('update', $trip);
+        return $this->user()->can('manageParticipants', $trip);
     }
+
 
     /**
      * Get the validation rules that apply to the request.
@@ -23,14 +25,15 @@ class UpdateTripRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'label' => 'nullable|string',
-            'description' => 'nullable|string',
-            'distance' => 'nullable|integer',
-            'duration' => 'nullable|integer',
-            'is_public' => 'nullable|boolean',
-            'geojson' => 'nullable|json',
-            'author_id' => 'prohibited'
+        $rules = [
+            'participants' => ['required', 'array', 'min:1'],
+            'participants.*.user_id' => ['required', 'uuid', 'exists:users,id'],
         ];
+
+        if (in_array($this->method(), ['POST', 'PATCH'])) {
+            $rules['participants.*.permission'] = ['required', 'in:view,update'];
+        }
+
+        return $rules;
     }
 }

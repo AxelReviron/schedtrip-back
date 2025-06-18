@@ -14,7 +14,10 @@ return new class extends Migration
         Schema::create('user_trip', function (Blueprint $table) {
             $table->foreignUuid('user_id')->constrained('users');
             $table->foreignUuid('trip_id')->constrained('trips');
+            $table->enum('permission', ['view', 'update'])->default('view');
             $table->timestamps();
+
+            $table->primary(['user_id', 'trip_id']);
         });
     }
 
