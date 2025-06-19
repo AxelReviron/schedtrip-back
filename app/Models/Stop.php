@@ -3,14 +3,32 @@
 namespace App\Models;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use App\Http\Requests\StoreStopRequest;
+use App\Http\Requests\UpdateStopRequest;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[ApiResource]
-class Stop extends Model
+#[ApiResource(
+    operations: [
+        new Get(),
+        new GetCollection(),
+        new Post(
+            rules: StoreStopRequest::class
+        ),
+        new Patch(
+            rules: UpdateStopRequest::class
+        ),
+        new Delete()
+    ]
+)]class Stop extends Model
 {
     use HasFactory, HasUuids;
 
