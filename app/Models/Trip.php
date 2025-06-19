@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use ApiPlatform\Laravel\Eloquent\Filter\OrderFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\QueryParameter;
 use App\Http\Requests\StoreTripRequest;
 use App\Http\Requests\UpdateTripRequest;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -30,6 +32,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
         new Delete()
     ]
 )]
+#[QueryParameter(key: 'sort[:property]', filter: OrderFilter::class)]
 class Trip extends Model
 {
     use HasFactory, HasUuids;
