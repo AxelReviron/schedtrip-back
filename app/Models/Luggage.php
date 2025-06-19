@@ -3,13 +3,18 @@
 namespace App\Models;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new Get()
+    ]
+)]
 class Luggage extends Model
 {
     use HasFactory, HasUuids;

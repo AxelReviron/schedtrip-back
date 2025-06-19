@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ParticipantAddedToTrip;
 use App\Http\Requests\TripParticipantsRequest;
 use App\Models\Trip;
+use Illuminate\Support\Facades\Event;
 
 class TripParticipantController extends Controller
 {
@@ -13,13 +15,26 @@ class TripParticipantController extends Controller
         $participants = $request->validated()['participants'];
         $syncData = [];
 
+        $existingParticipantsIds = $trip->participants()->pluck('users.id')->toArray();
+        $newParticipantsIds = [];
+
         foreach ($participants as $participant) {
             $userId = $participant['user_id'];
             $permission = $participant['permission'];
+
+            if (!in_array($userId, $existingParticipantsIds)) {
+                $newParticipantsIds[] = $userId;
+            }
+
             $syncData[$userId] = ['permission' => $permission];
         }
 
         $trip->participants()->syncWithoutDetaching($syncData);
+
+        if (!empty($newParticipantsIds)) {
+            Event::dispatch(new ParticipantAddedToTrip($trip, $newParticipantsIds));
+        }
+
         return response()->json(['message' => 'Participants added successfully'], 201);
     }
 

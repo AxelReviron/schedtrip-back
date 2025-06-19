@@ -5,7 +5,6 @@ namespace App\Policies;
 use App\Models\Stop;
 use App\Models\User;
 use App\Utils\HandlesPolicies;
-use Illuminate\Auth\Access\Response;
 use Illuminate\Database\Eloquent\Model;
 
 class StopPolicy
