@@ -45,7 +45,8 @@ class AuthController extends Controller
         $data = $request->validated();
         $data['password'] = Hash::make($data['password']);
 
-        User::create($data);
+        $user = User::create($data);
+        $user->assignRole('user');
         return response('User registered successfully', 201);
     }
 
