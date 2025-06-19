@@ -28,7 +28,7 @@ class TripPolicy
         if ($canViewBase) return true;
 
         return $model->participants()
-            ->where('user_id', $user->id)
+            ->where('user_id', $user->getKey())
             ->whereIn('permission', ['view', 'update'])
             ->exists();
     }
