@@ -215,7 +215,7 @@ return [
             'notes'   => 'vo,c,uo,do',
             'users'   => 'v,vo,c,uo,do',
             'luggage' => 'vo,c,uo,do',
-            'item'    => 'vo,c,uo,do',
+            'items'    => 'vo,c,uo,do',
         ],
     ],
     'customPermissions' => [

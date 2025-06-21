@@ -2,18 +2,18 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Trip;
+use App\Models\Item;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateTripRequest extends FormRequest
+class UpdateItemRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        $trip = Trip::find($this->route('id'));
-        return $this->user()->can('update', $trip);
+        $item = Item::find($this->route('id'));
+        return $this->user()->can('update', $item);
     }
 
     /**
@@ -25,13 +25,9 @@ class UpdateTripRequest extends FormRequest
     {
         return [
             'label' => 'nullable|string',
-            'description' => 'nullable|string',
-            'distance' => 'nullable|integer',
-            'duration' => 'nullable|integer',
-            'is_public' => 'nullable|boolean',
-            'geojson' => 'nullable|json',
-            'author_id' => 'prohibited',
-            'author' => 'prohibited'
+            'quantity' => 'nullable|numeric|min:1',
+            'luggage_id' => 'prohibited',
+            'luggage' => 'prohibited',
         ];
     }
 }
