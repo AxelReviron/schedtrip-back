@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use ApiPlatform\Metadata\ApiResource;
-
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Traits\HasRoles;
 
 #[ApiResource(
@@ -35,6 +35,13 @@ class User extends Authenticatable
         'password',
     ];
 
+    protected $appends = [
+        'friends',
+        'outgoingFriendsRequestInPending',
+        'incomingFriendsRequestInPending',
+        'usersBlocked'
+    ];
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -43,6 +50,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'friendsOutgoing',
+        'friendsIncoming',
     ];
 
     /**
@@ -58,13 +67,87 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Trips of the user.
+     *
+     * @return HasMany
+     */
     public function trips(): HasMany
     {
         return $this->hasMany(Trip::class, 'author_id');
     }
 
-    public function friends(): BelongsToMany
+    /**
+     * Friends request received by user in pending status.
+     *
+     * @return array<string>
+     */
+    public function getOutgoingFriendsRequestInPendingAttribute(): array
     {
-        return $this->belongsToMany(User::class, 'user_friend', 'user_id', 'friend_id');
+        return DB::table('user_friend')
+            ->where('user_id', $this->id)
+            ->where('status', 'pending')
+            ->pluck('friend_id')
+            ->map(fn ($id) => "/api/users/$id")
+            ->values()
+            ->all();
     }
+
+    /**
+     * Friends request sent by user in pending status.
+     *
+     * @return array<string>
+     */
+    public function getIncomingFriendsRequestInPendingAttribute(): array
+    {
+        return DB::table('user_friend')
+            ->where('friend_id', $this->id)
+            ->where('status', 'pending')
+            ->pluck('user_id')
+            ->map(fn ($id) => "/api/users/$id")
+            ->values()
+            ->all();
+    }
+
+    public function friendsOutgoing(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_friend', 'user_id', 'friend_id')
+            ->withPivot('status');
+    }
+
+    public function friendsIncoming(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_friend', 'friend_id', 'user_id')
+            ->withPivot('status');
+    }
+
+    /**
+     * Get all friends.
+     *
+     * @return array<string>
+     */
+    public function getFriendsAttribute(): array
+    {
+        $outgoing = $this->friendsOutgoing()->wherePivot('status', 'accepted')->pluck('users.id');
+        $incoming = $this->friendsIncoming()->wherePivot('status', 'accepted')->pluck('users.id');
+        $ids = $outgoing->merge($incoming)->unique();
+        return $ids->map(fn ($id) => "/api/users/$id")->values()->all();
+    }
+
+    /**
+     * User blocked.
+     *
+     * @return array<string>
+     */
+    public function getUsersBlockedAttribute(): array
+    {
+        return DB::table('user_friend')
+            ->where('user_id', $this->id)
+            ->where('status', 'blocked')
+            ->pluck('friend_id')
+            ->map(fn ($id) => "/api/users/$id")
+            ->values()
+            ->all();
+    }
+
 }
