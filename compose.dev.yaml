@@ -12,10 +12,12 @@ services:
       - caddy_data:/data
       - caddy_config:/config
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     tty: true
     networks:
       - schedtrip_network
+
   mysql:
     container_name: schedtrip_db
     image: mysql:8.0
@@ -30,10 +32,33 @@ services:
       - db_data:/var/lib/mysql
     networks:
       - schedtrip_network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  mysql_test:
+    container_name: schedtrip_db_test
+    image: mysql:8.0
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: test_root
+      MYSQL_DATABASE: schedtrip_test
+      MYSQL_USER: test_user
+      MYSQL_PASSWORD: test_pass
+    volumes:
+      - db_test_data:/var/lib/mysql
+    networks:
+      - schedtrip_network
+
 volumes:
   caddy_data:
   caddy_config:
   db_data:
+  db_test_data:
+
 
 networks:
   schedtrip_network:
