@@ -84,11 +84,10 @@ class User extends Authenticatable
      */
     public function getOutgoingFriendsRequestInPendingAttribute(): array
     {
-        return DB::table('user_friend')
-            ->where('user_id', $this->id)
-            ->where('status', 'pending')
-            ->pluck('friend_id')
-            ->map(fn ($id) => "/api/users/$id")
+        return $this->friendsOutgoing()
+            ->wherePivot('status', 'pending')
+            ->get()
+            ->map(fn ($user) => "/api/users/{$user->getKey()}")
             ->values()
             ->all();
     }
@@ -100,24 +99,23 @@ class User extends Authenticatable
      */
     public function getIncomingFriendsRequestInPendingAttribute(): array
     {
-        return DB::table('user_friend')
-            ->where('friend_id', $this->id)
-            ->where('status', 'pending')
-            ->pluck('user_id')
-            ->map(fn ($id) => "/api/users/$id")
+        return $this->friendsIncoming()
+            ->wherePivot('status', 'pending')
+            ->get()
+            ->map(fn ($user) => "/api/users/{$user->getKey()}")
             ->values()
             ->all();
     }
 
     public function friendsOutgoing(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'user_friend', 'user_id', 'friend_id')
+        return $this->belongsToMany(User::class, 'user_friend', 'from_user_id', 'to_user_id')
             ->withPivot('status');
     }
 
     public function friendsIncoming(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'user_friend', 'friend_id', 'user_id')
+        return $this->belongsToMany(User::class, 'user_friend', 'to_user_id', 'from_user_id')
             ->withPivot('status');
     }
 
@@ -142,9 +140,9 @@ class User extends Authenticatable
     public function getUsersBlockedAttribute(): array
     {
         return DB::table('user_friend')
-            ->where('user_id', $this->id)
+            ->where('from_user_id', $this->id)
             ->where('status', 'blocked')
-            ->pluck('friend_id')
+            ->pluck('to_user_id')
             ->map(fn ($id) => "/api/users/$id")
             ->values()
             ->all();
