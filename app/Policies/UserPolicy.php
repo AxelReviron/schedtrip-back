@@ -36,8 +36,8 @@ class UserPolicy
         }
 
         return DB::table('user_friend')
-            ->where('user_id', $target->getKey())
-            ->where('friend_id', $user->getKey())
+            ->where('from_user_id', $user->getKey())
+            ->where('to_user_id', $target->getKey())
             ->where('status', 'blocked')
             ->exists();
     }

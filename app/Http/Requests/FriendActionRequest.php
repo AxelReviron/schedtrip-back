@@ -34,9 +34,11 @@ class FriendActionRequest extends FormRequest
     {
         $validator->after(function ($validator) {
             $friendId = $this->input('user_id');
+            $currentUserId = Auth::user()->getKey();
+
             $exists = DB::table('user_friend')
-                ->where('user_id', Auth::user()->getKey())
-                ->where('friend_id', $friendId)
+                ->where('from_user_id', $friendId)
+                ->where('to_user_id', $currentUserId)
                 ->where('status', 'pending')
                 ->exists();
 

@@ -9,6 +9,8 @@ use Illuminate\Validation\Validator;
 
 class SendFriendRequest extends FormRequest
 {
+    protected bool $canResend = false;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -33,15 +35,15 @@ class SendFriendRequest extends FormRequest
     {
         $validator->after(function ($validator) {
             $targetUserId = $this->input('user_id');
-            $connectedUserId = Auth::user()->getKey();
+            $currentUserId = Auth::user()->getKey();
 
-            if ($targetUserId === $connectedUserId) {
+            if ($targetUserId === $currentUserId) {
                 $validator->errors()->add('user_id', 'You cannot send a friend request to yourself.');
             }
 
             $existing = DB::table('user_friend')
-                ->where('user_id', $targetUserId)
-                ->where('friend_id', $connectedUserId)
+                ->where('from_user_id', $currentUserId)
+                ->where('to_user_id', $targetUserId)
                 ->first();
 
             if ($existing) {
@@ -59,7 +61,7 @@ class SendFriendRequest extends FormRequest
                         break;
 
                     case 'rejected':
-                        // User can resend a friend request
+                        $this->canResend = true;
                         break;
 
                     default:
@@ -72,14 +74,6 @@ class SendFriendRequest extends FormRequest
 
     public function canResend(): bool
     {
-        $targetUserId = $this->input('user_id');
-        $currentUserId = Auth::user()->getKey();
-
-        $existing = DB::table('user_friend')
-            ->where('user_id', $targetUserId)
-            ->where('friend_id', $currentUserId)
-            ->first();
-
-        return $existing && $existing->status === 'rejected';
+        return $this->canResend;
     }
 }
