@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Stop;
 
 use App\Models\Trip;
 use Illuminate\Foundation\Http\FormRequest;

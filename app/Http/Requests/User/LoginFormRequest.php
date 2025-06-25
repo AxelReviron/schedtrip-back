@@ -1,19 +1,17 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\User;
 
-use App\Models\Note;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateNoteRequest extends FormRequest
+class LoginFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        $note = Note::find($this->route('id'));
-        return $this->user()->can('update', $note);
+        return true;
     }
 
     /**
@@ -24,9 +22,8 @@ class UpdateNoteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'prohibited',
-            'stop_id' => 'prohibited',
-            'content' => 'required|string',
+            'email' => ['required', 'string', 'email'],
+            'password' => ['required', 'string'],
         ];
     }
 }

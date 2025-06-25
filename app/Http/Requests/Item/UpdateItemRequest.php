@@ -1,17 +1,19 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Item;
 
+use App\Models\Item;
 use Illuminate\Foundation\Http\FormRequest;
 
-class DeleteFriendRequest extends FormRequest
+class UpdateItemRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        $item = Item::find($this->route('id'));
+        return $this->user()->can('update', $item);
     }
 
     /**
@@ -22,7 +24,10 @@ class DeleteFriendRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'uuid', 'exists:users,id'],
+            'label' => 'nullable|string',
+            'quantity' => 'nullable|numeric|min:1',
+            'luggage_id' => 'prohibited',
+            'luggage' => 'prohibited',
         ];
     }
 }

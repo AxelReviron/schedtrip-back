@@ -1,18 +1,17 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Friend;
 
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreUserRequest extends FormRequest
+class DeleteFriendRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', User::class);
+        return true;
     }
 
     /**
@@ -23,9 +22,7 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'pseudo' => 'required|string|between:2,20|unique:users,pseudo',
-            'email' => 'required|string|lowercase|email:strict,dns|unique:users,email',
-            'password' => 'required|string|between:8,20|confirmed',
+            'user_id' => ['required', 'uuid', 'exists:users,id'],
         ];
     }
 }

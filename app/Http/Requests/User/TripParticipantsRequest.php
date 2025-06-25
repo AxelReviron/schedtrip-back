@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\User;
 
 use App\Models\Trip;
-use App\Rules\MustBeCurrentUser;
 use Illuminate\Foundation\Http\FormRequest;
 
 class TripParticipantsRequest extends FormRequest

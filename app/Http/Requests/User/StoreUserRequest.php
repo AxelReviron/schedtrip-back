@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\User;
 
-use App\Models\Item;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateItemRequest extends FormRequest
+class StoreUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        $item = Item::find($this->route('id'));
-        return $this->user()->can('update', $item);
+        return $this->user()->can('create', User::class);
     }
 
     /**
@@ -24,10 +23,9 @@ class UpdateItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'label' => 'nullable|string',
-            'quantity' => 'nullable|numeric|min:1',
-            'luggage_id' => 'prohibited',
-            'luggage' => 'prohibited',
+            'pseudo' => 'required|string|between:2,20|unique:users,pseudo',
+            'email' => 'required|string|lowercase|email:strict,dns|unique:users,email',
+            'password' => 'required|string|between:8,20|confirmed',
         ];
     }
 }

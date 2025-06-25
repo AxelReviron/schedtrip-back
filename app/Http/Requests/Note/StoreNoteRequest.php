@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Note;
 
 use App\Models\Stop;
 use App\Rules\MustBeCurrentUser;
