@@ -33,6 +33,7 @@ class User extends Authenticatable
         'pseudo',
         'email',
         'password',
+        'ors_api_key'
     ];
 
     protected $appends = [
@@ -49,6 +50,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
+        'ors_api_key',
         'remember_token',
         'friendsOutgoing',
         'friendsIncoming',
