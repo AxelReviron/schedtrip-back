@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\ParticipantAddedToTrip;
-use App\Http\Requests\TripParticipantsRequest;
+use App\Http\Requests\User\TripParticipantsRequest;
 use App\Models\Trip;
 use Illuminate\Support\Facades\Event;
 
