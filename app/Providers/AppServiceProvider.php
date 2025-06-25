@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\RateLimiter;
+use App\Services\OpenRouteService\Client as OpenRouteServiceClient;
+use App\Services\OpenRouteService\Services\Directions;
+use App\Services\OpenRouteService\Services\GeoCode;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -22,25 +23,24 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // daily/perMinute
-        // Directions V2 (2000 / 40)
-        // Geocode Search (1000 / 100)
-        RateLimiter::for('directions', function (Request $request) {
-            $userId = $request->user()->getKey();
+        $this->app->bind(OpenRouteServiceClient::class, function ($app) {
+            $user = Auth::user();
 
-            return [
-                Limit::perMinute(4)->by($userId),
-                Limit::perDay(200)->by($userId),
-            ];
+            if ($user && isset($user->ors_api_key)) {
+                $apiKey = $user->ors_api_key;
+            } else {
+                $apiKey = config('openrouteservice.apiKey');
+            }
+
+            return new OpenRouteServiceClient($apiKey);
         });
 
-        RateLimiter::for('geocode', function (Request $request) {
-            $userId = $request->user()->getKey();
+        $this->app->bind(GeoCode::class, function ($app) {
+            return new GeoCode($app->make(OpenRouteServiceClient::class));
+        });
 
-            return [
-                Limit::perMinute(10)->by($userId),
-                Limit::perDay(100)->by($userId),
-            ];
+        $this->app->bind(Directions::class, function ($app) {
+            return new Directions($app->make(OpenRouteServiceClient::class));
         });
     }
 }
