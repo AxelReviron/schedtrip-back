@@ -26,12 +26,12 @@ jobs:
         run: composer install --no-interaction --prefer-dist --optimize-autoloader --no-scripts
 
       - name: Build Docker Backend Image
-        run: docker compose -f compose.dev.yaml build schedtrip
+        run: docker compose -f compose.dev.yaml build frankenphp
 
       - name: Run Test Services
         run: |
-          docker compose -f compose.dev.yaml up -d schedtrip_db_test schedtrip
-          docker compose -f compose.dev.yaml wait schedtrip_db_test schedtrip --timeout 120s
+          docker compose -f compose.dev.yaml up -d mysql_test frankenphp
+          docker compose -f compose.dev.yaml wait mysql_test frankenphp --timeout 120s
 
           echo "All test services are healthy!"
 
