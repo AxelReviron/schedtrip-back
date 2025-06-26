@@ -22,10 +22,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     Route::prefix('/ors')->group(function () {
-        Route::get('/search/{place}', [OpenRouteServiceController::class, 'searchPlace'])
-            ->middleware(['openrouteservice.rate.limit:geocode']);
-        Route::post('/route', [OpenRouteServiceController::class, 'getRoute'])
-            ->middleware(['openrouteservice.rate.limit:directions']);
+        Route::middleware(['openrouteservice.rate.limit:geocode'])->group(function () {
+            Route::get('/search/{place}', [OpenRouteServiceController::class, 'searchPlace']);
+            Route::post('/reverse-search', [OpenRouteServiceController::class, 'reverseSearchPlace']);
+        });
+        Route::middleware(['openrouteservice.rate.limit:directions'])->group(function () {
+            Route::post('/route', [OpenRouteServiceController::class, 'getRoute']);
+        });
     });
 
 });
