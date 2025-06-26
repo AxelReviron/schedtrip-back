@@ -26,24 +26,24 @@ jobs:
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Build Docker Backend Image
-        run: docker compose -f compose.dev.yml build frankenphp
+        run: docker compose -f compose.dev.yaml build frankenphp
 
       - name: Run Test Services
         run: |
-          docker compose -f compose.dev.yml up -d mysql_test frankenphp
-          docker compose -f compose.dev.yml wait mysql_test frankenphp --timeout 120s
+          docker compose -f compose.dev.yaml up -d mysql_test frankenphp
+          docker compose -f compose.dev.yaml wait mysql_test frankenphp --timeout 120s
 
           echo "All test services are healthy!"
 
       - name: Generate Application Key in Test Container
-        run: docker compose -f compose.dev.yml exec -T frankenphp php artisan key:generate --env=testing
+        run: docker compose -f compose.dev.yaml exec -T frankenphp php artisan key:generate --env=testing
 
       - name: Run Database Migrations on Test DB
-        run: docker compose -f compose.dev.yml exec -T frankenphp php artisan migrate:fresh --seed --force --env=testing
+        run: docker compose -f compose.dev.yaml exec -T frankenphp php artisan migrate:fresh --seed --force --env=testing
 
       - name: Run PHPUnit Tests
-        run: docker compose -f compose.dev.yml exec -T frankenphp php artisan test --env=testing
+        run: docker compose -f compose.dev.yaml exec -T frankenphp php artisan test --env=testing
 
       - name: Clean up Docker containers
         if: always()
-        run: docker compose -f compose.dev.yml down -v
+        run: docker compose -f compose.dev.yaml down -v
