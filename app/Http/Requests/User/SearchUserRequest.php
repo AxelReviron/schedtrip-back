@@ -37,10 +37,4 @@ class SearchUserRequest extends FormRequest
             'pseudo' => ['required', 'string', 'exists:users,pseudo'],
         ];
     }
-
-    public function getPseudo(): string
-    {
-        return $this->route('pseudo');
-    }
-
 }

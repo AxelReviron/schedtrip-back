@@ -12,7 +12,7 @@ class UserController extends Controller
 {
     public function searchByUserPseudo(SearchUserRequest $request): JsonResponse
     {
-        $user = User::where('pseudo', $request->getPseudo())->first();
+        $user = User::where('pseudo', $request->validated()['pseudo'])->first();
 
         return response()->json($user);
     }
