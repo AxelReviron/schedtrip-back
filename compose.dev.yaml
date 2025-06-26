@@ -1,5 +1,5 @@
 services:
-  frankenphp:
+  schedtrip:
     container_name: schedtrip
     build:
       context: .
