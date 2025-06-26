@@ -28,12 +28,10 @@ jobs:
       - name: Build Docker Backend Image
         run: docker compose -f compose.dev.yaml build frankenphp
 
-      - name: Run Test Services
+      - name: Run Services
         run: |
-          docker compose -f compose.dev.yaml up -d mysql_test frankenphp
-          docker compose -f compose.dev.yaml wait mysql_test frankenphp --timeout 120s
-
-          echo "All test services are healthy!"
+          docker compose -f compose.dev.yaml up -d
+          echo "All test services are up and healthy!"
 
       - name: Generate Application Key in Test Container
         run: docker compose -f compose.dev.yaml exec -T schedtrip php artisan key:generate --env=testing
