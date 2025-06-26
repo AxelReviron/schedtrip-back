@@ -1,6 +1,6 @@
 services:
   frankenphp:
-    container_name: schedtrip_back
+    container_name: schedtrip
     build:
       context: .
     entrypoint: php artisan octane:frankenphp --caddyfile=./Caddyfile --workers=1 --max-requests=1
