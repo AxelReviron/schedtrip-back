@@ -14,6 +14,8 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+      mysql_test:
+        condition: service_healthy
     tty: true
     networks:
       - schedtrip_network
@@ -52,6 +54,11 @@ services:
       - db_test_data:/var/lib/mysql
     networks:
       - schedtrip_network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
 volumes:
   caddy_data:
