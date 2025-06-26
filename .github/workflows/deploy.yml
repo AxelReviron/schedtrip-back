@@ -1,0 +1,49 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    if: success()
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Deploy to Production
+        if: success()
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            set -e
+
+            cd ${{ secrets.TARGET_DIR }} || exit 1
+
+            echo "Pulling latest code..."
+            git pull origin main
+
+            echo "Building and starting services..."
+            docker compose -f compose.prod.yaml up -d --build --force-recreate
+
+            echo "Waiting for services to be ready..."
+            sleep 10
+
+            echo "Running database migrations..."
+            docker compose -f compose.prod.yaml exec -T frankenphp php artisan migrate --force
+
+            echo "Clearing and caching Laravel configurations..."
+            docker compose -f compose.prod.yaml exec -T frankenphp php artisan optimize:clear
+            docker compose -f compose.prod.yaml exec -T frankenphp php artisan optimize
+
+            echo "Creating storage link..."
+            docker compose -f compose.prod.yaml exec -T frankenphp php artisan storage:link
+
+            echo "Deployment complete!"
