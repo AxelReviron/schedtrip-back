@@ -22,14 +22,17 @@ class Client
      *
      * @param string $endpoint
      * @param array $params
+     * @param string $acceptHeader
      * @return array|mixed
-     * @throws ConnectionException|RequestException
+     * @throws ConnectionException
+     * @throws RequestException
      */
-    public function get(string $endpoint, array $params = [])
+    public function get(string $endpoint, array $params = [], string $acceptHeader = 'application/json')
     {
         return Http::withHeaders([
             'Authorization' => $this->apiKey,
-            'Accept' => 'application/json',
+            'Accept' => $acceptHeader,
+            'Content-Type' => 'application/json',
         ])->get("{$this->baseUrl}/$endpoint", $params)->throw()->json();
     }
 
@@ -38,14 +41,16 @@ class Client
      *
      * @param string $endpoint
      * @param array $data
+     * @param string $acceptHeader
      * @return array|mixed
-     * @throws ConnectionException|RequestException
+     * @throws ConnectionException
+     * @throws RequestException
      */
-    public function post(string $endpoint, array $data = [])
+    public function post(string $endpoint, array $data = [], string $acceptHeader = 'application/json')
     {
         return Http::withHeaders([
             'Authorization' => $this->apiKey,
-            'Accept' => 'application/json',
+            'Accept' => $acceptHeader,
             'Content-Type' => 'application/json',
         ])->post("{$this->baseUrl}/$endpoint", $data)->throw()->json();
     }
