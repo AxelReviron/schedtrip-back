@@ -26,10 +26,10 @@ services:
     ports:
       - "3306:3306" # Only for local dev
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_USER: ${DB_USERNAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-default_root_password}
+      MYSQL_DATABASE: ${DB_DATABASE:-schedtrip}
+      MYSQL_USER: ${DB_USERNAME:-user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-password}
     volumes:
       - db_data:/var/lib/mysql
     networks:
