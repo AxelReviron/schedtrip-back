@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Events\TripSaved;
 use App\Models\Trip;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -19,10 +20,10 @@ class CreateLuggageForTripAuthor
     /**
      * Handle the event.
      */
-    public function handle(Trip $trip): void
+    public function handle(TripSaved $event): void
     {
-        $trip->luggages()->create([
-            'user_id' => $trip->author_id,
+        $event->trip->luggages()->create([
+            'user_id' => $event->trip->author_id,
         ]);
     }
 }

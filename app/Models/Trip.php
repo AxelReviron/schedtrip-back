@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
+use App\Events\TripSaved;
 use App\Http\Requests\Trip\StoreTripRequest;
 use App\Http\Requests\Trip\UpdateTripRequest;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -36,6 +37,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Trip extends Model
 {
     use HasFactory, HasUuids;
+
+    /**
+     * The event map for the model.
+     *
+     * @var array<string, string>
+     */
+    protected $dispatchesEvents = [
+        'saved' => TripSaved::class,
+    ];
 
     /**
      * The attributes that are mass assignable.
