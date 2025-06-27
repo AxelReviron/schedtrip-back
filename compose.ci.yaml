@@ -1,0 +1,46 @@
+services:
+  frankenphp:
+    container_name: schedtrip
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app # For dev only
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      mysql:
+        condition: service_healthy
+    tty: true
+    networks:
+      - schedtrip_network
+  mysql:
+    container_name: schedtrip_db
+    image: mysql:8.0
+    ports:
+      - "3306:3306" # Only for local dev
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-default_root_password}
+      MYSQL_DATABASE: ${DB_DATABASE:-schedtrip}
+      MYSQL_USER: ${DB_USERNAME:-user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-password}
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - schedtrip_network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  caddy_data:
+  caddy_config:
+  db_data:
+
+networks:
+  schedtrip_network:
+    driver: bridge

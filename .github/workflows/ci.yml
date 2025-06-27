@@ -26,22 +26,22 @@ jobs:
         run: composer install --no-interaction --prefer-dist --optimize-autoloader --no-scripts
 
       - name: Build Docker Backend Image
-        run: docker compose -f compose.dev.yaml build frankenphp
+        run: docker compose -f compose.ci.yaml build frankenphp
 
       - name: Run Services
         run: |
-          docker compose -f compose.dev.yaml up -d
+          docker compose -f compose.ci.yaml up -d
           echo "All test services are up and healthy!"
 
       - name: Generate Application Key in Test Container
-        run: docker compose -f compose.dev.yaml exec -T schedtrip php artisan key:generate --env=testing
+        run: docker compose -f compose.ci.yaml exec -T schedtrip php artisan key:generate --env=testing
 
       - name: Run Database Migrations on Test DB
-        run: docker compose -f compose.dev.yaml exec -T schedtrip php artisan migrate:fresh --seed --force --env=testing
+        run: docker compose -f compose.ci.yaml exec -T schedtrip php artisan migrate:fresh --seed --force --env=testing
 
       - name: Run PHPUnit Tests
-        run: docker compose -f compose.dev.yaml exec -T schedtrip php artisan test --env=testing
+        run: docker compose -f compose.ci.yaml exec -T schedtrip php artisan test --env=testing
 
       - name: Clean up Docker containers
         if: always()
-        run: docker compose -f compose.dev.yaml down -v
+        run: docker compose -f compose.ci.yaml down -v
