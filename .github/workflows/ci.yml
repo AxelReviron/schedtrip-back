@@ -45,6 +45,15 @@ jobs:
               sleep 2
             done
           '
+      - name: Debug - Show container logs
+        run: |
+          echo "=== All containers ==="
+          docker ps -a
+          echo "=== schedtrip logs ==="
+          docker logs schedtrip || echo "No schedtrip container found"
+          echo "=== Compose services ==="
+          docker compose -f compose.ci.yaml ps
+
       - name: Debug - Show running containers
         run: docker compose -f compose.ci.yaml ps
 
