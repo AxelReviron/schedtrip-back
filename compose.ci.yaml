@@ -16,6 +16,12 @@ services:
     tty: true
     networks:
       - schedtrip_network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/up" ]
+      interval: 5s
+      timeout: 2s
+      retries: 5
+
   mysql:
     container_name: schedtrip_db
     image: mysql:8.0
