@@ -36,6 +36,9 @@ jobs:
       - name: Debug - Show running containers
         run: docker compose -f compose.ci.yaml ps
 
+      - name: Generate Application Key in Test ContainerAdd commentMore actions
+        run: docker compose -f compose.ci.yaml exec -T schedtrip php artisan key:generate
+
       - name: Run Database Migrations
         run: docker compose -f compose.ci.yaml exec -T schedtrip php artisan migrate:fresh --seed --force
 
