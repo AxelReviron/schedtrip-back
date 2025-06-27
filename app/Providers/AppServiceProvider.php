@@ -15,14 +15,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
-    }
-
-    /**
-     * Bootstrap any application services.
-     */
-    public function boot(): void
-    {
         $this->app->bind(OpenRouteServiceClient::class, function ($app) {
             $user = Auth::user();
 
@@ -42,5 +34,13 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(Directions::class, function ($app) {
             return new Directions($app->make(OpenRouteServiceClient::class));
         });
+    }
+
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+        //
     }
 }

@@ -1,2 +1,2 @@
-schedtrip-back-docker:
-	docker exec -it schedtrip_back bash
+schedtrip-docker:
+	docker exec -it schedtrip bash
