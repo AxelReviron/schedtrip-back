@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\OpenRouteServiceRateLimiter;
+use App\Http\Middleware\SetUserOpenRouteServiceApiKey;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -15,7 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->statefulApi();
         $middleware->alias([
-            'openrouteservice.rate.limit' => OpenRouteServiceRateLimiter::class
+            'openrouteservice.rate.limit' => OpenRouteServiceRateLimiter::class,
+            'set.ors.api.key' => SetUserOpenRouteServiceApiKey::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

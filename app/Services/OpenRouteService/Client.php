@@ -11,9 +11,14 @@ class Client
     protected string $baseUrl;
     protected string $apiKey;
 
-    public function __construct(string $apiKey)
+    public function __construct(?string $apiKey = null)
     {
         $this->baseUrl = config('openrouteservice.baseUrl');
+        $this->apiKey = $apiKey ?? config('openrouteservice.apiKey');
+    }
+
+    public function setApiKey(string $apiKey): void
+    {
         $this->apiKey = $apiKey;
     }
 

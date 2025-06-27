@@ -21,7 +21,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::delete('/friends/remove', [FriendController::class, 'removeFriend']);
     });
 
-    Route::prefix('/ors')->group(function () {
+    Route::prefix('/ors')->middleware(['set.ors.api.key'])->group(function () {
         Route::middleware(['openrouteservice.rate.limit:geocode'])->group(function () {
             Route::get('/search/{place}', [OpenRouteServiceController::class, 'searchPlace']);
             Route::post('/reverse-search', [OpenRouteServiceController::class, 'reverseSearchPlace']);
