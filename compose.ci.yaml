@@ -1,5 +1,6 @@
 services:
   schedtrip:
+    user: "root"
     container_name: schedtrip
     build:
       context: .

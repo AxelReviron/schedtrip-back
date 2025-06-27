@@ -23,10 +23,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 COPY uploads.ini /usr/local/etc/php/conf.d/uploads.ini
 
-RUN mkdir -p /app /data/caddy /config/caddy && \
-    chown -R ${USER}:${USER} /app && \
-    chown -R ${USER}:${USER} /data && \
-    chown -R ${USER}:${USER} /config
+RUN mkdir -p /app && chown -R ${USER}:${USER} /app
 
 USER ${USER}
 
