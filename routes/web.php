@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
@@ -11,4 +12,8 @@ Route::prefix('auth')->group(function () {
         Route::patch('update', [AuthController::class, 'update']);
         Route::get('user', [AuthController::class, 'user']);
     });
+});
+
+Route::get('/', function () {
+    return Inertia::render('Home');
 });

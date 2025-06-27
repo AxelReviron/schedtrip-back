@@ -36,9 +36,9 @@ COPY . /app
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
-#RUN npm ci --only=production
+RUN npm ci --only=production
 
-#RUN npm run build
+RUN npm run build
 
 RUN chown -R ${USER}:${USER} /app
 

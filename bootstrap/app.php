@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\OpenRouteServiceRateLimiter;
 use App\Http\Middleware\SetUserOpenRouteServiceApiKey;
 use Illuminate\Foundation\Application;
@@ -18,6 +19,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'openrouteservice.rate.limit' => OpenRouteServiceRateLimiter::class,
             'set.ors.api.key' => SetUserOpenRouteServiceApiKey::class
+        ]);
+        $middleware->web(append: [
+            HandleInertiaRequests::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
