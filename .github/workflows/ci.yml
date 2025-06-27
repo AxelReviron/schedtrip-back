@@ -26,12 +26,15 @@ jobs:
         run: composer install --no-interaction --prefer-dist --optimize-autoloader --no-scripts
 
       - name: Build Docker Backend Image
-        run: docker compose -f compose.ci.yaml build frankenphp
+        run: docker compose -f compose.ci.yaml build schedtrip
 
       - name: Run Services
         run: |
           docker compose -f compose.ci.yaml up -d
           echo "All test services are up and healthy!"
+
+      - name: Debug - Show running containers
+        run: docker compose -f compose.ci.yaml ps
 
       - name: Generate Application Key in Test Container
         run: docker compose -f compose.ci.yaml exec -T schedtrip php artisan key:generate --env=testing
