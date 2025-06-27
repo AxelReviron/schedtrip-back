@@ -19,8 +19,8 @@ jobs:
           extensions: pdo_mysql, intl, gd, pcntl
           coverage: none
 
-      - name: Copy .env.testing to .env
-        run: cp .env.testing .env
+      - name: Copy .env.ci to .env
+        run: cp .env.ci .env
 
       - name: Install Composer Dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader --no-scripts
@@ -45,14 +45,6 @@ jobs:
               sleep 2
             done
           '
-      - name: Debug - Show container logs
-        run: |
-          echo "=== All containers ==="
-          docker ps -a
-          echo "=== schedtrip logs ==="
-          docker logs schedtrip || echo "No schedtrip container found"
-          echo "=== Compose services ==="
-          docker compose -f compose.ci.yaml ps
 
       - name: Debug - Show running containers
         run: docker compose -f compose.ci.yaml ps
