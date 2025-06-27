@@ -17,9 +17,9 @@ services:
     networks:
       - schedtrip_network
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8000/up" ]
+      test: [ "CMD-SHELL", "php artisan --version || exit 1" ]
       interval: 5s
-      timeout: 2s
+      timeout: 10s
       retries: 5
 
   mysql:
