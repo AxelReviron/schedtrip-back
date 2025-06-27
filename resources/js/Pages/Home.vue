@@ -18,6 +18,7 @@ const formData = ref({
         <link href="https://fonts.googleapis.com/css2?family=Agbalumo&display=swap" rel="stylesheet">
     </Head>
     <div class="relative w-screen h-screen overflow-hidden">
+        <!--TODO: Add Fallback image-->
         <video
             autoplay
             muted
