@@ -2,39 +2,94 @@
 import { ref } from 'vue';
 import { useI18n } from "vue-i18n";
 import { Eye, EyeOff } from "lucide-vue-next";
+import {usePage} from "@inertiajs/vue3";
+import axios from "axios";
+import Notification from "@/Components/Notification.vue";
 
-const {t} = useI18n()
+const {t} = useI18n();
+const page = usePage()
+const emit = defineEmits(['toggle-visibility']);
 const showPassword = ref(false);
+
 const formData = ref({
     email: '',
     password: '',
     remember_me: false
 });
 
+const notification = ref({
+    show: false,
+    message: '',
+    type: 'success' as 'success' | 'error'
+});
+
+const errors = ref({});
+
+function showNotification(message: string, type: 'success' | 'error') {
+    notification.value = {
+        show: true,
+        message,
+        type
+    };
+
+    setTimeout(() => {
+        notification.value.show = false;
+    }, 10000);
+}
+
+async function handleSubmit(e: Event) {
+    e.preventDefault();
+    errors.value = {};
+
+    try {
+        await axios.post('auth/login', {
+            _token: page.props.csrf_token,
+            ...formData.value
+        });
+
+        formData.value = {
+            email: '',
+            password: '',
+            remember_me: false
+        };
+
+        showNotification(t("form.auth.notification.login_success"), 'success');
+    } catch (error: any) {
+        if (error.response && error.response.status === 422) {// Validation errors
+            errors.value = error.response.data.errors;
+            showNotification(t("form.auth.notification.error.form"), 'error');
+        } else if (error.response && error.response.status === 401) {// Credentials errors
+            showNotification(t("form.auth.notification.error.credentials"), 'error');
+        } else {// Other errors
+            showNotification(t("form.auth.notification.error.server"), 'error');
+        }
+        console.log(errors.value);
+    }
+}
 </script>
 
 <template>
 
     <div class="flex flex-col justify-center items-center h-screen gap-4">
         <h2 class="text-4xl font-bold text-dark">
-            Welcome Back
+            {{ $t("form.auth.login_title") }}
         </h2>
-        <h3 class="text-xl md:text-2xl font-medium text-dark">
-            Sign in to continue your journey
+        <h3 class="text-xl md:text-2xl font-medium text-dark text-center">
+            {{ $t("form.auth.login_subtitle") }}
         </h3>
 
-        <form class="text-dark flex flex-col items-center">
+        <form class="text-dark flex flex-col items-center" name="login" method="POST" @submit="handleSubmit">
             <div class="flex flex-col mt-8">
                 <label for="email" class="p-1 font-medium text-lg">{{ $t("form.auth.email") }}</label>
                 <input
                     type="text"
-                    v-model="formData.name"
+                    v-model="formData.email"
                     :placeholder="t('form.auth.email')"
                     class="w-70 md:w-100 bg-white/70 border border-warm p-2 rounded-lg text-warm focus:outline-warm"
                     name="email" required
                     id="email"
                 >
-                <!--<div v-if="errors.name" class="text-red-500 text-sm mt-1">{{ errors.name[0] }}</div>-->
+                <div v-if="errors.email" class="text-red-500 text-sm mt-1">{{ errors.email[0] }}</div>
             </div>
 
             <div class="flex flex-col mt-4">
@@ -42,7 +97,7 @@ const formData = ref({
                 <div class="relative">
                     <input
                         :type="showPassword ? 'text' : 'password'"
-                        v-model="formData.name"
+                        v-model="formData.password"
                         placeholder="********"
                         class="w-70 md:w-100 bg-white/70 border border-warm p-2 rounded-lg text-warm focus:outline-warm"
                         name="password" required
@@ -57,7 +112,7 @@ const formData = ref({
                         <EyeOff v-else :size="20" />
                     </button>
                 </div>
-                <!--<div v-if="errors.name" class="text-red-500 text-sm mt-1">{{ errors.name[0] }}</div>-->
+                <div v-if="errors.password" class="text-red-500 text-sm mt-1">{{ errors.password[0] }}</div>
             </div>
 
             <div class="flex flex-row gap-2 mt-4 self-start">
@@ -66,11 +121,10 @@ const formData = ref({
                     v-model="formData.remember_me"
                     :placeholder="t('form.auth.email')"
                     class="bg-white/70 border border-warm p-2 rounded-lg text-warm focus:outline-warm"
-                    name="remember_me" required
+                    name="remember_me"
                     id="remember_me"
                 >
-                <label for="remember_me" class="p-1 font-medium text-lg">{{ $t("form.auth.remember_me") }}</label>
-                <!--<div v-if="errors.name" class="text-red-500 text-sm mt-1">{{ errors.name[0] }}</div>-->
+                <label for="remember_me" class="p-1 font-medium text-[1rem]">{{ $t("form.auth.remember_me") }}</label>
             </div>
 
             <button
@@ -79,10 +133,14 @@ const formData = ref({
             >
                 {{ $t("form.auth.sign_in") }}
             </button>
-            <a class="text-dark text-sm font-medium hover:underline cursor-pointer">
+            <a
+                @click="emit('toggle-visibility', false)"
+                class="text-dark text-sm font-medium hover:underline cursor-pointer"
+            >
                 {{ $t("form.auth.no_account") }} {{ $t("form.auth.sign_up") }}
             </a>
         </form>
+        <Notification :notification="notification"/>
     </div>
 </template>
 
