@@ -17,3 +17,11 @@ Route::prefix('auth')->group(function () {
 Route::get('/', function () {
     return Inertia::render('Home');
 });
+
+Route::get('/terms-of-service', function () {
+    return Inertia::render('TermsOfService');
+});
+
+Route::get('/privacy-policy', function () {
+    return Inertia::render('PrivacyPolicy');
+});
