@@ -24,8 +24,8 @@ export default {
             register_subtitle: "Créez votre compte pour commencer à planifier vos voyages",
             have_account: "Déjà un compte ?",
             notification: {
-                login_success: "Sign in successfully !",
-                register_success: "Sign up successfully !",
+                login_success: "Connexion réussie !",
+                register_success: "Inscription réussie ! Vous allez être redirigé pour vous connecter.",
                 error: {
                     form: "Corriger les erreurs dans le formulaire.",
                     server: "Une erreur inattendue s'est produite. Veuillez réessayer.",
