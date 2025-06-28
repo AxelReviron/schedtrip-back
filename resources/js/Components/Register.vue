@@ -2,10 +2,15 @@
 import { ref } from 'vue';
 import { useI18n } from "vue-i18n";
 import { Eye, EyeOff } from "lucide-vue-next";
+import axios from "axios";
+import Notification from "@/Components/Notification.vue";
+import {usePage} from "@inertiajs/vue3";
 
 const {t} = useI18n();
+const page = usePage()
 const showPassword = ref(false);
 const showPasswordConfirmation = ref(false);
+const emit = defineEmits(['toggle-visibility']);
 
 const formData = ref({
     pseudo: '',
@@ -15,7 +20,60 @@ const formData = ref({
     consent: false
 });
 
-const emit = defineEmits(['toggle-visibility']);
+const notification = ref({
+    show: false,
+    message: '',
+    type: 'success' as 'success' | 'error'
+});
+
+const errors = ref({});
+
+function showNotification(message: string, type: 'success' | 'error') {
+    notification.value = {
+        show: true,
+        message,
+        type
+    };
+
+    setTimeout(() => {
+        notification.value.show = false;
+    }, 10000);
+}
+
+async function handleSubmit(e: Event) {
+    console.log('test');
+    e.preventDefault();
+    errors.value = {};
+
+    try {
+        await axios.post('auth/register', {
+            _token: page.props.csrf_token,
+            ...formData.value
+        });
+
+        formData.value = {
+            pseudo: '',
+            email: '',
+            password: '',
+            password_confirmation: '',
+            consent: false
+        };
+
+        showNotification(t("form.auth.notification.register_success"), 'success');
+        setTimeout(() => {
+            emit('toggle-visibility', true);
+        }, 5000);
+    } catch (error: any) {
+        if (error.response && error.response.status === 422) {// Validation errors
+            errors.value = error.response.data.errors;
+            showNotification(t("form.auth.notification.error.form"), 'error');
+        } else if (error.response && error.response.status === 401) {// Credentials errors
+            showNotification(t("form.auth.notification.error.credentials"), 'error');
+        } else {// Other errors
+            showNotification(t("form.auth.notification.error.server"), 'error');
+        }
+    }
+}
 </script>
 
 <template>
@@ -28,7 +86,7 @@ const emit = defineEmits(['toggle-visibility']);
             {{ $t("form.auth.register_subtitle") }}
         </h3>
 
-        <form class="text-dark flex flex-col items-center">
+        <form class="text-dark flex flex-col items-center" name="register" method="POST" @submit="handleSubmit">
             <div class="flex flex-col mt-8">
                 <label for="pseudo" class="p-1 font-medium text-lg">{{ $t("form.auth.pseudo") }}</label>
                 <input
@@ -39,20 +97,20 @@ const emit = defineEmits(['toggle-visibility']);
                     name="pseudo" required
                     id="pseudo"
                 >
-                <!--<div v-if="errors.name" class="text-red-500 text-sm mt-1">{{ errors.name[0] }}</div>-->
+                <div v-if="errors.pseudo" class="text-red-500 text-sm mt-1">{{ errors.pseudo[0] }}</div>
             </div>
 
             <div class="flex flex-col mt-4">
                 <label for="email" class="p-1 font-medium text-lg">{{ $t("form.auth.email") }}</label>
                 <input
-                    type="text"
+                    type="email"
                     v-model="formData.email"
                     :placeholder="t('form.auth.email')"
                     class="w-70 md:w-100 bg-white/70 border border-warm p-2 rounded-lg text-warm focus:outline-warm"
                     name="email" required
                     id="email"
                 >
-                <!--<div v-if="errors.name" class="text-red-500 text-sm mt-1">{{ errors.name[0] }}</div>-->
+                <div v-if="errors.email" class="text-red-500 text-sm mt-1">{{ errors.email[0] }}</div>
             </div>
 
             <div class="flex flex-col mt-4">
@@ -75,7 +133,7 @@ const emit = defineEmits(['toggle-visibility']);
                         <EyeOff v-else :size="20" />
                     </button>
                 </div>
-                <!--<div v-if="errors.name" class="text-red-500 text-sm mt-1">{{ errors.name[0] }}</div>-->
+                <div v-if="errors.password" class="text-red-500 text-sm mt-1">{{ errors.password[0] }}</div>
             </div>
 
             <div class="flex flex-col mt-4">
@@ -98,7 +156,6 @@ const emit = defineEmits(['toggle-visibility']);
                         <EyeOff v-else :size="20" />
                     </button>
                 </div>
-                <!--<div v-if="errors.name" class="text-red-500 text-sm mt-1">{{ errors.name[0] }}</div>-->
             </div>
 
             <div class="flex flex-row gap-2 mt-4 self-start">
@@ -111,8 +168,6 @@ const emit = defineEmits(['toggle-visibility']);
                     id="consent"
                 >
                 <label for="consent" class="p-1 font-medium text-xs md:text-[1rem]">
-<!--                    {{ $t("form.auth.register_consent") }}-->
-
                     <i18n-t keypath="form.auth.register_consent" tag="span">
                         <template #terms_of_service>
                             <a href="/terms-of-service">
@@ -125,8 +180,8 @@ const emit = defineEmits(['toggle-visibility']);
                             </a>
                         </template>
                     </i18n-t>
+                    <div v-if="errors.consent" class="text-red-500 text-sm mt-1">{{ errors.consent[0] }}</div>
                 </label>
-                <!--<div v-if="errors.name" class="text-red-500 text-sm mt-1">{{ errors.name[0] }}</div>-->
             </div>
 
             <button
@@ -142,6 +197,7 @@ const emit = defineEmits(['toggle-visibility']);
                 {{ $t("form.auth.have_account") }} {{ $t("form.auth.sign_in") }}
             </a>
         </form>
+        <Notification :notification="notification"/>
     </div>
 </template>
 
