@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3'
 import { ref } from 'vue';
+import { Map, TreePalm, UsersRound, Briefcase, NotebookPen } from "lucide-vue-next";
+import Login from "@/Components/Login.vue";
 
 const formData = ref({
     pseudo: '',
@@ -17,7 +19,10 @@ const formData = ref({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Agbalumo&display=swap" rel="stylesheet">
     </Head>
-    <div class="relative w-screen h-screen overflow-hidden">
+    <div class="flex flex-col lg:flex-row justify-between">
+
+
+    <div class="relative lg:w-6/12 h-screen overflow-hidden">
         <!--TODO: Add Fallback image-->
         <video
             autoplay
@@ -31,40 +36,53 @@ const formData = ref({
         <div class="absolute inset-0 bg-black/20"></div>
 
         <div class="relative z-10 flex items-center justify-center gap-4 h-full text-white">
-            <div class="text-center">
+            <div class="text-center py-8 px-8 rounded-lg border-1 border-white/20 bg-white/10 backdrop-blur-sm text-cream">
                 <div class="flex flex-row gap-2 justify-center">
-                    <svg height="50px" width="50px" id="_x32_" xmlns="http://www.w3.org/2000/svg"
-                         viewBox="0 0 512 512" xml:space="preserve" fill="#FFF">
-                        <g>
-                            <path class="st0" d="M493.656,124.29c-15.374-54.334-60.399-77.447-112.012-68.662c-47.529,8.09-72.358,67.34-83.923,103.27
-                                c3.44-47.59-5.354-113.771-62.132-144.674C148.834-32.997,93.926,51.562,88.435,62.543c-5.491,10.982-5.5,13.084,9.883,12.08
-                                c4.582-0.3,44.51-11.538,83.692-4.452l18.437-17.004l8.545,23.962c32.464,11.376,58.511,40.529,63.204,84.241
-                                c-26.338-32.379-66.962-53.226-112.707-53.226c-79.539,0-144.014,62.723-144.014,140.093c0,6.228,0.129,1.759,0.129,1.759
-                                c0.223,2.933,2.144,5.464,4.907,6.468c2.762,0.996,5.86,0.283,7.91-1.827c0,0,1.604-2.497,8.811-9.086
-                                c12.697-11.617,26.664-21.852,41.627-30.577l13.684-25.541l18.463,9.806c27.703-11.041,57.919-17.133,89.569-17.133
-                                c20.873,0,41.138,2.651,60.467,7.618c-44.57-2.951-111.746,20.282-138.334,77c-32.945,70.282-0.524,126.066,4.161,130.432
-                                c3.844,3.578,8.494,0.79,9.755-5.448c2.753-13.632,10.321-39.113,24.219-67.692l-5.611-22.666l15.452,3.955
-                                c19.364-34.147,47.719-70,87.827-94.15c-30.997,68.291-56.512,168.095-17.63,300.844h95.488c0,0-96.939-93.893-46.56-286.431
-                                c10.948,14.147,24.88,34.678,36.506,59.686l14.696,1.854l-6.564,17.587c8.048,21.534,13.839,45.591,14.645,71.337
-                                c0.206,6.572,4.17,11.437,6.194,7.13c31.024-66.113,21.268-133.779-22.22-173.261c27.42,9.042,49.829,31.091,67.288,56.314
-                                l20.822,4.47l-3.878,23.473c14.611,27.78,23.576,55.286,26.777,71.055c1.26,6.211,4.555,10.261,8.528,3.192
-                                c23.67-42.124,26.725-122.96-16.052-167.212c-33.168-34.3-91.688-36.558-127.729-27.051c23.661-39.783,86.969-42.743,86.969-42.743
-                                S405.803,108.34,408,105.045c2.196-3.294,14.276,22.462,14.276,22.462l63.745,26.038c0,0,8.184,5.595,9.78-3.912
-                                C496.762,143.893,497.345,135.048,493.656,124.29z"/>
-                        </g>
-                    </svg>
-                    <h1 class="text-5xl font-bold mb-4 font-[Agbalumo]">SchedTrip</h1>
+                    <div class="hidden md:block">
+                        <TreePalm
+                            :size="52"
+                            stroke-width="2"
+                            class="drop-shadow-sm"
+                        />
+                    </div>
+                    <div class="block md:hidden">
+                        <TreePalm
+                            :size="32"
+                            stroke-width="2"
+                            class="drop-shadow-sm"
+                        />
+                    </div>
+                    <h1 class="text-3xl md:text-5xl font-bold mb-6 font-[Agbalumo] text-shadow-lg">SchedTrip</h1>
                 </div>
 
-                <p class="mb-6 px-8 text-lg md:text-xl font-medium text-center md:w-150">
-                    Organize solo trips or group adventures with interactive maps, route between markers, personalized notes for each stop, and individual packing lists. Everything you need to plan the perfect journey, all in one place.
-                </p>
-
-                <button class="text-lg border py-1 rounded-lg border-1 px-4 border-white/20 bg-white/20 backdrop-blur-xs cursor-pointer hover:border-white">
-                    Get Started
-                </button>
+                <h2 class="text-lg md:text-2xl font-medium mb-8">
+                    Everything you need to plan the perfect journey.
+                </h2>
+                <ul class="text-xs md:text-xl text-shadow-lg flex flex-col items-start gap-2">
+                    <li class="flex flex-row gap-2 items-center">
+                        <UsersRound />
+                        Organize solo trips or group adventures
+                    </li>
+                    <li class="flex flex-row gap-2 items-center">
+                        <Map />
+                        Plan with interactive maps
+                    </li>
+                    <li class="flex flex-row gap-2 items-center">
+                        <NotebookPen />
+                        Personalized notes for each stop
+                    </li>
+                    <li class="flex flex-row gap-2 items-center">
+                        <Briefcase />
+                        Individual packing lists
+                    </li>
+                </ul>
             </div>
         </div>
+    </div>
+
+    <div class="relative lg:w-6/12 h-screen bg-[#FEFAE0]">
+        <Login />
+    </div>
     </div>
 </template>
 

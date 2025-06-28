@@ -1,0 +1,91 @@
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useI18n } from "vue-i18n";
+import { Eye, EyeOff } from "lucide-vue-next";
+
+const {t} = useI18n()
+const showPassword = ref(false);
+const formData = ref({
+    email: '',
+    password: '',
+    remember_me: false
+});
+
+</script>
+
+<template>
+
+    <div class="flex flex-col justify-center items-center h-screen gap-4">
+        <h2 class="text-4xl font-bold text-dark">
+            Welcome Back
+        </h2>
+        <h3 class="text-xl md:text-2xl font-medium text-dark">
+            Sign in to continue your journey
+        </h3>
+
+        <form class="text-dark flex flex-col items-center">
+            <div class="flex flex-col mt-8">
+                <label for="email" class="p-1 font-medium text-lg">{{ $t("form.auth.email") }}</label>
+                <input
+                    type="text"
+                    v-model="formData.name"
+                    :placeholder="t('form.auth.email')"
+                    class="w-70 md:w-100 bg-white/70 border border-warm p-2 rounded-lg text-warm focus:outline-warm"
+                    name="email" required
+                    id="email"
+                >
+                <!--<div v-if="errors.name" class="text-red-500 text-sm mt-1">{{ errors.name[0] }}</div>-->
+            </div>
+
+            <div class="flex flex-col mt-4">
+                <label for="password" class="p-1 font-medium text-lg">{{ $t("form.auth.password") }}</label>
+                <div class="relative">
+                    <input
+                        :type="showPassword ? 'text' : 'password'"
+                        v-model="formData.name"
+                        placeholder="********"
+                        class="w-70 md:w-100 bg-white/70 border border-warm p-2 rounded-lg text-warm focus:outline-warm"
+                        name="password" required
+                        id="password"
+                    >
+                    <button
+                        type="button"
+                        @click="showPassword = !showPassword"
+                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-warm cursor-pointer"
+                    >
+                        <Eye v-if="!showPassword" :size="20" />
+                        <EyeOff v-else :size="20" />
+                    </button>
+                </div>
+                <!--<div v-if="errors.name" class="text-red-500 text-sm mt-1">{{ errors.name[0] }}</div>-->
+            </div>
+
+            <div class="flex flex-row gap-2 mt-4 self-start">
+                <input
+                    type="checkbox"
+                    v-model="formData.remember_me"
+                    :placeholder="t('form.auth.email')"
+                    class="bg-white/70 border border-warm p-2 rounded-lg text-warm focus:outline-warm"
+                    name="remember_me" required
+                    id="remember_me"
+                >
+                <label for="remember_me" class="p-1 font-medium text-lg">{{ $t("form.auth.remember_me") }}</label>
+                <!--<div v-if="errors.name" class="text-red-500 text-sm mt-1">{{ errors.name[0] }}</div>-->
+            </div>
+
+            <button
+                type="submit"
+                class="mt-4 mb-4 py-2 px-4 w-full border border-warm bg-dark rounded-lg text-cream font-medium cursor-pointer"
+            >
+                {{ $t("form.auth.sign_in") }}
+            </button>
+            <a class="text-dark text-sm font-medium hover:underline cursor-pointer">
+                {{ $t("form.auth.no_account") }} {{ $t("form.auth.sign_up") }}
+            </a>
+        </form>
+    </div>
+</template>
+
+<style scoped>
+
+</style>
