@@ -53,7 +53,7 @@ async function handleSubmit(e: Event) {
             remember_me: false
         };
 
-        showNotification(t("form.auth.notification.login_success"), 'success');
+        window.location.href = '/dashboard';
     } catch (error: any) {
         if (error.response && error.response.status === 422) {// Validation errors
             errors.value = error.response.data.errors;
