@@ -12,7 +12,7 @@ class StoreUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', User::class);
+        return true;
     }
 
     /**
@@ -26,6 +26,7 @@ class StoreUserRequest extends FormRequest
             'pseudo' => 'required|string|between:2,20|unique:users,pseudo',
             'email' => 'required|string|lowercase|email:strict,dns|unique:users,email',
             'password' => 'required|string|between:8,20|confirmed',
+            'consent' => 'required|boolean|accepted',
         ];
     }
 }
