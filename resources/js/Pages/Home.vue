@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3'
-import { ref } from 'vue';
 import { Map, TreePalm, UsersRound, Briefcase, NotebookPen } from "lucide-vue-next";
 import Login from "@/Components/Login.vue";
+import {useI18n} from "vue-i18n";
+import {ref} from "vue";
+import Register from "@/Components/Register.vue";
 
-const formData = ref({
-    pseudo: '',
-    email: '',
-    password: '',
-    password_confirmed: '',
-    consent: false
-});
+const {t} = useI18n();
+const isLoginFormVisible = ref(true);
+
+function handleLoginFormVisibility(newValue: boolean) {
+    isLoginFormVisible.value = newValue;
+}
+
 </script>
 
 <template>
@@ -21,16 +23,15 @@ const formData = ref({
     </Head>
     <div class="flex flex-col lg:flex-row justify-between">
 
-
     <div class="relative lg:w-6/12 h-screen overflow-hidden">
-        <!--TODO: Add Fallback image-->
         <video
             autoplay
             muted
             loop
+            poster="../../assets/fallback-video.webp"
             class="absolute top-0 left-0 w-full h-full object-cover"
         >
-            <source src="../../assets/video-bg.mp4" type="video/mp4">
+            <source src="../../assets/video-bg.webm" type="video/mp4">
         </video>
 
         <div class="absolute inset-0 bg-black/20"></div>
@@ -52,28 +53,30 @@ const formData = ref({
                             class="drop-shadow-sm"
                         />
                     </div>
-                    <h1 class="text-3xl md:text-5xl font-bold mb-6 font-[Agbalumo] text-shadow-lg">SchedTrip</h1>
+                    <h1 class="text-3xl md:text-5xl font-bold mb-6 font-[Agbalumo] text-shadow-lg">
+                        {{ $t("home.title") }}
+                    </h1>
                 </div>
 
                 <h2 class="text-lg md:text-2xl font-medium mb-8">
-                    Everything you need to plan the perfect journey.
+                    {{ $t("home.subtitle") }}
                 </h2>
                 <ul class="text-xs md:text-xl text-shadow-lg flex flex-col items-start gap-2">
                     <li class="flex flex-row gap-2 items-center">
                         <UsersRound />
-                        Organize solo trips or group adventures
+                        {{ $t("home.feature_user") }}
                     </li>
                     <li class="flex flex-row gap-2 items-center">
                         <Map />
-                        Plan with interactive maps
+                        {{ $t("home.feature_map") }}
                     </li>
                     <li class="flex flex-row gap-2 items-center">
                         <NotebookPen />
-                        Personalized notes for each stop
+                        {{ $t("home.feature_note") }}
                     </li>
                     <li class="flex flex-row gap-2 items-center">
                         <Briefcase />
-                        Individual packing lists
+                        {{ $t("home.feature_luggage") }}
                     </li>
                 </ul>
             </div>
@@ -81,7 +84,12 @@ const formData = ref({
     </div>
 
     <div class="relative lg:w-6/12 h-screen bg-[#FEFAE0]">
-        <Login />
+        <div v-if="isLoginFormVisible">
+            <Login @toggle-visibility="handleLoginFormVisibility"/>
+        </div>
+        <div v-else>
+            <Register @toggle-visibility="handleLoginFormVisibility"/>
+        </div>
     </div>
     </div>
 </template>
