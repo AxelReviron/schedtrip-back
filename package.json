@@ -19,6 +19,9 @@
         "vite": "^6.2.4"
     },
     "dependencies": {
-        "@inertiajs/vue3": "^2.0.14"
+        "@inertiajs/vue3": "^2.0.14",
+        "lucide-vue-next": "^0.525.0",
+        "vue-i18n": "^11.1.7",
+        "ziggy-js": "^2.5.3"
     }
 }
