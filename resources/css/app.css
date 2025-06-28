@@ -3,6 +3,10 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
     --font-agbalumo: 'Agbalumo', system-ui, sans-serif;
+
+    --color-cream: #FAEDCD;
+    --color-warm: #D4A574;
+    --color-dark: #8B4513
 }
 
 .agbalumo-regular {
