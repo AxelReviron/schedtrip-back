@@ -63,7 +63,6 @@ async function handleSubmit(e: Event) {
         } else {// Other errors
             showNotification(t("form.auth.notification.error.server"), 'error');
         }
-        console.log(errors.value);
     }
 }
 </script>
@@ -82,7 +81,7 @@ async function handleSubmit(e: Event) {
             <div class="flex flex-col mt-8">
                 <label for="email" class="p-1 font-medium text-lg">{{ $t("form.auth.email") }}</label>
                 <input
-                    type="text"
+                    type="email"
                     v-model="formData.email"
                     :placeholder="t('form.auth.email')"
                     class="w-70 md:w-100 bg-white/70 border border-warm p-2 rounded-lg text-warm focus:outline-warm"
