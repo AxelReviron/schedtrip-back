@@ -32,4 +32,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     });
+    Route::get('/trip', function () {
+        return Inertia::render('Trip');
+    });
+    Route::get('/friend', function () {
+        return Inertia::render('Friend');
+    });
+    Route::get('/setting', function () {
+        return Inertia::render('Setting');
+    });
 });
