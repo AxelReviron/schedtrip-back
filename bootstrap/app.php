@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->statefulApi();
+        $middleware->redirectGuestsTo('/');
         $middleware->alias([
             'openrouteservice.rate.limit' => OpenRouteServiceRateLimiter::class,
             'set.ors.api.key' => SetUserOpenRouteServiceApiKey::class

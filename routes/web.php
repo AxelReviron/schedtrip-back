@@ -7,15 +7,17 @@ use Inertia\Inertia;
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('register', [AuthController::class, 'register']);
-    Route::middleware(['auth:sanctum'])->group(function () {
+    Route::middleware(['auth'])->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::patch('update', [AuthController::class, 'update']);
         Route::get('user', [AuthController::class, 'user']);
     });
 });
 
-Route::get('/', function () {
-    return Inertia::render('Home');
+Route::middleware(['guest'])->group(function () {
+    Route::get('/', function () {
+        return Inertia::render('Welcome');
+    });
 });
 
 Route::get('/terms-of-service', function () {
@@ -24,4 +26,10 @@ Route::get('/terms-of-service', function () {
 
 Route::get('/privacy-policy', function () {
     return Inertia::render('PrivacyPolicy');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    });
 });
