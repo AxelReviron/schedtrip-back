@@ -14,7 +14,7 @@ class UserController extends Controller
     {
         $user = User::where('pseudo', $request->validated()['pseudo'])->first();
 
-        return response()->json($user);
+        return response()->json(['user_id' => $user->getKey()]);
     }
 
     public function addOrsApiKey(OrsApiKeyRequest $request): JsonResponse
