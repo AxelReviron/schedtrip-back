@@ -90,8 +90,11 @@ async function logout(): void {
                     <li>
                         <a
                             href="/dashboard"
-                            :class="{'bg-warm md:text-warm': currentPage === 'dashboard'}"
-                            class="flex flex-row gap-2 items-center block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:hover:text-warm md:p-0"
+                            :class="{
+                                'bg-warm md:text-dark': currentPage === 'dashboard',
+                                'md:hover:text-warm': currentPage !== 'dashboard'
+                            }"
+                            class="flex flex-row gap-2 items-center block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0"
                         >
                             <Globe
                                 size="18"
@@ -102,8 +105,11 @@ async function logout(): void {
                     <li>
                         <a
                             href="/trip"
-                            :class="{'bg-warm md:text-warm': currentPage === 'trip'}"
-                            class="flex flex-row gap-2 items-center block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:hover:text-warm md:p-0"
+                            :class="{
+                                'bg-warm md:text-dark': currentPage === 'trip',
+                                'md:hover:text-warm': currentPage !== 'trip'
+                            }"
+                            class="flex flex-row gap-2 items-center block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0"
                         >
                             <MapPin
                                 size="18"
@@ -114,8 +120,11 @@ async function logout(): void {
                     <li>
                         <a
                             href="/friend"
-                            :class="{'bg-warm md:text-warm': currentPage === 'friend'}"
-                            class="flex flex-row gap-2 items-center block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:hover:text-warm md:p-0"
+                            :class="{
+                                'bg-warm md:text-dark': currentPage === 'friend',
+                                'md:hover:text-warm': currentPage !== 'friend'
+                            }"
+                            class="flex flex-row gap-2 items-center block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0"
                         >
                             <UsersRound
                                 size="18"
