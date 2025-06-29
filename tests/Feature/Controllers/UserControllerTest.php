@@ -32,10 +32,8 @@ class UserControllerTest extends TestCase
             ->get("/api/users/pseudo/$pseudo");
 
         $response->assertStatus(200);
-        $response->assertJsonFragment([
-            'id' => $this->friend->getKey(),
-            'pseudo' => $this->friend->pseudo,
-            'email' => $this->friend->email,
+        $response->assertJson([
+            'user_id' => $this->friend->getKey(),
         ]);
     }
 
