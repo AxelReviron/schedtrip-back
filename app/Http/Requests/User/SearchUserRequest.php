@@ -12,8 +12,7 @@ class SearchUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $user = User::where('pseudo', $this->pseudo)->first();
-        return $user && $this->user()->can('view', $user);
+        return true;
     }
 
     /**
