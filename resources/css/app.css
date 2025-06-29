@@ -4,8 +4,10 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
     --font-agbalumo: 'Agbalumo', system-ui, sans-serif;
 
+    --color-light: #fffef8;
     --color-cream: #FAEDCD;
     --color-warm: #D4A574;
+    --color-warmer: #d4985a;
     --color-dark: #8B4513
 }
 
