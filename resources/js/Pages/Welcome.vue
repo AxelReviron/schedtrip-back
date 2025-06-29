@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3'
 import { Map, TreePalm, UsersRound, Briefcase, NotebookPen } from "lucide-vue-next";
-import Login from "@/Components/Login.vue";
+import Login from "@/Components/Welcome/Login.vue";
 import {useI18n} from "vue-i18n";
 import {ref} from "vue";
-import Register from "@/Components/Register.vue";
+import Register from "@/Components/Welcome/Register.vue";
 
 const {t} = useI18n();
 const isLoginFormVisible = ref(true);
