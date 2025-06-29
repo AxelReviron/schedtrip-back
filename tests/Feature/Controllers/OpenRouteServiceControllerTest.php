@@ -8,12 +8,13 @@ use App\Services\OpenRouteService\Dto\RouteDataDTO;
 use App\Services\OpenRouteService\Services\Directions;
 use App\Services\OpenRouteService\Services\GeoCode;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
 use Tests\TestCase;
 
 class OpenRouteServiceControllerTest extends TestCase
 {
-    use DatabaseTransactions;
+    use RefreshDatabase;
 
     private User $user;
     private GeoCode $geoCodeMock;
