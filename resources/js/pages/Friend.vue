@@ -1,27 +1,39 @@
 <script setup lang="ts">
-
 import {usePage} from "@inertiajs/vue3";
-import {computed, ref} from "vue";
-import Navbar from "@/Components/Navbar.vue";
-import { UserRoundPlus, Mail, UsersRound } from "lucide-vue-next";
-import FriendRequestCard from "@/Components/Friends/FriendRequestCard.vue";
-import FriendCard from "@/Components/Friends/FriendCard.vue";
-import FriendRequestModal from "@/Components/Friends/FriendRequestModal.vue";
+import { ref } from "vue";
+import Navbar from "@/components/Navbar.vue";
+import { UserRoundPlus, Mail, UsersRound, UserRoundSearch } from "lucide-vue-next";
+import FriendRequestCard from "@/components/Friends/FriendRequestCard.vue";
+import FriendCard from "@/components/Friends/FriendCard.vue";
+import AddFriendModal from "@/components/Friends/AddFriendModal.vue";
 import {useI18n} from "vue-i18n";
+import {useUserStore} from "@/stores/userStore";
+import {storeToRefs} from "pinia";
 
 const {t} = useI18n();
-const page = usePage()
-const user = computed(() => page.props.auth.user)
+const page = usePage();
 const isModalVisible = ref(false);
+
+const userStore = useUserStore();
 
 function handleModalVisibility() {
     isModalVisible.value = !isModalVisible.value;
 }
+
+const {
+    user,
+    incomingFriendRequestPendingUsers,
+    friendsUsers,
+    isLoading
+} = storeToRefs(userStore);
+
+//TODO: Message if no pending request
+//TODO: Link to friend profile, can delete it (option to block).
 </script>
 
 <template>
     <Navbar/>
-    <FriendRequestModal
+    <AddFriendModal
         v-if="isModalVisible"
         @toggle-visibility="handleModalVisibility"
     />
@@ -59,13 +71,17 @@ function handleModalVisibility() {
                             {{ $t("friend.friend_requests") }}
                         </h3>
                         <div class="relative inline-flex items-center justify-center w-6 h-6 overflow-hidden bg-warm rounded-full">
-                            <span class="font-medium text-white text-sm">4</span>
+                            <span class="font-medium text-white text-sm">
+                                {{ incomingFriendRequestPendingUsers.length }}
+                            </span>
                         </div>
                     </div>
                 </div>
-                <div class="h-55 overflow-scroll">
-                    <div v-for="n in 4" class="mt-4">
-                        <FriendRequestCard />
+                <div v-if="incomingFriendRequestPendingUsers.length > 0" class="mb-2 overflow-scroll">
+                    <div v-for="friendRequest in incomingFriendRequestPendingUsers" class="mt-4">
+                        <FriendRequestCard
+                            :friend-request="friendRequest"
+                        />
                     </div>
                 </div>
             </div>
@@ -82,18 +98,31 @@ function handleModalVisibility() {
                             {{ $t("friend.my_friends") }}
                         </h3>
                         <div class="relative inline-flex items-center justify-center w-6 h-6 overflow-hidden bg-warm rounded-full">
-                            <span class="font-medium text-white text-sm">4</span>
+                            <span class="font-medium text-white text-sm">
+                                {{ friendsUsers.length }}
+                            </span>
                         </div>
                     </div>
                 </div>
-                <div class="flex flex-row flex-wrap gap-2">
-                    <div v-for="n in 4" class="mt-4">
-                        <FriendCard />
+                <div v-if="friendsUsers.length > 0" class="flex flex-row flex-wrap gap-2">
+                    <div v-for="friend in friendsUsers" class="mt-4">
+                        <FriendCard :friend="friend"/>
                     </div>
+                </div>
+                <div v-else class="flex flex-col items-center justify-center mt-4">
+                    <UserRoundSearch
+                        size="42"
+                        class="text-warm"
+                    />
+                    <h3 class="text-xl text-warm">
+                        {{ $t("friend.no_friend") }}
+                    </h3>
+                    <h4 class="text-lg text-warm">
+                        {{ $t("friend.travel_net") }}
+                    </h4>
                 </div>
             </div>
         </div>
-
     </div>
 </template>
 

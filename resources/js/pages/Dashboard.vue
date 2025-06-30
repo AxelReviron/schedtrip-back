@@ -2,7 +2,7 @@
 
 import {usePage} from "@inertiajs/vue3";
 import {computed} from "vue";
-import Navbar from "@/Components/Navbar.vue";
+import Navbar from "@/components/Navbar.vue";
 
 const page = usePage()
 const user = computed(() => page.props.auth.user)

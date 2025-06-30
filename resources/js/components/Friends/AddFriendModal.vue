@@ -4,7 +4,8 @@ import {useI18n} from "vue-i18n";
 import {ref} from "vue";
 import axios from "axios";
 import {usePage} from "@inertiajs/vue3";
-import Notification from "@/Components/Notification.vue";
+import Notification from "@/components/Notification.vue";
+import {useNotification} from "@/composables/useNotification";
 
 const page = usePage()
 const {t} = useI18n();
@@ -15,25 +16,10 @@ const formData = ref({
     pseudo: '',
 });
 
-const notification = ref({
-    show: false,
-    message: '',
-    type: 'success' as 'success' | 'error'
-});
 
 const errors = ref({});
+const { notification, showNotification } = useNotification();
 
-function showNotification(message: string, type: 'success' | 'error') {
-    notification.value = {
-        show: true,
-        message,
-        type
-    };
-
-    setTimeout(() => {
-        notification.value.show = false;
-    }, 10000);
-}
 
 async function handleSubmit(e: Event) {
     e.preventDefault();
@@ -53,7 +39,7 @@ async function handleSubmit(e: Event) {
             pseudo: '',
         };
 
-        showNotification(t("friend.form.notification.success"), 'success');
+        showNotification(t("friend.form.add_friend.notification.success"), 'success');
     } catch (error: any) {
         if (error.response && error.response.status === 422) {// Validation errors
             errors.value = error.response.data.errors;
@@ -61,7 +47,7 @@ async function handleSubmit(e: Event) {
         } else if (error.response && error.response.status === 401) {// TODO: error user not found
             showNotification(t("form.auth.notification.error.credentials"), 'error');
         } else {// Other errors
-            showNotification(t("friend.form.notification.error.server"), 'error');
+            showNotification(t("friend.form.add_friend.notification.error.server"), 'error');
         }
     }
 }
@@ -94,11 +80,11 @@ async function handleSubmit(e: Event) {
             <div>
                 <form class="text-dark flex flex-col items-center" name="login" method="POST" @submit="handleSubmit">
                     <div class="flex flex-col mt-2 w-full">
-                        <label for="pseudo" class="p-1 font-medium text-lg">{{ $t("friend.form.pseudo") }}</label>
+                        <label for="pseudo" class="p-1 font-medium text-lg">{{ $t("friend.form.add_friend.pseudo") }}</label>
                         <input
                             type="text"
                             v-model="formData.pseudo"
-                            :placeholder="t('friend.form.pseudo')"
+                            :placeholder="t('friend.form.add_friend.pseudo')"
                             class="bg-white/70 border border-warm p-2 rounded-lg text-warm focus:outline-warm"
                             name="pseudo" required
                             id="pseudo"
@@ -111,13 +97,13 @@ async function handleSubmit(e: Event) {
                             type="submit"
                             class="mt-4 py-2 px-4 w-full border border-warm bg-warm text-light font-medium rounded-lg px-4 cursor-pointer hover:bg-warmer"
                         >
-                            {{ $t("friend.form.send") }}
+                            {{ $t("friend.form.add_friend.send") }}
                         </button>
                         <button
                             @click="emit('toggle-visibility')"
                             class="mt-4 py-2 px-4 w-full border border-warm border-2 rounded-lg text-warm font-medium cursor-pointer"
                         >
-                            {{ $t("friend.form.cancel") }}
+                            {{ $t("friend.form.add_friend.cancel") }}
                         </button>
                     </div>
                 </form>

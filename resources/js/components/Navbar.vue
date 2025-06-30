@@ -1,15 +1,18 @@
 <script setup lang="ts">
 import {TreePalm, CircleUserRound, Globe, MapPin, UsersRound, Settings, LogOut} from "lucide-vue-next";
 import {Head, usePage} from "@inertiajs/vue3";
-import {computed, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import axios from "axios";
+import {useUserStore} from "@/stores/userStore";
 
 const page = usePage()
 const currentRoute = computed(() => page.props.ziggy.location);
 const currentPage = currentRoute.value.split('/').pop() || 'home'
-const user = computed(() => page.props.auth.user)
 const isUserMenuOpen = ref(false)
 const isMobileMenuOpen = ref(false)
+
+const userStore = useUserStore();
+const user = computed(() => userStore.user);
 
 function toggleUserMenu(): void {
     isUserMenuOpen.value = !isUserMenuOpen.value
@@ -26,6 +29,10 @@ async function logout(): void {
     window.location.href = '/';
 }
 
+onMounted(async () => {
+    await userStore.setUser(page.props.auth.user);
+});
+
 </script>
 
 <template>
@@ -41,21 +48,24 @@ async function logout(): void {
                 <TreePalm
                     :size="32"
                     stroke-width="2"
+                    class="text-warm drop-shadow-xs"
                 />
-                <span class="self-center text-2xl font-medium font-[Agbalumo]">SchedTrip</span>
+                <span class="self-center text-2xl font-medium font-[Agbalumo] text-warm text-shadow-xs">SchedTrip</span>
             </a>
             <div class="relative flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
                 <button @click="toggleUserMenu" type="button" class="flex text-sm rounded-full md:me-0 cursor-pointer" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
                     <span class="sr-only">Open user menu</span>
-                    <CircleUserRound />
+                    <CircleUserRound
+                        stroke-width="1.5"
+                    />
                 </button>
                 <!-- Dropdown menu -->
                 <div :class="{'hidden': !isUserMenuOpen}" class="absolute top-5 right-0 z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-sm" id="user-dropdown">
                     <div class="px-4 py-3">
-                        <span v-if="user.pseudo" class="block text-sm text-gray-900">
+                        <span v-if="user?.pseudo" class="block text-sm text-gray-900">
                             {{ user.pseudo }}
                         </span>
-                        <span v-if="user.email" class="block text-sm  text-gray-500 truncate">
+                        <span v-if="user?.email" class="block text-sm  text-gray-500 truncate">
                             {{ user.email }}
                         </span>
                     </div>
@@ -63,6 +73,7 @@ async function logout(): void {
                         <li>
                             <a href="/setting" class="flex flex-row gap-2 items-center block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 <Settings
+                                    stroke-width="1.5"
                                     size="18"
                                 />
                                 Settings
@@ -71,6 +82,7 @@ async function logout(): void {
                         <li>
                             <a @click="logout" href="#" class="flex flex-row gap-2 items-center block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 <LogOut
+                                    stroke-width="1.5"
                                     size="18"
                                 />
                                 Sign out
@@ -97,6 +109,7 @@ async function logout(): void {
                             class="flex flex-row gap-2 items-center block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0"
                         >
                             <Globe
+                                stroke-width="1.5"
                                 size="18"
                             />
                             Discover
@@ -112,6 +125,7 @@ async function logout(): void {
                             class="flex flex-row gap-2 items-center block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0"
                         >
                             <MapPin
+                                stroke-width="1.5"
                                 size="18"
                             />
                             My Trips
@@ -127,6 +141,7 @@ async function logout(): void {
                             class="flex flex-row gap-2 items-center block py-2 px-3 text-gray-900 rounded-sm md:bg-transparent md:p-0"
                         >
                             <UsersRound
+                                stroke-width="1.5"
                                 size="18"
                             />
                             Friends
