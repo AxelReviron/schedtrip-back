@@ -124,10 +124,9 @@ class UserControllerTest extends TestCase
             $this->friend->getKey() => ['status' => 'accepted']
         ]);
 
+        $friendId = $this->friend->getKey();
         $response = $this->actingAs($this->user)
-            ->delete("/api/users/friends/remove", [
-                'user_id' => $this->friend->getKey(),
-            ]);
+            ->delete("/api/users/friends/remove/$friendId");
 
         $response->assertStatus(200);
         $response->assertJson(['message' => 'Friend removed']);

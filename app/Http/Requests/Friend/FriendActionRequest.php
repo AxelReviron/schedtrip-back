@@ -39,7 +39,6 @@ class FriendActionRequest extends FormRequest
             $exists = DB::table('user_friend')
                 ->where('from_user_id', $friendId)
                 ->where('to_user_id', $currentUserId)
-                ->where('status', 'pending')
                 ->exists();
 
             if (!$exists) {

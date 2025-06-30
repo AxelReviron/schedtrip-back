@@ -28,7 +28,8 @@ const {
 } = storeToRefs(userStore);
 
 //TODO: Message if no pending request
-//TODO: Link to friend profile, can delete it (option to block).
+//TODO: Link to friend profile.
+//TODO: Skeleton on loading
 </script>
 
 <template>

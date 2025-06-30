@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { SquareArrowOutUpRight, Trash2 } from "lucide-vue-next";
 import UserInterface from "@/interfaces/userInterface";
+import RemoveFriendModal from "@/components/Friends/RemoveFriendModal.vue";
+import {ref} from "vue";
+
+const isModalVisible = ref(false);
 
 const props = defineProps<{
     friend: UserInterface
@@ -8,9 +12,17 @@ const props = defineProps<{
 
 const { friend } = props;
 
+function handleRemoveOrBlockModalVisibility() {
+    isModalVisible.value = !isModalVisible.value;
+}
 </script>
 
 <template>
+    <RemoveFriendModal
+        :friend-id="friend.id"
+        v-if="isModalVisible"
+        @toggle-visibility="handleRemoveOrBlockModalVisibility"
+    />
     <div class="bg-gray-100/20 border border-gray-200 rounded-sm px-4 py-4  shadow-xs w-90">
         <div class="flex flex-row justify-between items-center">
             <div class="flex justify-start gap-4 items-center">
@@ -31,6 +43,7 @@ const { friend } = props;
                 </button>
                 <button class="relative inline-flex items-center justify-center w-8 h-8 overflow-hidden bg-red-200 hover:bg-red-300 cursor-pointer rounded-lg">
                     <Trash2
+                        @click="handleRemoveOrBlockModalVisibility"
                         class="text-red-600"
                         size="20"
                     />

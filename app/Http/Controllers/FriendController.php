@@ -53,7 +53,7 @@ class FriendController extends Controller
     public function removeFriend(DeleteFriendRequest $request): JsonResponse
     {
         $userId = Auth::user()->getKey();
-        $friendId = $request->input('user_id');
+        $friendId = $request->validated()['user_id'];
 
         DB::table('user_friend')
             ->where(function ($query) use ($userId, $friendId) {

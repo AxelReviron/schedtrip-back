@@ -4,6 +4,9 @@ export default {
         subtitle: "Connectez-vous avec vos amis et découvrez leurs aventures.",
         add_friend: "Ajouter un ami",
         delete_friend_request: "Supprimer la demande d\'ami",
+        delete_friend: "Supprimer l\'ami",
+        delete_friend_question: "Êtes-vous sûr de vouloir supprimer cet ami ?",
+        remove: "Supprimer",
         friend_requests: 'Demandes d\'amis',
         my_friends: 'Mes amis',
         no_friend: 'Pas encore d\'amis.',
@@ -37,6 +40,14 @@ export default {
             accept_friend_request: {
                 notification: {
                     success: "La demande d'ami a correctement été accepté !",
+                    error: {
+                        server: "Une erreur inattendue s'est produite. Veuillez réessayer.",
+                    }
+                }
+            },
+            remove_friend: {
+                notification: {
+                    success: "L\'ami a correctement été supprimé !",
                     error: {
                         server: "Une erreur inattendue s'est produite. Veuillez réessayer.",
                     }
