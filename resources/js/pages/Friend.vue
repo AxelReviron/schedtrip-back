@@ -79,7 +79,7 @@ const {
                     </div>
                 </div>
                 <div v-if="incomingFriendRequestPendingUsers.length > 0" class="mb-2 overflow-scroll">
-                    <div v-for="friendRequest in incomingFriendRequestPendingUsers" class="mt-4">
+                    <div v-for="friendRequest in incomingFriendRequestPendingUsers" :key="friendRequest.id" class="mt-4">
                         <FriendRequestCard
                             :friend-request="friendRequest"
                         />
@@ -106,7 +106,7 @@ const {
                     </div>
                 </div>
                 <div v-if="friendsUsers.length > 0" class="flex flex-row flex-wrap gap-2">
-                    <div v-for="friend in friendsUsers" class="mt-4">
+                    <div v-for="friend in friendsUsers" :key="friend.id" class="mt-4">
                         <FriendCard :friend="friend"/>
                     </div>
                 </div>
