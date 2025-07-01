@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ApiResource(
     operations: [
@@ -31,9 +32,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
             rules: UpdateTripRequest::class
         ),
         new Delete()
-    ]
+    ],
+    normalizationContext: ['groups' => ['trip:read']]
 )]
 #[QueryParameter(key: 'sort[:property]', filter: OrderFilter::class)]
+#[Groups(['trip:read'])]
 class Trip extends Model
 {
     use HasFactory, HasUuids;
@@ -72,7 +75,7 @@ class Trip extends Model
 
     public function stops(): HasMany
     {
-        return $this->hasMany(Stop::class);
+        return $this->hasMany(Stop::class)->orderBy('arrival_date');
     }
 
     public function participants(): BelongsToMany
@@ -80,7 +83,7 @@ class Trip extends Model
         return $this->belongsToMany(User::class, 'user_trip')->withPivot('permission');
     }
 
-    public function luggages(): HasMany
+    public function luggage(): HasMany
     {
         return $this->hasMany(Luggage::class);
     }

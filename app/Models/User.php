@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use ApiPlatform\Metadata\Get;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -13,12 +14,15 @@ use Illuminate\Notifications\Notifiable;
 use ApiPlatform\Metadata\ApiResource;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Traits\HasRoles;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ApiResource(
     operations: [
         new Get(),
-    ]
+    ],
+    normalizationContext: ['groups' => ['user:read']]
 )]
+#[Groups(['user:read'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -34,13 +38,6 @@ class User extends Authenticatable
         'email',
         'password',
         'ors_api_key'
-    ];
-
-    protected $appends = [
-        'friends',
-        'outgoingFriendsRequestInPending',
-        'incomingFriendsRequestInPending',
-        'usersBlocked'
     ];
 
     /**
