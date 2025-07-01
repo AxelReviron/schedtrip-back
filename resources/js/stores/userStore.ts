@@ -11,6 +11,54 @@ export const useUserStore = defineStore('user', () => {
     const isLoading: boolean = ref(false);
     const page = usePage();
 
+    function removeUserFriendRequest(friendId: string): void {
+        const friendRequestRouteApi = `/api/users/${friendId}`;
+
+        // Remove on user object friend route api
+        user.value.incomingFriendsRequestInPending = user.value.incomingFriendsRequestInPending.filter((friendRouteApi: string) => {
+            return friendRouteApi !== friendRequestRouteApi;
+        });
+
+        // Remove on incomingFriendRequestPendingUsers object
+        incomingFriendRequestPendingUsers.value = incomingFriendRequestPendingUsers.value.filter((friend: UserInterface) => {
+            return friend.id !== friendId;
+        })
+    }
+
+    function removeUserFriend(friendId: string): void {
+        const friendRequestRouteApi = `/api/users/${friendId}`;
+
+        // Remove on user object friend route api
+        user.value.friends = user.value.friends.filter((friendRouteApi: string) => {
+            return friendRouteApi !== friendRequestRouteApi;
+        });
+
+
+        // Remove on friendsUsers object
+        friendsUsers.value = friendsUsers.value.filter((friend: UserInterface) => {
+            return friend.id !== friendId;
+        })
+    }
+
+    function acceptFriendRequest(friendId: string): void {
+        const friendRequestRouteApi = `/api/users/${friendId}`;
+
+        // Get the friend accepted route api
+        const friendAcceptedRouteApi = user.value.incomingFriendsRequestInPending.filter((friendRouteApi: string) => {
+            return friendRouteApi === friendRequestRouteApi;
+        });
+
+        // Get friend infos
+        const newFriend = incomingFriendRequestPendingUsers.value.filter((friend: UserInterface) => {
+            return friend.id === friendId;
+        })
+
+        removeUserFriendRequest(friendId);
+
+        user.value.friends.push(friendAcceptedRouteApi[0]);
+        friendsUsers.value.push(newFriend[0]);
+    }
+
     async function loadFriendRequestsDetails() {
         if (!user.value?.incomingFriendsRequestInPending?.length) {
             incomingFriendRequestPendingUsers.value = [];
@@ -64,22 +112,6 @@ export const useUserStore = defineStore('user', () => {
         }
     }
 
-    async function refreshUserAllFriendsDetails() {
-        const response = await axios.get('/auth/user', {
-            _token: page.props.csrf_token,
-        });
-        user.value = response.data;
-
-        if (user.value) {
-            incomingFriendRequestPendingUsers.value = [];
-            friendsUsers.value = [];
-            await Promise.all([
-                loadFriendRequestsDetails(),
-                loadFriendsDetails()
-            ]);
-        }
-    }
-
     return {
         // States
         user,
@@ -89,6 +121,8 @@ export const useUserStore = defineStore('user', () => {
 
         // Actions
         setUser,
-        refreshUserAllFriendsDetails,
+        removeUserFriendRequest,
+        removeUserFriend,
+        acceptFriendRequest,
     }
 })

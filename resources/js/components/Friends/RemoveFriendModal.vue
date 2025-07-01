@@ -21,7 +21,7 @@ const emit = defineEmits(['toggle-visibility']);
 
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
-const { refreshUserAllFriendsDetails } = userStore;
+const { removeUserFriend } = userStore;
 
 const errors = ref({});
 const { notification, showNotification } = useNotification();
@@ -35,7 +35,7 @@ async function removeFriend() {
 
         showNotification(t("friend.form.remove_friend.notification.success"), 'success');
         setTimeout(async () => {
-            await refreshUserAllFriendsDetails();
+            removeUserFriend(friendId);
             emit('toggle-visibility');
         }, 2000);
     } catch (error: any) {

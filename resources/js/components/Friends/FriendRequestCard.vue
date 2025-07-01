@@ -21,7 +21,7 @@ const { friendRequest } = props;
 const isModalVisible = ref(false);
 
 const userStore = useUserStore();
-const { refreshUserAllFriendsDetails } = userStore;
+const { acceptFriendRequest } = userStore;
 
 function handleRejectOrBlockModalVisibility() {
     isModalVisible.value = !isModalVisible.value;
@@ -31,7 +31,7 @@ const errors = ref({});
 
 const { notification, showNotification } = useNotification();
 
-async function acceptFriendRequest() {
+async function handleFriendRequestAccepted() {
     errors.value = {};
     try {
         await axios.patch('api/users/friends/action', {
@@ -42,7 +42,7 @@ async function acceptFriendRequest() {
 
         showNotification(t("friend.form.accept_friend_request.notification.success"), 'success');
         setTimeout(async () => {
-            await refreshUserAllFriendsDetails();
+            acceptFriendRequest(friendRequest.id);
         }, 2000);
     } catch (error: any) {
         console.log(error)
@@ -75,7 +75,7 @@ async function acceptFriendRequest() {
         <div class="flex justify-start gap-2 items-center">
             <div class="relative inline-flex items-center justify-center w-8 h-8 overflow-hidden bg-green-200 hover:bg-green-300 cursor-pointer rounded-lg">
                 <Check
-                    @click="acceptFriendRequest"
+                    @click="handleFriendRequestAccepted"
                     class="text-green-600"
                     size="20"
                 />

@@ -21,7 +21,7 @@ const emit = defineEmits(['toggle-visibility']);
 
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
-const { refreshUserAllFriendsDetails } = userStore;
+const { removeUserFriendRequest } = userStore;
 
 const errors = ref({});
 const { notification, showNotification } = useNotification();
@@ -41,7 +41,7 @@ async function rejectFriendRequest(status: string) {
             showNotification(t("friend.form.reject_friend_request.notification.blocked_success"), 'success');
         }
         setTimeout(async () => {
-            await refreshUserAllFriendsDetails();
+            removeUserFriendRequest(friendId);
             emit('toggle-visibility');
         }, 2000);
     } catch (error: any) {
