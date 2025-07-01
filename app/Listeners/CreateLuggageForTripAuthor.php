@@ -22,7 +22,7 @@ class CreateLuggageForTripAuthor
      */
     public function handle(TripSaved $event): void
     {
-        $event->trip->luggages()->create([
+        $event->trip->luggage()->create([
             'user_id' => $event->trip->author_id,
         ]);
     }
