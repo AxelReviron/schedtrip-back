@@ -1,3 +1,5 @@
+import TripInterface from "@/interfaces/tripInterface";
+
 export default interface UserInterface {
     id: string;
     pseudo: string;
@@ -7,6 +9,7 @@ export default interface UserInterface {
     usersBlocked: string[];
     incomingFriendsRequestInPending: string[];
     outgoingFriendsRequestInPending: string[];
+    trips: TripInterface[]|[];
     created_at: Date;
     updated_at: Date;
 }
