@@ -2,7 +2,7 @@
 
 import {usePage} from "@inertiajs/vue3";
 import Navbar from "@/components/Navbar.vue";
-import {UserRoundPlus, MapPin, UsersRound} from "lucide-vue-next";
+import {UserRoundPlus, MapPin} from "lucide-vue-next";
 import {useUserStore} from "@/stores/userStore";
 import {storeToRefs} from "pinia";
 import {watch, onMounted} from "vue";
@@ -48,7 +48,7 @@ onMounted(async () => {
                 </div>
                 <button
                     @click="handleModalVisibility"
-                    class="flex flex-row gap-2 items-center border h-12 bg-warm text-light font-medium rounded-sm px-4 cursor-pointer hover:bg-warmer">
+                    class="flex flex-row gap-2 items-center border py-2 bg-warm text-light font-medium rounded-sm px-4 cursor-pointer hover:bg-warmer">
                     <UserRoundPlus
                         size="20"
                     />

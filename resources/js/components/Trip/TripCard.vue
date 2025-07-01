@@ -5,6 +5,8 @@ import TripInterface from "@/interfaces/tripInterface";
 import {useI18n} from "vue-i18n";
 import axios from "axios";
 import UserInterface from "@/interfaces/userInterface";
+import {useUserStore} from "@/stores/userStore";
+import {storeToRefs} from "pinia";
 
 const isModalVisible = ref(false);
 const {t} = useI18n();
@@ -12,6 +14,9 @@ const {t} = useI18n();
 const props = defineProps<{
     trip: TripInterface
 }>();
+
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 
 const {trip} = props;
 
@@ -59,23 +64,23 @@ onMounted(async () => {
     <!--        v-if="isModalVisible"-->
     <!--        @toggle-visibility="handleRemoveOrBlockModalVisibility"-->
     <!--    />-->
-    <div class="bg-gray-100/20 border border-gray-200 rounded-sm shadow-xs w-90">
+    <div class="bg-gray-100/20 border border-gray-200 rounded-sm shadow-xs w-100">
 
         <img
             src="../../../assets/trip_card_cover.jpg" alt="Trip card cover"
             class="w-full h-50 object-cover"
         />
 
-        <div class="flex flex-col items-start h-60 px-4 py-4 w-full">
+        <div class="flex flex-col items-start max-h-80 px-4 py-4 w-full">
             <h3 class="text-dark text-xl font-medium truncate">
                 {{ trip.label }}
             </h3>
             <h4 class="text-sm mt-2 w-full truncate">
                 {{ trip.description ? trip.description : $t("trip.trip_no_description") }}
             </h4>
-            <div class="flex flex-col">
+            <div class="flex flex-col w-full">
 
-                <div class="flex flex-row justify-between gap-2 mt-2 w-full">
+                <div class="flex flex-row justify-start gap-4 mt-2 w-full">
                     <div class="flex flex-row items-center gap-2 mt-4">
                         <MapPinned
                             size="14"
@@ -113,6 +118,26 @@ onMounted(async () => {
                         {{ tripAuthor.pseudo }}
                     </h4>
                 </div>
+                <div class="flex flex-row justify-center items-center gap-2 mt-6 w-full" v-if="tripAuthor">
+                    <a href="#" class="w-full">
+                        <button
+                            class="w-full flex flex-row gap-2 justify-center items-center border py-2 bg-warm text-light font-medium rounded-sm px-4 cursor-pointer hover:bg-warmer"
+
+                        >
+                                {{ $t("trip.view_trip") }}
+                        </button>
+                    </a>
+
+                    <a href="#" class="w-full">
+                        <button
+                            v-if="tripAuthor && tripAuthor.id === user.id"
+                            class="w-full flex flex-row gap-2 justify-center items-center border py-2 bg-red-500 text-light font-medium rounded-sm px-4 cursor-pointer hover:bg-red-600"
+                        >
+                            {{ tripAuthor.id === user.id ? $t("trip.delete_trip") : $t("trip.quit_trip")}}
+                        </button>
+                    </a>
+                </div>
+
             </div>
 
         </div>
