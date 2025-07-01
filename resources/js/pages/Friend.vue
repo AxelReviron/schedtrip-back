@@ -73,12 +73,12 @@ const {
                         </h3>
                         <div class="relative inline-flex items-center justify-center w-6 h-6 overflow-hidden bg-warm rounded-full">
                             <span class="font-medium text-white text-sm">
-                                {{ incomingFriendRequestPendingUsers.length }}
+                                {{ incomingFriendRequestPendingUsers ? incomingFriendRequestPendingUsers.length : '0' }}
                             </span>
                         </div>
                     </div>
                 </div>
-                <div v-if="incomingFriendRequestPendingUsers.length > 0" class="mb-2 overflow-scroll">
+                <div v-if="incomingFriendRequestPendingUsers && incomingFriendRequestPendingUsers.length > 0" class="mb-2 overflow-scroll">
                     <div v-for="friendRequest in incomingFriendRequestPendingUsers" :key="friendRequest.id" class="mt-4">
                         <FriendRequestCard
                             :friend-request="friendRequest"
@@ -100,12 +100,12 @@ const {
                         </h3>
                         <div class="relative inline-flex items-center justify-center w-6 h-6 overflow-hidden bg-warm rounded-full">
                             <span class="font-medium text-white text-sm">
-                                {{ friendsUsers.length }}
+                                {{ friendsUsers ? friendsUsers.length : '0' }}
                             </span>
                         </div>
                     </div>
                 </div>
-                <div v-if="friendsUsers.length > 0" class="flex flex-row flex-wrap gap-2">
+                <div v-if="friendsUsers && friendsUsers.length > 0" class="flex flex-row flex-wrap gap-2">
                     <div v-for="friend in friendsUsers" :key="friend.id" class="mt-4">
                         <FriendCard :friend="friend"/>
                     </div>
