@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {TreePalm, CircleUserRound, Globe, MapPin, UsersRound, Settings, LogOut} from "lucide-vue-next";
 import {Head, usePage} from "@inertiajs/vue3";
-import {computed, onMounted, ref} from "vue";
+import {computed, onMounted, ref, nextTick} from "vue";
 import axios from "axios";
 import {useUserStore} from "@/stores/userStore";
 
@@ -30,7 +30,9 @@ async function logout(): void {
 }
 
 onMounted(async () => {
-    await userStore.setUser(page.props.auth.user);
+    const userId = page.props.auth.user.id;
+    const response = await axios.get(`/api/users/${userId}`);
+    await userStore.setUser(response.data);
 });
 
 </script>
