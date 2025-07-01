@@ -11,6 +11,9 @@ export default {
         participant: "Participant",
         participants: "Participants",
         date: "Date",
+        view_trip: "Voir",
+        quit_trip: "Quitter",
+        delete_trip: "Supprimer",
         form: {
             create_trip: {
                 create: "Créer",
