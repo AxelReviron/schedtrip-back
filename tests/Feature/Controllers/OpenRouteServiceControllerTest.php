@@ -82,14 +82,13 @@ class OpenRouteServiceControllerTest extends TestCase
     {
         // Data
         $coordinates = ['lon' => 4.8357, 'lat' => 45.7640];
-        $expectedDtoCollection = collect($this->geoCodeResult['features'])
-            ->map(fn ($feature) => LocationFeatureDTO::fromArray($feature));
+        $expectedDto = LocationFeatureDTO::fromArray($this->geoCodeResult['features'][0]);
 
         // Mock
         $this->geoCodeMock->shouldReceive('reverseSearch')
             ->once()
             ->with($coordinates)
-            ->andReturn($expectedDtoCollection);
+            ->andReturn($expectedDto);
         $this->app->instance(GeoCode::class, $this->geoCodeMock);
 
         // Test
@@ -99,15 +98,13 @@ class OpenRouteServiceControllerTest extends TestCase
         // Assertions
         $response->assertStatus(200);
         $response->assertJson([
-            [
-                'name' => 'Lyon',
-                'label' => 'Lyon, France',
-                'longitude' => 4.8357,
-                'latitude' => 45.7640,
-                'country' => 'France',
-                'region' => 'Auvergne-Rhône-Alpes',
-                'locality' => 'Lyon',
-            ]
+            'name' => 'Lyon',
+            'label' => 'Lyon, France',
+            'longitude' => 4.8357,
+            'latitude' => 45.7640,
+            'country' => 'France',
+            'region' => 'Auvergne-Rhône-Alpes',
+            'locality' => 'Lyon',
         ]);
     }
 

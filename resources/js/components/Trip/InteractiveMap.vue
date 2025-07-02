@@ -25,12 +25,12 @@ async function addStopToTrip(coords: L.LatLng) {
     });
 
     const stop = {
-        label: response.data[0].label,
+        label: response.data.label,
         description: null,
         trip_id: null,
         duration: null,
-        latitude: response.data[0].latitude,
-        longitude: response.data[0].longitude,
+        latitude: response.data.latitude,
+        longitude: response.data.longitude,
         arrival_date: null,
         departure_date: null,
         order_index: null,

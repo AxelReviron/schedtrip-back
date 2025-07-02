@@ -37,19 +37,20 @@ class GeoCode
      * Resolve input coordinates into address.
      *
      * @param array<float> $coordinates
-     * @return Collection<LocationFeatureDTO>
+     * @return LocationFeatureDTO
      * @throws ConnectionException|RequestException
      */
-    public function reverseSearch(array $coordinates): Collection
+    public function reverseSearch(array $coordinates): LocationFeatureDTO
     {
         $response = $this->client->get(
             endpoint: '/geocode/reverse',
             params: [
                 'point.lon' => $coordinates['lon'],
                 'point.lat' => $coordinates['lat'],
+                'size' => 1,
             ]
         );
 
-        return collect($response['features'])->map(fn ($feature) => LocationFeatureDTO::fromArray($feature));
+        return LocationFeatureDTO::fromArray($response['features'][0]);
     }
 }
