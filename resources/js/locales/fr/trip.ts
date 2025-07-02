@@ -46,7 +46,9 @@ export default {
                     no_destinations: "Pas encore de destinations",
                     start_destinations: "Commencez à ajouter des arrêts en cliquant sur la carte ou faites une recherche.",
                     search: "Rechercher",
-                    search_placeholder: "Rechercher une destination"
+                    search_placeholder: "Rechercher une destination",
+                    destination_placeholder: "Destination",
+                    note_placeholder: "Ajouter une note pour cette destination",
                 },
                 notification: {
                     success: "Voyage créé avec succès !",

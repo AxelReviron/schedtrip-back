@@ -46,7 +46,9 @@ export default {
                     no_destinations: "No destinations yet.",
                     search: "Search",
                     start_destinations: "Start adding destinations clicking on the map or search it.",
-                    search_placeholder: "Search for a destination"
+                    search_placeholder: "Search for a destination",
+                    destination_placeholder: "Destination",
+                    note_placeholder: "Add a note for this destination",
                 },
                 notification: {
                     success: "Trip successfully created !",
