@@ -8,7 +8,7 @@ import TitleIcon from "@/components/TitleIcon.vue";
 const {t} = useI18n();
 
 const tripFormStore = useTripFormStore();
-const { label, description, is_public } = storeToRefs(tripFormStore);
+const { trip } = storeToRefs(tripFormStore);
 
 // TODO: Recevoir les erreurs en props
 </script>
@@ -25,7 +25,7 @@ const { label, description, is_public } = storeToRefs(tripFormStore);
                 <label for="label" class="p-1 font-medium text-lg">{{ $t("trip.form.create_trip.trip_details.label") }}</label>
                 <input
                     type="text"
-                    v-model="label"
+                    v-model="trip.label"
                     :placeholder="t('trip.form.create_trip.trip_details.label')"
                     class="bg-white/70 border border-warm p-2 rounded-lg text-warm focus:outline-warm"
                     name="label" required
@@ -37,7 +37,7 @@ const { label, description, is_public } = storeToRefs(tripFormStore);
                 <label for="description" class="p-1 font-medium text-lg">{{ $t("trip.form.create_trip.trip_details.description") }}</label>
                 <textarea
                     rows="4"
-                    v-model="description"
+                    v-model="trip.description"
                     :placeholder="t('trip.form.create_trip.trip_details.description')"
                     class="bg-white/70 border border-warm p-2 rounded-lg text-warm focus:outline-warm resize-none"
                     name="description" required
@@ -49,7 +49,7 @@ const { label, description, is_public } = storeToRefs(tripFormStore);
             <div class="flex flex-row gap-2 mt-2 w-full">
                 <input
                     type="checkbox"
-                    v-model="is_public"
+                    v-model="trip.is_public"
                     class="bg-white/70 border border-warm p-2 rounded-lg text-warm focus:outline-warm resize-none"
                     name="is_public" required
                     id="is_public"
