@@ -104,7 +104,7 @@ onMounted(async () => {
                 </div>
 
                 <div class="flex flex-row justify-start gap-4 w-full">
-                    <div class="flex flex-row items-center gap-2 mt-4 border-1 border-warm bg-white/90 px-2 rounded-sm px-2 shadow-sm">
+                    <div v-if="tripArrivalDate" class="flex flex-row items-center gap-2 mt-4 border-1 border-warm bg-white/90 px-2 rounded-sm px-2 shadow-sm">
                         <CalendarArrowDown
                             size="14"
                             class="text-warm"
@@ -113,7 +113,7 @@ onMounted(async () => {
                             {{ tripArrivalDate }}
                         </h4>
                     </div>
-                    <div class="flex flex-row items-center gap-2 mt-4 border-1 border-warm bg-white/90 px-2 rounded-sm px-2 shadow-sm">
+                    <div v-if="tripDepartureDate" class="flex flex-row items-center gap-2 mt-4 border-1 border-warm bg-white/90 px-2 rounded-sm px-2 shadow-sm">
                         <CalendarArrowUp
                             size="14"
                             class="text-warm"
@@ -143,15 +143,6 @@ onMounted(async () => {
                                 {{ $t("trip.view_trip") }}
                         </button>
                     </a>
-
-<!--                    <a href="#" class="w-full">-->
-<!--                        <button-->
-<!--                            v-if="tripAuthor && tripAuthor.id === user.id"-->
-<!--                            class="w-full flex flex-row gap-2 justify-center items-center border py-2 bg-red-500 text-light font-medium rounded-sm px-4 cursor-pointer hover:bg-red-600"-->
-<!--                        >-->
-<!--                            {{ tripAuthor.id === user.id ? $t("trip.delete_trip") : $t("trip.quit_trip")}}-->
-<!--                        </button>-->
-<!--                    </a>-->
                 </div>
 
             </div>
