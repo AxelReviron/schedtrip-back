@@ -6,7 +6,7 @@ export default interface TripInterface {
     description: string|null;
     distance: number;
     duration: number;
-    is_public: boolean;
+    isPublic: boolean;
     geojson: [];
     stops: StopInterface[]|[];
     author_id: string;

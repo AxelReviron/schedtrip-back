@@ -2,15 +2,18 @@
 
 import {usePage} from "@inertiajs/vue3";
 import Navbar from "@/components/Navbar.vue";
-import {UserRoundPlus, MapPin} from "lucide-vue-next";
+import { MapPin } from "lucide-vue-next";
 import {useUserStore} from "@/stores/userStore";
 import {storeToRefs} from "pinia";
 import {watch, onMounted} from "vue";
 import TripCard from "@/components/Trip/TripCard.vue";
 import {useTripStore} from "@/stores/tripStore";
 import axios from "axios";
+import HeroBanner from "@/components/HeroBanner.vue";
+import {useI18n} from "vue-i18n";
 
 const page = usePage()
+const {t} = useI18n();
 
 const userStore = useUserStore();
 const tripStore = useTripStore();
@@ -36,25 +39,13 @@ onMounted(async () => {
     <Navbar/>
     <div class="bg-light flex flex-col items-center justify-center">
         <div class="w-8/12 mx-auto my-8">
-            <!--Hero, Button-->
-            <div class="flex flex-row justify-between items-center w-full">
-                <div class="flex flex-col items-start">
-                    <h1 class="text-3xl font-bold text-dark">
-                        {{ $t("trip.title") }}
-                    </h1>
-                    <h2 class="text-lg text-dark">
-                        {{ $t("trip.subtitle") }}
-                    </h2>
-                </div>
-                <button
-                    @click="handleModalVisibility"
-                    class="flex flex-row gap-2 items-center border py-2 bg-warm text-light font-medium rounded-sm px-4 cursor-pointer hover:bg-warmer">
-                    <UserRoundPlus
-                        size="20"
-                    />
-                    {{ $t("trip.new_trip") }}
-                </button>
-            </div>
+            <HeroBanner
+                :title="t('trip.title')"
+                :subtitle="t('trip.subtitle')"
+                :button-text="t('trip.new_trip')"
+                :icon="MapPin"
+                button-link="/trip/create"
+            />
 
             <!--Trip-->
             <div class="bg-white border border-gray-200 mt-8 rounded-sm px-4 py-4 shadow-xs">
@@ -75,7 +66,7 @@ onMounted(async () => {
                         </div>
                     </div>
                 </div>
-                <div v-if="trips && trips.length > 0" class="flex flex-row flex-wrap gap-2">
+                <div v-if="trips && trips.length > 0" class="flex flex-row justify-between flex-wrap">
                     <div v-for="trip in trips" :key="trip.id" class="mt-4">
                         <TripCard :trip="trip"/>
                     </div>

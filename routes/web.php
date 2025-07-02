@@ -30,6 +30,7 @@ Route::get('/privacy-policy', fn() => Inertia::render('PrivacyPolicy'));
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', fn() => Inertia::render('Dashboard'));
     Route::get('/trip', fn() => Inertia::render('Trip'));
+    Route::get('/trip/create', fn() => Inertia::render('CreateTrip'));
     Route::get('/friend', fn() => Inertia::render('Friend'));
     Route::get('/setting', fn() => Inertia::render('Setting'));
 });
