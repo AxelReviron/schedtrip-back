@@ -1,3 +1,5 @@
+import NoteInterface from "@/interfaces/noteInterface";
+
 export default interface StopInterface {
     id: string;
     label: string;
@@ -9,6 +11,7 @@ export default interface StopInterface {
     arrival_date: Date;
     departure_date: Date;
     order_index: number;
+    notes: NoteInterface[];
     created_at: Date;
     updated_at: Date;
 }

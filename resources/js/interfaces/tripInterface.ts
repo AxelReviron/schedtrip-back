@@ -7,9 +7,10 @@ export default interface TripInterface {
     distance: number;
     duration: number;
     isPublic: boolean;
-    geojson: [];
-    stops: StopInterface[]|[];
+    geojson: [];// TODO: typer ça
+    stops: StopInterface[];
     author_id: string;
+    participants: [];// TODO: typer ça
     created_at: Date;
     updated_at: Date;
 }
