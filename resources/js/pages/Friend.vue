@@ -9,6 +9,7 @@ import AddFriendModal from "@/components/Friends/AddFriendModal.vue";
 import {useI18n} from "vue-i18n";
 import {useUserStore} from "@/stores/userStore";
 import {storeToRefs} from "pinia";
+import HeroBanner from "@/components/HeroBanner.vue";
 
 const {t} = useI18n();
 const page = usePage();
@@ -40,25 +41,13 @@ const {
     />
     <div class="bg-light flex flex-col items-center justify-center">
         <div class="w-8/12 mx-auto my-8">
-            <!--Hero, Button-->
-            <div class="flex flex-row justify-between items-center w-full">
-                <div class="flex flex-col items-start">
-                    <h1 class="text-3xl font-bold text-dark">
-                        {{ $t("friend.title") }}
-                    </h1>
-                    <h2 class="text-lg text-dark">
-                        {{ $t("friend.subtitle") }}
-                    </h2>
-                </div>
-                <button
-                    @click="handleModalVisibility"
-                    class="flex flex-row gap-2 items-center border py-2 bg-warm text-light font-medium rounded-sm px-4 cursor-pointer hover:bg-warmer">
-                    <UserRoundPlus
-                        size="20"
-                    />
-                    {{ $t("friend.add_friend") }}
-                </button>
-            </div>
+            <HeroBanner
+                :title="t('friend.title')"
+                :subtitle="t('friend.subtitle')"
+                :button-text="t('friend.add_friend')"
+                :icon="UserRoundPlus"
+                :on-click="handleModalVisibility"
+            />
 
             <!--Friend Request-->
             <div class="bg-white border border-gray-200 mt-8 rounded-sm px-4 py-4 shadow-xs">
@@ -105,7 +94,7 @@ const {
                         </div>
                     </div>
                 </div>
-                <div v-if="friendsUsers && friendsUsers.length > 0" class="flex flex-row flex-wrap gap-2">
+                <div v-if="friendsUsers && friendsUsers.length > 0" class="flex flex-row justify-between flex-wrap gap-2">
                     <div v-for="friend in friendsUsers" :key="friend.id" class="mt-4">
                         <FriendCard :friend="friend"/>
                     </div>

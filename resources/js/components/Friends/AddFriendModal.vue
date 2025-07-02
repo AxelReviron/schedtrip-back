@@ -16,10 +16,8 @@ const formData = ref({
     pseudo: '',
 });
 
-
 const errors = ref({});
 const { notification, showNotification } = useNotification();
-
 
 async function handleSubmit(e: Event) {
     e.preventDefault();
