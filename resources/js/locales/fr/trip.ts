@@ -14,10 +14,40 @@ export default {
         view_trip: "Voir",
         quit_trip: "Quitter",
         delete_trip: "Supprimer",
+        public: "publique",
+        private: "privé",
         form: {
             create_trip: {
+                title: "Créer un voyage",
+                subtitle: "Ajoutez les détails, destinations et participants",
+                save: "Sauvegarder",
                 create: "Créer",
                 cancel: "Annuler",
+                interactive_map: {
+                    title: "Carte interactive",
+                    subtitle: "Cliquez n'importe où pour ajouter une destination",
+                },
+                trip_details: {
+                    title: "Détails du voyage",
+                    label: "Label",
+                    description: "Description",
+                    make_public: "Rendre le voyage publique"
+                },
+                participants: {
+                    title: "Participants",
+                    add_friends: "Ajouter des amis",
+                },
+                destinations: {
+                    title: "Destinations",
+                    add_notes: "Ajouter des notes",
+                    destination_name: "Nom de la destination",
+                    stop: "Arrêt",
+                    stops: "arrêts",
+                    no_destinations: "Pas encore de destinations",
+                    start_destinations: "Commencez à ajouter des arrêts en cliquant sur la carte ou faites une recherche.",
+                    search: "Rechercher",
+                    search_placeholder: "Rechercher une destination"
+                },
                 notification: {
                     success: "Voyage créé avec succès !",
                     error: {
