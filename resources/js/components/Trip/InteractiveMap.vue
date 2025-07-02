@@ -7,23 +7,49 @@ import {useI18n} from "vue-i18n";
 import {onMounted, ref} from "vue";
 import {useTripFormStore} from "@/stores/tripFormStore";
 import {storeToRefs} from "pinia";
+import axios from "axios";
 
 const {t} = useI18n();
 
 const tripFormStore = useTripFormStore();
-const {
-    distance,
-    duration,
-    geojson,
-} = storeToRefs(tripFormStore);
+
+const { trip } = storeToRefs(tripFormStore);
 
 const mapEl = ref<HTMLElement>();
 const interactiveMap = ref(undefined);
 
-function handleMapClick(e: L.LeafletMouseEvent) {
+async function addStopToTrip(coords: L.LatLng) {
+    const response = await axios.post('/api/ors/reverse-search', {
+        lat: coords.lat,
+        lon: coords.lng,
+    });
+
+    const stop = {
+        label: response.data[0].label,
+        description: null,
+        trip_id: null,
+        duration: null,
+        latitude: response.data[0].latitude,
+        longitude: response.data[0].longitude,
+        arrival_date: null,
+        departure_date: null,
+        order_index: null,
+        notes: [
+            {
+                user_id: null,
+                stop_id: null,
+                content: null,
+            }
+        ]
+    };
+    tripFormStore.addStop(stop);
+}
+
+async function handleMapClick(e: L.LeafletMouseEvent) {
     const coords = e.latlng;
     L.marker(coords).addTo(interactiveMap.value);
-    // TODO: mettre a jour les stops dans le store
+    await addStopToTrip(coords);
+    // TODO: Calculer itineraire et gérer affichage
 }
 
 
