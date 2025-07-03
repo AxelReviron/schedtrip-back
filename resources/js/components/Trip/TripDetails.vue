@@ -14,7 +14,7 @@ const { trip } = storeToRefs(tripFormStore);
 </script>
 
 <template>
-    <div class="bg-white border border-gray-200 mt-8 rounded-sm px-4 py-4 shadow-xs w-8/12">
+    <div class="bg-white border border-gray-200 mt-8 rounded-sm px-4 py-4 shadow-xs w-full">
         <TitleIcon
             :title="t('trip.form.create_trip.trip_details.title')"
             :icon="NotepadText"

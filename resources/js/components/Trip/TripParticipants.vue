@@ -8,7 +8,7 @@ const {t} = useI18n();
 </script>
 
 <template>
-    <div class="bg-white border border-gray-200 mt-8 rounded-sm px-4 py-4 shadow-xs w-8/12">
+    <div class="bg-white border border-gray-200 mt-8 rounded-sm px-4 py-4 shadow-xs w-full h-[22.25rem]">
         <TitleIcon
             :title="t('trip.form.create_trip.participants.title')"
             :icon="UsersRound"
