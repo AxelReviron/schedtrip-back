@@ -99,7 +99,7 @@ async function createTrip(e: Event) {
 
     <Navbar/>
     <div class="bg-light flex flex-col items-center justify-center">
-        <div class="w-8/12 mx-auto my-8">
+        <div class="w-10/12 xl:w-8/12 mx-auto my-8">
             <HeroBanner
                 :title="t('trip.form.create_trip.title')"
                 :subtitle="t('trip.form.create_trip.subtitle')"
@@ -108,11 +108,11 @@ async function createTrip(e: Event) {
                 @click="createTrip"
             />
 
-            <div class="flex flex-row justify-center gap-2">
+            <div class="flex flex-col items-center lg:flex-row justify-center lg:gap-2 w-full">
                 <TripDetails />
                 <TripParticipants />
             </div>
-            <div class="flex flex-row justify-center gap-2">
+            <div class="flex flex-col items-center lg:flex-row justify-center lg:gap-2 w-full">
                 <InteractiveMap />
                 <Destinations />
             </div>
