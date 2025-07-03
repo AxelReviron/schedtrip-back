@@ -49,12 +49,19 @@ export default {
                     search_placeholder: "Rechercher une destination",
                     destination_placeholder: "Destination",
                     note_placeholder: "Ajouter une note pour cette destination",
+                    modal: {
+                        title: "Supprimer l'arrêt",
+                        subtitle: "Êtes-vous sûr de vouloir supprimer cet arrêt ?",
+                        remove: "Supprimer"
+                    },
                 },
                 notification: {
                     success: "Voyage créé avec succès !",
                     error: {
                         form: "Veuillez corriger les erreurs dans le formulaire.",
                         server: "Une erreur inattendue s'est produite. Veuillez réessayer.",
+                        reverse_search_error: "Impossible d'obtenir le nom du lieu a partir des coordonnées.",
+                        route_error: "Impossible d'obtenir la route a partir des coordonnées",
                     }
                 }
             },

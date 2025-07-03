@@ -49,12 +49,19 @@ export default {
                     search_placeholder: "Search for a destination",
                     destination_placeholder: "Destination",
                     note_placeholder: "Add a note for this destination",
+                    modal: {
+                        title: "Remove Stop",
+                        subtitle: "Are you sure you want to remove this stop ?",
+                        remove: "Remove"
+                    },
                 },
                 notification: {
                     success: "Trip successfully created !",
                     error: {
                         form: "Please correct the errors in the form.",
                         server: "An unexpected error occurred. Please try again.",
+                        reverse_search_error: "Can't get the name from coordinates",
+                        route_error: "Can't get route from coordinates",
                     }
                 }
             },
