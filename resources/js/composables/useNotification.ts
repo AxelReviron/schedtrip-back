@@ -10,7 +10,7 @@ const notification: NotificationInterface = ref({
     type: 'success' as NotificationType,
 });
 
-function showNotification(message: string, type: NotificationType = 'success') {
+function showNotification(message: string, type: NotificationType = 'success', timeout: number = 2000) {
     notification.value = {
         show: true,
         message,
@@ -19,7 +19,7 @@ function showNotification(message: string, type: NotificationType = 'success') {
 
     setTimeout(() => {
         notification.value.show = false;
-    }, 2000);
+    }, timeout);
 }
 
 export function useNotification() {
