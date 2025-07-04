@@ -15,10 +15,10 @@ const page = usePage()
 const {t} = useI18n();
 
 const props = defineProps<{
-    stopIndex: number
+    stop: StopInterface
 }>();
 
-const { stopIndex } = props;
+const { stop } = props;
 const emit = defineEmits(['toggle-visibility']);
 
 const tripFormStore = useTripFormStore();
@@ -29,7 +29,8 @@ const { notification, showNotification } = useNotification();
 
 async function handleRemoveStop() {
     errors.value = {};
-    tripFormStore.removeStop(stopIndex);
+    tripFormStore.removeStop(stop);
+    tripFormStore.removeGeoJson();
     emit('toggle-visibility');
 }
 </script>
