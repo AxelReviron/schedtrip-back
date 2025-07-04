@@ -10,8 +10,8 @@ class LocationFeatureDTO
      * @param float $longitude
      * @param float $latitude
      * @param string $country
-     * @param string $region
-     * @param string $locality
+     * @param string|null $region
+     * @param string|null $locality
      */
     public function __construct(
         public string $name,
@@ -19,8 +19,8 @@ class LocationFeatureDTO
         public float $longitude,
         public float $latitude,
         public string $country,
-        public string $region,
-        public string $locality,
+        public ?string $region = null,
+        public ?string $locality = null,
     ) {}
 
     public static function fromArray(array $feature): self
@@ -31,8 +31,8 @@ class LocationFeatureDTO
             longitude: $feature['geometry']['coordinates'][0],
             latitude: $feature['geometry']['coordinates'][1],
             country: $feature['properties']['country'],
-            region: $feature['properties']['region'],
-            locality: $feature['properties']['locality'],
+            region: $feature['properties']['region'] ?? null,
+            locality: $feature['properties']['locality'] ?? null,
         );
     }
 }
