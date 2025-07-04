@@ -86,6 +86,8 @@ function displayMarkersFromStore() {
     if (!interactiveMap.value || !trip.value?.stops) return;
 
     clearAllMarkers();
+    const hasCalculatedRoute = ref(false);
+
     trip.value.stops.forEach(stop => {
         const hasNoMarker = ref(false);
         if (stop.markers && stop.markers.length > 0) {
@@ -101,8 +103,10 @@ function displayMarkersFromStore() {
                 marker.setIcon(icon);
                 marker.addTo(interactiveMap.value);
                 displayedMarkers.value.push(marker);
-                if (hasNoMarker.value) {
+                if (hasNoMarker.value && !hasCalculatedRoute.value) {// We need to get only once the route
                     displayRouteFromStore();
+                    hasCalculatedRoute.value = true;
+                    hasNoMarker.value = false;
                 }
             });
         }
