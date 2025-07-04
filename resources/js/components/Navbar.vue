@@ -23,7 +23,7 @@ function toggleMobileMenu(): void {
 }
 
 async function logout(): void {
-    await axios.post('auth/logout', {
+    await axios.post('/auth/logout', {
         _token: page.props.csrf_token,
     });
     window.location.href = '/';
