@@ -60,6 +60,7 @@ export default {
                     error: {
                         form: "Please correct the errors in the form.",
                         server: "An unexpected error occurred. Please try again.",
+                        search_error: "Can't find any places that match your search criteria.",
                         reverse_search_error: "Can't get the name from coordinates",
                         route_error: "Can't get route from coordinates",
                     }

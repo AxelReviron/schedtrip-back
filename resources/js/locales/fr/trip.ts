@@ -61,6 +61,7 @@ export default {
                         form: "Veuillez corriger les erreurs dans le formulaire.",
                         server: "Une erreur inattendue s'est produite. Veuillez réessayer.",
                         reverse_search_error: "Impossible d'obtenir le nom du lieu a partir des coordonnées.",
+                        search_error: "Aucun lieu ne correspond à vos critères de recherche.",
                         route_error: "Impossible d'obtenir la route a partir des coordonnées",
                     }
                 }
