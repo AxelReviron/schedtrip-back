@@ -21,7 +21,7 @@ export const useTripFormStore = defineStore('tripForm', () => {
                 label: null,
                 latitude: null,
                 longitude: null,
-                order_index: 0,
+                order_index: 1,
                 trip_id: null,
                 notes: [
                     {
@@ -46,13 +46,13 @@ export const useTripFormStore = defineStore('tripForm', () => {
             const firstStop = trip.value.stops[0];
             Object.assign(firstStop, {
                 ...stopData,
-                order_index: 0, // Ensure the first stop always has order_index 0
+                order_index: 1, // First stop always has order_index 1
             });
             if (stopData.markers) {
                 firstStop.markers = stopData.markers;
             }
         } else {// For all subsequent stops, push them into the array
-            stopData.order_index = trip.value.stops.length;
+            stopData.order_index = trip.value.stops.length + 1;
             if (!stopData.label) {
                 stopData.label = `Destination ${stopData.order_index + 1}`;
             }
@@ -60,14 +60,45 @@ export const useTripFormStore = defineStore('tripForm', () => {
         }
     }
 
-    function removeStop(stopIndex: number) {
-        if (stopIndex >= 0 && stopIndex < trip.value.stops.length) {
-            trip.value.stops.splice(stopIndex, 1);
-            // Calculate order_index after stop deletion
-            trip.value.stops.forEach((stop, index) => {
-                stop.order_index = index;
-            });
-        }
+    function removeStop(stopToRemove: StopInterface) {
+        console.log(stopToRemove);
+        trip.value.stops = trip.value.stops.filter(stop =>
+            !(stop.latitude === stopToRemove.latitude && stop.longitude === stopToRemove.longitude)
+        );
+
+        // Recalcul des index après suppression
+        trip.value.stops.forEach((stop, index) => {
+            stop.order_index = index + 1;
+        });
+    }
+
+    /**
+     * Updates the order of trip stops based on a reordered list of local stops.
+     * For each stop in the reordered list, this function finds the corresponding original stop
+     * in the store, updates its `order_index` and reorders it.
+     *
+     * @param reorderedLocalStops
+     */
+    function updateStopOrder(reorderedLocalStops: StopInterface[]) {
+        trip.value.stops = reorderedLocalStops.map((reorderedStop: StopInterface, index: number) => {
+            const originalStop = trip.value.stops.find(s =>
+                s.latitude === reorderedStop.latitude &&
+                s.longitude === reorderedStop.longitude &&
+                s.label === reorderedStop.label
+            );
+
+            if (originalStop) {
+                originalStop.order_index = index + 1;
+            } else {
+                console.warn('Stop not found in trip store:', reorderedStop);
+            }
+
+            return originalStop;
+        });
+    }
+
+    function removeGeoJson() {
+        trip.value.geojson = null;
     }
 
     return {
@@ -77,5 +108,7 @@ export const useTripFormStore = defineStore('tripForm', () => {
         // Actions
         addStop,
         removeStop,
+        updateStopOrder,
+        removeGeoJson,
     }
 })
