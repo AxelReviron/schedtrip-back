@@ -72,7 +72,7 @@ watch(
  */
 function updateStopOrder() {
     localStops.value.forEach((stop, index) => {
-        stop.order_index = index + 1;// Update local order_index
+       stop.order_index = index + 1;// Update local order_index
     });
 
     tripFormStore.updateStopOrder(localStops.value);
@@ -174,8 +174,8 @@ function addStopToTrip(searchResult: SearchResultInterface) {
         <div class="w-full border border-1 my-4 rounded-sm text-warm opacity-30"></div>
 
         <div v-if="localStops && localStops.length > 0 && localStops[0].latitude">
-        <VueDraggable
-                v-model="localStops" @end="updateStopOrder"
+        <VueDraggable @update="updateStopOrder"
+                v-model="localStops"
                 handle=".handle" ghostClass="ghost"
             >
                 <RemoveStopModal
