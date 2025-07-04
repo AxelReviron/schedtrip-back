@@ -4,10 +4,8 @@ namespace Controllers;
 
 use App\Models\User;
 use App\Services\OpenRouteService\Dto\LocationFeatureDTO;
-use App\Services\OpenRouteService\Dto\RouteDataDTO;
 use App\Services\OpenRouteService\Services\Directions;
 use App\Services\OpenRouteService\Services\GeoCode;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
 use Tests\TestCase;
@@ -130,13 +128,10 @@ class OpenRouteServiceControllerTest extends TestCase
             ],
         ];
 
-        $expectedDtoCollection = collect($routeResult['features'])
-            ->map(fn ($feature) => RouteDataDTO::fromArray($feature));
-
         $this->directionMock->shouldReceive('route')
             ->once()
             ->with($coordinates)
-            ->andReturn($expectedDtoCollection);
+            ->andReturn($routeResult);
         $this->app->instance(Directions::class, $this->directionMock);
 
         $response = $this->actingAs($this->user)
@@ -145,14 +140,22 @@ class OpenRouteServiceControllerTest extends TestCase
         $response->assertStatus(200);
 
         $response->assertJson([
-            [
-                'distance' => 0.891,
-                'duration' => 189.6,
-                'coordinates' => [
-                    [8.681495, 49.414599],
-                    [8.68147, 49.414599]
+            'features' => [
+                [
+                    'properties' => [
+                        'summary' => [
+                            'distance' => 0.891,
+                            'duration' => 189.6,
+                        ],
+                    ],
+                    'geometry' => [
+                        'coordinates' => [
+                            [8.681495, 49.414599],
+                            [8.68147, 49.414599]
+                        ]
+                    ],
                 ],
-            ]
+            ],
         ]);
     }
 }
