@@ -10,6 +10,7 @@ import {storeToRefs} from "pinia";
 import axios from "axios";
 import {useNotification} from "@/composables/useNotification";
 import Notification from "@/components/Notification.vue";
+import useCreateStopForStore from "@/composables/useCreateStopForStore";
 
 const {t} = useI18n();
 const { notification, showNotification } = useNotification();
@@ -86,39 +87,26 @@ function displayMarkersFromStore() {
 
     clearAllMarkers();
     trip.value.stops.forEach(stop => {
+        const hasNoMarker = ref(false);
         if (stop.markers && stop.markers.length > 0) {
             stop.markers.forEach(marker => {
                 const icon = createCustomMarkerIcon(stop.order_index);
+                if (!marker) {// Stops added from search bar (Destinations) doesn't have marker
+                    marker = L.marker({
+                        lat: stop.latitude,
+                        lng: stop.longitude,
+                    });
+                    hasNoMarker.value = true;
+                }
                 marker.setIcon(icon);
                 marker.addTo(interactiveMap.value);
                 displayedMarkers.value.push(marker);
+                if (hasNoMarker.value) {
+                    displayRouteFromStore();
+                }
             });
         }
     });
-}
-
-function createStopForStore(label: string|null, latitude: number, longitude: number, marker: L.Marker) {
-    return {
-        label: label,
-        description: null,
-        trip_id: null,
-        duration: null,
-        latitude: latitude,
-        longitude: longitude,
-        arrival_date: null,
-        departure_date: null,
-        order_index: null,
-        notes: [
-            {
-                user_id: null,
-                stop_id: null,
-                content: null,
-            }
-        ],
-        markers: [
-            marker
-        ]
-    };
 }
 
 async function addStopToTrip(coords: L.LatLng, marker: L.Marker) {
@@ -128,7 +116,7 @@ async function addStopToTrip(coords: L.LatLng, marker: L.Marker) {
             lon: coords.lng,
         });
 
-        const stop = createStopForStore(response.data.label, response.data.latitude, response.data.longitude, marker);
+        const stop = useCreateStopForStore(response.data.label, response.data.latitude, response.data.longitude, marker);
         tripFormStore.addStop(stop);
     } catch (error: any) {
         const stop = createStopForStore(null, roundCoord(coords.lat), roundCoord(coords.lng), marker);
