@@ -112,7 +112,7 @@ async function createTrip(e: Event) {
                 <TripDetails />
                 <TripParticipants />
             </div>
-            <div class="flex flex-col items-center lg:flex-row justify-center lg:gap-2 w-full">
+            <div class="flex flex-col items-start lg:flex-row justify-center lg:gap-2 w-full">
                 <InteractiveMap />
                 <Destinations />
             </div>
