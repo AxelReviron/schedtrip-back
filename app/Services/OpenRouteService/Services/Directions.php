@@ -21,10 +21,11 @@ class Directions
      * Returns a route between two or more locations for a selected profile and its settings as GeoJSON
      *
      * @param array<float> $coordinates
-     * @return Collection<LocationFeatureDTO>
-     * @throws ConnectionException|RequestException
+     * @param string $profile
+     * @return mixed
+     * @throws RequestException|ConnectionException
      */
-    public function route(array $coordinates, string $profile = 'driving-car'): Collection
+    public function route(array $coordinates, string $profile = 'driving-car'): mixed
     {
         $response = $this->client->post(
             endpoint: "/v2/directions/$profile/geojson",
@@ -36,6 +37,6 @@ class Directions
             acceptHeader: 'application/geo+json'
         );
 
-        return collect($response['features'])->map(fn (array $feature) => RouteDataDTO::fromArray($feature));
+        return $response;
     }
 }
