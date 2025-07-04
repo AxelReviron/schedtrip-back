@@ -20,9 +20,11 @@ const {trip} = storeToRefs(tripFormStore);
 const localStops = ref([]);
 const placeSearched = ref<string>(null);
 const isModalVisible = ref(false);
+const selectedStopToRemove = ref(null);
 
-function handleRemoveStopModalVisibility() {
-    isModalVisible.value = !isModalVisible.value;
+function handleRemoveStopModalVisibility(stop = null) {
+    selectedStopToRemove.value = stop;
+    isModalVisible.value = !!stop;
 }
 
 /**
@@ -36,38 +38,30 @@ function cloneStopData(stop) {
 }
 
 /**
- * Update local stops on store stops changes
+ * Trigger when marker is added to the map.
+ * Initially the store contains a stop with null values.
+ * When the first marker is added, this first stop is updated.
+ * For the others, we check the length of the stops array.
  */
-watch(() => trip.value.stops, (newStops) => {
-    localStops.value = newStops.map(cloneStopData);
-}, { immediate: true, deep: true });
+watch(
+    () => trip.value.stops.map(s => [s.label, s.latitude, s.longitude, s.order_index]),
+    () => {
+        localStops.value = trip.value.stops.map(cloneStopData);
+    },
+    { immediate: true }
+);
 
 /**
- * Update stop order_index and order in array (locally and store)
+ * Update stop order_index after a drag and drop.
+ * VueDraggable component reorder the localStops for us.
  */
 function updateStopOrder() {
     localStops.value.forEach((stop, index) => {
-        stop.order_index = index;// Update local order_index
+        stop.order_index = index + 1;// Update local order_index
     });
 
-    const newOrderedTripStops = [];
-    localStops.value.forEach(reorderedStopData => {
-        // Find original stop in the store
-        const originalStopWithMarker = trip.value.stops.find(s =>
-            s.latitude === reorderedStopData.latitude &&
-            s.longitude === reorderedStopData.longitude &&
-            s.label === reorderedStopData.label
-        );
-
-        newOrderedTripStops.push(originalStopWithMarker);
-    });
-
-    newOrderedTripStops.forEach((stop, index) => {
-        stop.order_index = index;// Update store order_index
-    });
-
-    tripFormStore.trip.stops = newOrderedTripStops;
-    // TODO: Mettre a jour itineraire
+    tripFormStore.updateStopOrder(localStops.value);
+    tripFormStore.removeGeoJson();
 }
 
 // TODO: Recherche et gérer affichage
@@ -95,7 +89,7 @@ async function handlePlaceSearch(e) {
                 :icon="MapPinned"
             />
             <h4 class="text-dark text-[1rem]">
-                {{ trip.stops.length }} {{ $t("trip.form.create_trip.destinations.stops") }}
+                {{ localStops[0].latitude ? trip.stops.length : '0' }} {{ $t("trip.form.create_trip.destinations.stops") }}
             </h4>
         </div>
 
@@ -126,22 +120,25 @@ async function handlePlaceSearch(e) {
                 v-model="localStops" @end="updateStopOrder"
                 handle=".handle" ghostClass="ghost"
             >
+                <RemoveStopModal
+                    :stop="selectedStopToRemove"
+                    v-if="isModalVisible"
+                    @toggle-visibility="handleRemoveStopModalVisibility"
+                />
                 <div
                     v-for="(stop, index) in localStops" :key="`${stop.latitude}-${stop.longitude}`"
                     class="bg-white border border-warm mt-2 rounded-sm px-4 py-4 shadow-xs flex flex-row gap-2"
                 >
-                    <RemoveStopModal
-                        :stop-index="index"
-                        v-if="isModalVisible"
-                        @toggle-visibility="handleRemoveStopModalVisibility"
-                    />
-                    <div class="flex flex-col gap-4">
+                    <div class="flex flex-col items-center gap-4">
                         <Grip
                             class="text-dark hover:text-dark/50 cursor-grab handle"
                         />
+                        <div class="relative w-7 h-7 bg-dark text-cream font-bold border border-warm rounded-full flex items-center justify-center text-[1rem]">
+                            <span class="relative z-20">{{ stop.order_index }}</span>
+                        </div>
                         <Trash2
                             class="text-red-500 hover:text-red-600 cursor-pointer"
-                            @click="handleRemoveStopModalVisibility"
+                            @click="handleRemoveStopModalVisibility(stop)"
                         />
                     </div>
                     <div class="w-full">
