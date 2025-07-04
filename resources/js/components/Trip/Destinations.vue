@@ -10,6 +10,8 @@ import axios from "axios";
 import {useNotification} from "@/composables/useNotification";
 import Notification from "@/components/Notification.vue";
 import RemoveStopModal from "@/components/Trip/RemoveStopModal.vue";
+import SearchResultInterface from "@/interfaces/searchResultInterface";
+import useCreateStopForStore from "@/composables/useCreateStopForStore";
 
 const {t} = useI18n();
 
@@ -21,6 +23,7 @@ const localStops = ref([]);
 const placeSearched = ref<string>(null);
 const isModalVisible = ref(false);
 const selectedStopToRemove = ref(null);
+const searchResults = ref<SearchResultInterface[]|[]>([]);
 
 function handleRemoveStopModalVisibility(stop = null) {
     selectedStopToRemove.value = stop;
@@ -36,6 +39,18 @@ function cloneStopData(stop) {
     const { markers, ...rest } = stop;
     return { ...rest };
 }
+
+/**
+ * Trigger when user start a new search.
+ */
+watch(
+    () => placeSearched.value,
+    () => {
+        if (searchResults.value && searchResults.value.length > 0) {
+            searchResults.value = [];
+        }
+    }
+);
 
 /**
  * Trigger when marker is added to the map.
@@ -64,11 +79,30 @@ function updateStopOrder() {
     tripFormStore.removeGeoJson();
 }
 
-// TODO: Recherche et gérer affichage
+function filterSearchResult(results: SearchResultInterface): SearchResultInterface {
+    const uniqueResults = [];
+    const seenCombinations = new Set();
+
+    results.forEach((result) => {
+        const combination = `${result.locality}-${result.region}-${result.country}`;
+
+        if (!seenCombinations.has(combination)) {
+            uniqueResults.push(result);
+            seenCombinations.add(combination);
+        }
+    });
+
+    return uniqueResults;
+}
+
 async function handlePlaceSearch(e) {
     e.preventDefault();
     try {
         const response = await axios.get(`/api/ors/search/${placeSearched.value}`);
+        searchResults.value = filterSearchResult(response.data);
+        if (!searchResults.value.length > 0) {
+            showNotification(t("trip.form.create_trip.notification.error.search_error"), 'error', 5000);
+        }
     } catch (error: any) {
         if (error.response && error.response.status === 422) {// Validation errors
             errors.value = error.response.data.errors;
@@ -79,10 +113,16 @@ async function handlePlaceSearch(e) {
     }
 }
 
+function addStopToTrip(searchResult: SearchResultInterface) {
+    const label = `${searchResult.locality ? searchResult.locality : searchResult.name},  ${searchResult.region},  ${searchResult.country}`;
+    const stop = useCreateStopForStore(label, searchResult.latitude, searchResult.longitude);
+    tripFormStore.addStop(stop);
+}
+
 </script>
 
 <template>
-    <div class="bg-white border border-gray-200 mt-8 rounded-sm px-4 py-4 shadow-xs w-full lg:w-4/12 lg:h-[79vh]">
+    <div class="bg-white border border-gray-200 mt-8 rounded-sm px-4 py-4 shadow-xs w-full lg:w-4/12 ">
         <div class="flex flex-row justify-between items-center">
             <TitleIcon
                 :title="t('trip.form.create_trip.destinations.title')"
@@ -112,6 +152,24 @@ async function handlePlaceSearch(e) {
                 />
             </button>
         </form>
+
+        <transition name="max-height-expand">
+            <div v-if="searchResults && searchResults.length > 0"
+                 class="bg-white border border-warm mt-2 rounded-sm shadow-xs flex flex-col h-40 overflow-scroll"
+            >
+                <div v-for="searchResult in searchResults" :key="`${searchResult.latitude}-${searchResult.longitude}`"
+                     class="cursor-pointer hover:bg-warm hover:text-light px-2 py-2"
+                     @click="addStopToTrip(searchResult)"
+                >
+                    <p v-if="(searchResult.locality || searchResult.name) && searchResult.region && searchResult.country">
+                        {{ searchResult.locality ? searchResult.locality : searchResult.name }}, {{ searchResult.region }}, {{ searchResult.country }}
+                    </p>
+                    <p v-else-if="searchResult.name">
+                        {{ searchResult.name }}
+                    </p>
+                </div>
+            </div>
+        </transition>
 
         <div class="w-full border border-1 my-4 rounded-sm text-warm opacity-30"></div>
 
@@ -191,14 +249,38 @@ async function handlePlaceSearch(e) {
 </template>
 
 <style scoped>
-.ghost {
+.ghost {/* DnD background*/
     opacity: 0.5;
     background: #FAEDCD;
 }
 input[type="search"]::-webkit-search-cancel-button {
+    /* Hide default apparence */
     -webkit-appearance: none;
     appearance: none;
-    display: none;
+
+    width: 20px;
+    height: 20px;
+
+    cursor: pointer;
+
+    /* Replace with SVG and another color */
+    background: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23D4A574"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>') no-repeat center center;
+    background-size: contain;
+}
+input[type="search"]::-webkit-search-cancel-button:hover {
+    background: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%238B4513"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>') no-repeat center center;
+}
+/* Search result animations */
+.max-height-expand-enter-active, .max-height-expand-leave-active {
+    transition: max-height 0.5s ease-out, opacity 0.3s ease;
+}
+.max-height-expand-enter-from, .max-height-expand-leave-to {
+    max-height: 0;
+    opacity: 0;
+}
+.max-height-expand-enter-to, .max-height-expand-leave-from {
+    max-height: 220px; /* Ou une valeur plus grande, par exemple 500px, selon votre contenu max */
+    opacity: 1;
 }
 
 </style>
