@@ -4,7 +4,7 @@ import {Map} from "lucide-vue-next";
 import "leaflet/dist/leaflet.css"
 import * as L from 'leaflet';
 import {useI18n} from "vue-i18n";
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {useTripFormStore} from "@/stores/tripFormStore";
 import {storeToRefs} from "pinia";
 import axios from "axios";
@@ -20,6 +20,7 @@ const { trip } = storeToRefs(tripFormStore);
 const mapEl = ref<HTMLElement>();
 const interactiveMap = ref(undefined);
 const displayedMarkers = ref<L.Marker[]>([]);
+const displayedRoute = ref<L.geoJSON>(null);
 
 function roundCoord(value: number): number {
     return Number(value.toFixed(6));
@@ -34,6 +35,52 @@ function clearAllMarkers() {
     displayedMarkers.value = [];
 }
 
+function clearRoute() {
+    if (interactiveMap.value && displayedRoute.value && interactiveMap.value.hasLayer(displayedRoute.value)) {
+        interactiveMap.value.removeLayer(displayedRoute.value);
+    }
+    displayedRoute.value = null;
+}
+
+function displayRouteFromStore() {
+    if (!interactiveMap.value || !trip.value?.stops) return;
+
+    clearRoute();
+    if (trip.value.geojson) {
+
+        const storedGeoJsonLayer = L.geoJSON(trip.value.geojson, {style: geoStyler});
+        displayedRoute.value = storedGeoJsonLayer;
+        storedGeoJsonLayer.addTo(interactiveMap.value);
+    }
+
+    if (trip.value.stops && trip.value.stops.length >= 2) {
+        getRoute();
+    }
+}
+
+function geoStyler() {
+    return {
+        color: '#8B4513',
+        weight: 4,
+        opacity: 0.8,
+    };
+}
+
+function createCustomMarkerIcon(orderIndex: number | null): L.DivIcon {
+    return L.divIcon({
+        className: '', // On met tout dans `html` directement
+        html: `
+            <div class="relative w-8 h-8 bg-dark text-cream font-bold border border-warm rounded-full text-center drop-shadow-lg flex items-center justify-center text-[1rem]">
+                <span class="relative z-20">${orderIndex ?? ''}</span>
+                <div class="w-6 h-6 bg-dark absolute left-[0.2rem] top-[1.55rem] z-10" style="clip-path: polygon(50% 100%, 0% 0%, 100% 0%);"></div>
+            </div>
+        `,
+        iconSize: [31, 31],
+        iconAnchor: [15, 31],
+        popupAnchor: [0, -30]
+    });
+}
+
 function displayMarkersFromStore() {
     if (!interactiveMap.value || !trip.value?.stops) return;
 
@@ -41,11 +88,37 @@ function displayMarkersFromStore() {
     trip.value.stops.forEach(stop => {
         if (stop.markers && stop.markers.length > 0) {
             stop.markers.forEach(marker => {
+                const icon = createCustomMarkerIcon(stop.order_index);
+                marker.setIcon(icon);
                 marker.addTo(interactiveMap.value);
                 displayedMarkers.value.push(marker);
             });
         }
     });
+}
+
+function createStopForStore(label: string|null, latitude: number, longitude: number, marker: L.Marker) {
+    return {
+        label: label,
+        description: null,
+        trip_id: null,
+        duration: null,
+        latitude: latitude,
+        longitude: longitude,
+        arrival_date: null,
+        departure_date: null,
+        order_index: null,
+        notes: [
+            {
+                user_id: null,
+                stop_id: null,
+                content: null,
+            }
+        ],
+        markers: [
+            marker
+        ]
+    };
 }
 
 async function addStopToTrip(coords: L.LatLng, marker: L.Marker) {
@@ -55,50 +128,11 @@ async function addStopToTrip(coords: L.LatLng, marker: L.Marker) {
             lon: coords.lng,
         });
 
-        const stop = {
-            label: response.data.label,
-            description: null,
-            trip_id: null,
-            duration: null,
-            latitude: response.data.latitude,
-            longitude: response.data.longitude,
-            arrival_date: null,
-            departure_date: null,
-            order_index: null,
-            notes: [
-                {
-                    user_id: null,
-                    stop_id: null,
-                    content: null,
-                }
-            ],
-            markers: [
-                marker
-            ]
-        };
+        const stop = createStopForStore(response.data.label, response.data.latitude, response.data.longitude, marker);
         tripFormStore.addStop(stop);
     } catch (error: any) {
-        const stop = {
-            label: null,
-            description: null,
-            trip_id: null,
-            duration: null,
-            latitude: roundCoord(coords.lat),
-            longitude: roundCoord(coords.lng),
-            arrival_date: null,
-            departure_date: null,
-            order_index: null,
-            notes: [
-                {
-                    user_id: null,
-                    stop_id: null,
-                    content: null,
-                }
-            ],
-            markers: [
-                marker
-            ]
-        };
+        const stop = createStopForStore(null, roundCoord(coords.lat), roundCoord(coords.lng), marker);
+
         tripFormStore.addStop(stop);
         if (error.response && error.response.status === 422) {// Validation errors
             errors.value = error.response.data.errors;
@@ -120,10 +154,14 @@ async function getRoute() {
         const response = await axios.post('/api/ors/route', {
             coordinates: StopCoordinates
         });
-        console.log(response.data);
+
+        trip.value.geojson = response.data;// TODO: Add method tripFormStore
+        clearRoute();
+
+        const newRouteLayer = L.geoJSON(trip.value.geojson, {style: geoStyler});
+        newRouteLayer.addTo(interactiveMap.value);
+        displayedRoute.value = newRouteLayer;
     } catch (error:any) {
-        console.error("Error calculating route:", error);
-        // Handle error, e.g., show a notification
         showNotification(t("trip.form.create_trip.notification.error.route_error"), 'error', 5000);
     }
 }
@@ -133,7 +171,6 @@ async function handleMapClick(e: L.LeafletMouseEvent) {
     const marker = L.marker(coords);
 
     await addStopToTrip(coords, marker);
-    // TODO: Calculer itineraire et gérer affichage
     await getRoute();
 }
 
@@ -151,11 +188,30 @@ function initMap() {
     displayMarkersFromStore();
 }
 
-watchEffect(() => {
-    if (trip.value?.stops) {
+/**
+ * Trigger when marker is added to the map.
+ * Initially the store contains a stop with null values.
+ * When the first marker is added, this first stop is updated.
+ * For the others, we check the length of the stops array.
+ */
+watch(
+    () => [trip.value.stops[0]?.latitude, trip.value.stops.length],
+    () => {
         displayMarkersFromStore();
     }
-});
+);
+
+/**
+ * Trigger when the geojson value of a trip is removed from store.
+ */
+watch(
+    () => trip.value.geojson,
+    () => {
+        if (!trip.value.geojson) {
+            displayRouteFromStore();
+        }
+    }
+);
 
 onMounted(() => {
     initMap();
