@@ -19,10 +19,8 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ApiResource(
     operations: [
         new Get(),
-    ],
-    normalizationContext: ['groups' => ['user:read']]
+    ]
 )]
-#[Groups(['user:read'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
