@@ -8,7 +8,7 @@ import {storeToRefs} from "pinia";
 import {useUserStore} from "@/stores/userStore";
 import {useNotification} from "@/composables/useNotification";
 import {useTripFormStore} from "@/stores/tripFormStore";
-import ParticipantCard from "@/components/Friends/ParticipantCard.vue";
+import ParticipantCard from "@/components/Trip/ParticipantCard.vue";
 import AddParticipantModal from "@/components/Trip/AddParticipantModal.vue";
 
 const {t} = useI18n();
