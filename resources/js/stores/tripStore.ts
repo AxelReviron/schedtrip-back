@@ -9,8 +9,8 @@ export const useTripStore = defineStore('trip', () => {
     const isLoading: boolean = ref(false);
     const page = usePage();
 
-    async function setTrips(tripData: TripInterface) {
-        trips.value.push(tripData);
+    async function setTrips(tripData: TripInterface[]) {
+        trips.value = tripData;
     }
 
     function addTrip(): void {
