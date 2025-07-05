@@ -143,7 +143,7 @@ async function handleSubmit(e: Event) {
                 </div>
             </div>
 
-            <div class="flex flex-row gap-2 mt-4 self-start">
+            <div class="flex flex-row gap-2 mt-4 self-start w-70 md:w-100">
                 <input
                     type="checkbox"
                     v-model="formData.consent"
