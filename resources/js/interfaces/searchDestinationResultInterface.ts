@@ -1,4 +1,4 @@
-export default interface SearchResultInterface {
+export default interface SearchDestinationResultInterface {
     country: string;
     label: string;
     latitude: number;
