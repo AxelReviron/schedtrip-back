@@ -11,6 +11,7 @@ import {useTripStore} from "@/stores/tripStore";
 import axios from "axios";
 import HeroBanner from "@/components/HeroBanner.vue";
 import {useI18n} from "vue-i18n";
+import TripInterface from "@/interfaces/tripInterface";
 
 const page = usePage()
 const {t} = useI18n();
@@ -23,11 +24,14 @@ const { trips } = storeToRefs(tripStore);
 
 onMounted(async () => {
     const stopWatcher = watch(user, async (newUser) => {
+        let tempTrip: TripInterface[]|[] = [];
+
         if (newUser && newUser.trips) {
             for (const trip of newUser.trips) {
                 const response = await axios.get(trip);
-                await tripStore.setTrips(response.data);
+                tempTrip.push(response.data);
             }
+            await tripStore.setTrips(tempTrip);
             stopWatcher();
         }
     });
