@@ -4,10 +4,13 @@ import {Head, usePage} from "@inertiajs/vue3";
 import {computed, onMounted, ref, nextTick} from "vue";
 import axios from "axios";
 import {useUserStore} from "@/stores/userStore";
+import {useI18n} from "vue-i18n";
 
+const {t} = useI18n();
 const page = usePage()
 const currentRoute = computed(() => page.props.ziggy.location);
 const currentPage = currentRoute.value.split('/').pop() || 'home'
+
 const isUserMenuOpen = ref(false)
 const isMobileMenuOpen = ref(false)
 
@@ -78,7 +81,7 @@ onMounted(async () => {
                                     stroke-width="1.5"
                                     size="18"
                                 />
-                                Settings
+                                {{ $t("navbar.settings") }}
                             </a>
                         </li>
                         <li>
@@ -87,7 +90,7 @@ onMounted(async () => {
                                     stroke-width="1.5"
                                     size="18"
                                 />
-                                Sign out
+                                {{ $t("navbar.sign_out") }}
                             </a>
                         </li>
                     </ul>
@@ -114,7 +117,7 @@ onMounted(async () => {
                                 stroke-width="1.5"
                                 size="18"
                             />
-                            Discover
+                            {{ $t("navbar.discover") }}
                         </a>
                     </li>
                     <li>
@@ -130,7 +133,7 @@ onMounted(async () => {
                                 stroke-width="1.5"
                                 size="18"
                             />
-                            My Trips
+                            {{ $t("navbar.trips") }}
                         </a>
                     </li>
                     <li>
@@ -146,7 +149,7 @@ onMounted(async () => {
                                 stroke-width="1.5"
                                 size="18"
                             />
-                            Friends
+                            {{ $t("navbar.friends") }}
                         </a>
                     </li>
                 </ul>
