@@ -36,6 +36,17 @@ export default {
                 participants: {
                     title: "Participants",
                     add_friends: "Ajouter des amis",
+                    search_placeholder: "Rechercher un ami à partir de son pseudo",
+                    no_participant_title: "Vous êtes le seul participant",
+                    no_participant_subtitle: "Commencez à ajouter des participants avec la barre de recherche",
+                    modal: {
+                        title: "Ajouter un participant",
+                        subtitle: "Les spectateurs peuvent voir votre voyage, tandis que les éditeurs peuvent le modifier entièrement (mais ils ne peuvent pas le supprimer).",
+                        permission_label: "Permission",
+                        viewer: "Spectateur",
+                        editor: "Éditeur",
+                        add: "Ajouter",
+                    },
                 },
                 destinations: {
                     title: "Destinations",
@@ -60,9 +71,11 @@ export default {
                     error: {
                         form: "Veuillez corriger les erreurs dans le formulaire.",
                         server: "Une erreur inattendue s'est produite. Veuillez réessayer.",
+                        search_place_error: "Aucun lieu ne correspond à vos critères de recherche.",
                         reverse_search_error: "Impossible d'obtenir le nom du lieu a partir des coordonnées.",
-                        search_error: "Aucun lieu ne correspond à vos critères de recherche.",
                         route_error: "Impossible d'obtenir la route a partir des coordonnées",
+                        search_friend_error: "Impossible de trouver un ami avec ce pseudo.",
+                        no_friends: "Vous n'avez pas d'amis, commencer par en ajouter."
                     }
                 }
             },

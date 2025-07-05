@@ -36,6 +36,17 @@ export default {
                 participants: {
                     title: "Participants",
                     add_friends: "Add friends",
+                    search_placeholder: "Search a friend by it's pseudo",
+                    no_participant_title: "You are the only participant",
+                    no_participant_subtitle: "Start adding participants with the search bar.",
+                    modal: {
+                        title: "Add Participant",
+                        subtitle: "Viewers can see your trip, while editors can fully modify it (but they can't delete it).",
+                        permission_label: "Permission",
+                        viewer: "Viewer",
+                        editor: "Editor",
+                        add: "Add"
+                    },
                 },
                 destinations: {
                     title: "Destinations",
@@ -60,9 +71,11 @@ export default {
                     error: {
                         form: "Please correct the errors in the form.",
                         server: "An unexpected error occurred. Please try again.",
-                        search_error: "Can't find any places that match your search criteria.",
+                        search_place_error: "Can't find any places that match your search criteria.",
                         reverse_search_error: "Can't get the name from coordinates",
                         route_error: "Can't get route from coordinates",
+                        search_friend_error: "Can't find any friend with this pseudo",
+                        no_friends: "You don't have any friends, add one first."
                     }
                 }
             },
