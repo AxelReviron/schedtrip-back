@@ -10,7 +10,7 @@ import axios from "axios";
 import {useNotification} from "@/composables/useNotification";
 import Notification from "@/components/Notification.vue";
 import RemoveStopModal from "@/components/Trip/RemoveStopModal.vue";
-import SearchResultInterface from "@/interfaces/searchResultInterface";
+import SearchDestinationResultInterface from "@/interfaces/searchDestinationResultInterface";
 import useCreateStopForStore from "@/composables/useCreateStopForStore";
 
 const {t} = useI18n();
@@ -23,7 +23,7 @@ const localStops = ref([]);
 const placeSearched = ref<string>(null);
 const isModalVisible = ref(false);
 const selectedStopToRemove = ref(null);
-const searchResults = ref<SearchResultInterface[]|[]>([]);
+const searchResults = ref<SearchDestinationResultInterface[]|[]>([]);
 
 function handleRemoveStopModalVisibility(stop = null) {
     selectedStopToRemove.value = stop;
@@ -79,7 +79,7 @@ function updateStopOrder() {
     tripFormStore.removeGeoJson();
 }
 
-function filterSearchResult(results: SearchResultInterface): SearchResultInterface {
+function filterSearchResult(results: SearchDestinationResultInterface): SearchDestinationResultInterface {
     const uniqueResults = [];
     const seenCombinations = new Set();
 
@@ -101,7 +101,7 @@ async function handlePlaceSearch(e) {
         const response = await axios.get(`/api/ors/search/${placeSearched.value}`);
         searchResults.value = filterSearchResult(response.data);
         if (!searchResults.value.length > 0) {
-            showNotification(t("trip.form.create_trip.notification.error.search_error"), 'error', 5000);
+            showNotification(t("trip.form.create_trip.notification.error.search_place_error"), 'error', 5000);
         }
     } catch (error: any) {
         if (error.response && error.response.status === 422) {// Validation errors
@@ -113,7 +113,7 @@ async function handlePlaceSearch(e) {
     }
 }
 
-function addStopToTrip(searchResult: SearchResultInterface) {
+function addStopToTrip(searchResult: SearchDestinationResultInterface) {
     const label = `${searchResult.locality ? searchResult.locality : searchResult.name},  ${searchResult.region},  ${searchResult.country}`;
     const stop = useCreateStopForStore(label, searchResult.latitude, searchResult.longitude);
     tripFormStore.addStop(stop);
@@ -122,7 +122,7 @@ function addStopToTrip(searchResult: SearchResultInterface) {
 </script>
 
 <template>
-    <div class="bg-white border border-gray-200 mt-8 rounded-sm px-4 py-4 shadow-xs w-full lg:w-4/12 ">
+    <div class="bg-white border border-gray-200 mt-8 rounded-sm px-4 py-4 shadow-xs w-full lg:w-4/12 min-h-[79vh]">
         <div class="flex flex-row justify-between items-center">
             <TitleIcon
                 :title="t('trip.form.create_trip.destinations.title')"
