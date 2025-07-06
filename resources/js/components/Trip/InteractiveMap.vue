@@ -11,6 +11,7 @@ import axios from "axios";
 import {useNotification} from "@/composables/useNotification";
 import Notification from "@/components/Notification.vue";
 import useCreateStopForStore from "@/composables/useCreateStopForStore";
+import {usePage} from "@inertiajs/vue3";
 
 const {t} = useI18n();
 const { notification, showNotification } = useNotification();
@@ -48,7 +49,6 @@ function displayRouteFromStore() {
 
     clearRoute();
     if (trip.value.geojson) {
-
         const storedGeoJsonLayer = L.geoJSON(trip.value.geojson, {style: geoStyler});
         displayedRoute.value = storedGeoJsonLayer;
         storedGeoJsonLayer.addTo(interactiveMap.value);
@@ -147,7 +147,7 @@ async function getRoute() {
             coordinates: StopCoordinates
         });
 
-        trip.value.geojson = response.data;// TODO: Add method tripFormStore
+        tripFormStore.addGeoJson(response.data);
         clearRoute();
 
         const newRouteLayer = L.geoJSON(trip.value.geojson, {style: geoStyler});
@@ -166,6 +166,20 @@ async function handleMapClick(e: L.LeafletMouseEvent) {
     await getRoute();
 }
 
+function getTileLayerByLocale(locale) {
+    const tileLayers = {
+        'fr': {
+            url: 'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png',
+            attribution: '© OpenStreetMap France'
+        },
+        'en': {
+            url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            attribution: '© OpenStreetMap contributors'
+        }
+    };
+
+    return tileLayers[locale] || tileLayers['en'];
+}
 
 function initMap() {
     interactiveMap.value = L.map(mapEl.value!, {
@@ -174,7 +188,13 @@ function initMap() {
         minZoom: 2,
         center: [45.7580032,4.7939244],
     })
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(interactiveMap.value);
+
+    const locale = usePage().props.locale || 'en';
+    const tileConfig = getTileLayerByLocale(locale);
+
+    L.tileLayer(tileConfig.url, {
+        attribution: tileConfig.attribution
+    }).addTo(interactiveMap.value);
 
     interactiveMap.value.on('click', handleMapClick);
     displayMarkersFromStore();
@@ -208,6 +228,8 @@ watch(
 onMounted(() => {
     initMap();
 });
+
+// TODO : Centrer la carte sur l'itinéraire
 </script>
 
 <template>
