@@ -18,7 +18,7 @@ class LocationFeatureDTO
         public string $label,
         public float $longitude,
         public float $latitude,
-        public string $country,
+        public ?string $country = null,
         public ?string $region = null,
         public ?string $locality = null,
     ) {}
@@ -30,7 +30,7 @@ class LocationFeatureDTO
             label: $feature['properties']['label'],
             longitude: $feature['geometry']['coordinates'][0],
             latitude: $feature['geometry']['coordinates'][1],
-            country: $feature['properties']['country'],
+            country: $feature['properties']['country'] ?? null,
             region: $feature['properties']['region'] ?? null,
             locality: $feature['properties']['locality'] ?? null,
         );
