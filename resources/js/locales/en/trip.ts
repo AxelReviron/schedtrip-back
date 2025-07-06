@@ -1,6 +1,6 @@
 export default {
     trip: {
-        title: "Trip",
+        title: "Trips",
         subtitle: "Plan and organize your trips",
         new_trip: "New Trip",
         no_trip: "No trips yet",
@@ -16,6 +16,14 @@ export default {
         delete_trip: "Delete",
         public: "public",
         private: "private",
+        edit_trip: {
+            title: "Edit trip",
+            subtitle: "Update trip details, destinations and participants",
+            edit_btn: "Edit",
+            notification: {
+                success: "Trip successfully updated !",
+            }
+        },
         form: {
             create_trip: {
                 title: "Create new trip",
@@ -75,7 +83,10 @@ export default {
                         reverse_search_error: "Can't get the name from coordinates",
                         route_error: "Can't get route from coordinates",
                         search_friend_error: "Can't find any friend with this pseudo",
-                        no_friends: "You don't have any friends, add one first."
+                        no_friends: "You don't have any friends, add one first.",
+                        no_trip_label: "A trip must have a label",
+                        no_stop_label: "A stop must have a label",
+                        no_stop_dates: "A stop must have arrival and departure dates",
                     }
                 }
             },

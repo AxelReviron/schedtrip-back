@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { X } from "lucide-vue-next";
 import UserInterface from "@/interfaces/userInterface";
-import {onMounted, ref} from "vue";
+import {ref, watch} from "vue";
 import {storeToRefs} from "pinia";
 import {useUserStore} from "@/stores/userStore";
 
@@ -25,11 +25,17 @@ function handlePermissionChange() {
     emit('permission-changed', friendId, localPermission.value);
 }
 
-onMounted(() => {
-    friend.value = friendsUsers.value.find((f) => {
-        return f.id === friendId;
-    });
-});
+watch(
+    () => friendsUsers.value,
+    () => {
+        if (friendsUsers.value) {
+            friend.value = friendsUsers.value.find((f) => {
+                return f.id === friendId;
+            });
+        }
+    },
+    { deep: true, immediate: true }
+);
 
 function handleRemoveOrBlockModalVisibility() {//TODO
     isModalVisible.value = !isModalVisible.value;

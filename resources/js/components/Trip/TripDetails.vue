@@ -5,6 +5,12 @@ import {storeToRefs} from "pinia";
 import {useTripFormStore} from "@/stores/tripFormStore";
 import TitleIcon from "@/components/TitleIcon.vue";
 
+const props = defineProps<{
+    errors: object
+}>();
+
+const { errors } = props;
+
 const {t} = useI18n();
 
 const tripFormStore = useTripFormStore();
@@ -31,7 +37,9 @@ const { trip } = storeToRefs(tripFormStore);
                     name="label" required
                     id="label"
                 >
-<!--                <div v-if="errors.label" class="text-red-500 text-sm mt-1">{{ errors.label[0] }}</div>-->
+                <div v-if="props.errors && props.errors.trip_details" class="text-red-500 text-sm mt-1">
+                    {{ props.errors.trip_details }}
+                </div>
             </div>
             <div class="flex flex-col mt-2 w-full">
                 <label for="description" class="p-1 font-medium text-lg">{{ $t("trip.form.create_trip.trip_details.description") }}</label>
@@ -44,7 +52,6 @@ const { trip } = storeToRefs(tripFormStore);
                     id="description"
                 >
                 </textarea>
-                <!--                <div v-if="errors.label" class="text-red-500 text-sm mt-1">{{ errors.label[0] }}</div>-->
             </div>
             <div class="flex flex-row gap-2 mt-2 w-full">
                 <input

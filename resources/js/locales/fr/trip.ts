@@ -1,6 +1,6 @@
 export default {
     trip: {
-        title: "Voyage",
+        title: "Voyages",
         subtitle: "Planifiez et organisez vos voyages.",
         new_trip: "Nouveau Voyage",
         no_trip: "Pas encore de voyage",
@@ -12,10 +12,19 @@ export default {
         participants: "Participants",
         date: "Date",
         view_trip: "Voir",
+        edit_trip: "Editer",
         quit_trip: "Quitter",
         delete_trip: "Supprimer",
         public: "publique",
         private: "privé",
+        edit_trip: {
+            title: "Modifier un voyage",
+            subtitle: "Modifiez les détails, destinations et participants",
+            edit_btn: "Éditer",
+            notification: {
+                success: "Voyage mis a jour correctement !",
+            }
+        },
         form: {
             create_trip: {
                 title: "Créer un voyage",
@@ -75,7 +84,10 @@ export default {
                         reverse_search_error: "Impossible d'obtenir le nom du lieu a partir des coordonnées.",
                         route_error: "Impossible d'obtenir la route a partir des coordonnées",
                         search_friend_error: "Impossible de trouver un ami avec ce pseudo.",
-                        no_friends: "Vous n'avez pas d'amis, commencer par en ajouter."
+                        no_friends: "Vous n'avez pas d'amis, commencer par en ajouter.",
+                        no_trip_label: "Un voyage doit avoir un label",
+                        no_stop_label: "A arrêt doit avoir un label",
+                        no_stop_dates: "Un arrêt doit avoir des dates d'arrivée et de départ",
                     }
                 }
             },

@@ -4,6 +4,7 @@ import {usePage} from "@inertiajs/vue3";
 import StopInterface from "@/interfaces/stopInterface";
 import TripInterface from "@/interfaces/tripInterface";
 import UserInterface from "@/interfaces/userInterface";
+import axios from "axios";
 
 export const useTripFormStore = defineStore('tripForm', () => {
     const trip = ref<TripInterface>({// TODO: Use TripFormInterface
@@ -139,11 +140,42 @@ export const useTripFormStore = defineStore('tripForm', () => {
         })
     }
 
+    function updateStopLabel(newLabel: string, stopConcern: StopInterface) {
+        trip.value.stops.forEach((stop: StopInterface) => {
+            if (stop.longitude === stopConcern.longitude && stop.latitude === stopConcern.latitude) {
+                stop.label = newLabel;
+            }
+        })
+    }
+
+    async function setTrip(newTrip: TripInterface) {
+        newTrip.geojson = JSON.parse(newTrip.geojson);
+
+        for (const stop of newTrip.stops) {
+            stop.markers = [];
+            stop.notes = [];
+            const response = await axios.get(`/api/stops/${stop.id}`);
+            stop.notes.push(response.data);
+        }
+
+        const participants = [];
+        newTrip.participants.forEach((participant: UserInterface) => {
+            participants.push({
+                user_id: participant.id,
+                permission: participant.pivot.permission
+            })
+        })
+        newTrip.participants = participants;
+
+        trip.value = newTrip;
+    }
+
     return {
         // States
         trip,
 
         // Actions
+        setTrip,
         setAuthor,
         addStop,
         removeStop,
@@ -153,5 +185,6 @@ export const useTripFormStore = defineStore('tripForm', () => {
         addParticipant,
         updateParticipantPermission,
         updateStopDates,
+        updateStopLabel,
     }
 })

@@ -3,7 +3,7 @@ import Navbar from "@/components/Navbar.vue";
 import { Save } from "lucide-vue-next";
 import HeroBanner from "@/components/HeroBanner.vue";
 import {useI18n} from "vue-i18n";
-import {ref, watch} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {storeToRefs} from "pinia";
 import {useUserStore} from "@/stores/userStore";
 import InteractiveMap from "@/components/Trip/InteractiveMap.vue";
@@ -31,12 +31,17 @@ const errors = ref({
 });
 const { notification, showNotification } = useNotification();
 
+onMounted(async () => {
+    await tripFormStore.setTrip(page.props.trip);
+    console.log(trip.value);
+})
+
 function isTripDetailsValid(): void {
     if (!trip.value.label) {
         showNotification(t("trip.form.create_trip.notification.error.form"), 'error');
         errors.value.trip_details = t("trip.form.create_trip.notification.error.no_trip_label");
     }
-}
+}// TODO: Composable
 
 function isTripDestinationsValid(): void {
     trip.value.stops.forEach((stop, index) => {
@@ -58,10 +63,12 @@ function isTripDestinationsValid(): void {
                 ...destinationErrors
             });
         }
+        console.log(errors.value)
     })
-}
+}// TODO: Composable
 
-async function createTrip(e: Event) {
+//TODO: Update
+async function updateTrip(e: Event) {
     e.preventDefault();
     errors.value = {
         trip_details: null,
@@ -74,7 +81,7 @@ async function createTrip(e: Event) {
     if (errors.value.trip_details !== null || errors.value.trip_destinations.length > 0) return
 
     try {
-        const tripResponse = await axios.post('/api/trips', {//TODO
+        const tripResponse = await axios.patch(`/api/trips/${trip.value.id}`, {//TODO
             _token: page.props.csrf_token,
             label: trip.value.label,
             description: trip.value.description,
@@ -82,17 +89,16 @@ async function createTrip(e: Event) {
             distance: trip.value.distance,
             duration: trip.value.duration,
             geojson: JSON.stringify(trip.value.geojson),
-            author: trip.value.author,
         }, {
             headers: {
-                'Content-Type': 'application/ld+json'
+                'Content-Type': 'application/merge-patch+json'
             }
         });
 
         const tripId = tripResponse.data.id;
 
         for (const stop of trip.value.stops) {
-            await axios.post('/api/stops', {
+            await axios.patch(`/api/stops/${stop.id}`, {
                 _token: page.props.csrf_token,
                 label: stop.label,
                 description: stop.description,
@@ -104,20 +110,20 @@ async function createTrip(e: Event) {
                 trip: `/api/trips/${tripId}`
             }, {
                 headers: {
-                    'Content-Type': 'application/ld+json'
+                    'Content-Type': 'application/merge-patch+json'
                 }
             });
         }
 
         if (trip.value.participants && trip.value.participants.length > 0) {
-            await axios.post(`/api/trips/${tripId}/participants`, {
+            await axios.patch(`/api/trips/${tripId}/participants`, {
                 _token: page.props.csrf_token,
                 participants: trip.value.participants
             });
         }
 
 
-        showNotification(t("trip.form.create_trip.notification.success"), 'success');
+        showNotification(t("trip.edit_trip.notification.success"), 'success');
         //TODO: Redirect to edit page
     } catch (error: any) {
         console.log(error);
@@ -152,11 +158,11 @@ watch(
     <div class="bg-light flex flex-col items-center justify-center">
         <div class="w-10/12 xl:w-8/12 mx-auto my-8">
             <HeroBanner
-                :title="t('trip.form.create_trip.title')"
-                :subtitle="t('trip.form.create_trip.subtitle')"
+                :title="t('trip.edit_trip.title')"
+                :subtitle="t('trip.edit_trip.subtitle')"
                 :button-text="t('trip.form.create_trip.save')"
                 :icon="Save"
-                @click="createTrip"
+                @click="updateTrip"
             />
 
             <div class="flex flex-col items-center lg:flex-row justify-center lg:gap-2 w-full">

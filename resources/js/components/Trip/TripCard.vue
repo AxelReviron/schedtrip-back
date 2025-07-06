@@ -13,11 +13,10 @@ const {t} = useI18n();
 const props = defineProps<{
     trip: TripInterface
 }>();
-const userStore = useUserStore();
-
-const { user } = storeToRefs(userStore);
-
 const {trip} = props;
+
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 
 const tripParticipantsCount = ref(1);
 const tripAuthor: UserInterface|null = ref(null);
@@ -137,12 +136,19 @@ onMounted(async () => {
 
 
                 <div class="flex flex-row justify-center items-center gap-2 mt-6 w-full" v-if="tripAuthor">
-                    <a href="#" class="w-full">
+                    <a :href="`/trip/view/${trip.id}`" class="w-full">
                         <button
                             class="w-full flex flex-row gap-2 justify-center items-center border py-2 bg-warm text-light font-medium rounded-sm px-4 cursor-pointer hover:bg-warmer"
-
                         >
-                                {{ $t("trip.view_trip") }}
+                            {{ $t("trip.view_trip") }}
+                        </button>
+                    </a>
+                    <!--TODO: Check permission, if user can't edit trip, disable btn-->
+                    <a :href="`/trip/edit/${trip.id}`" class="w-full">
+                        <button
+                            class="w-full flex flex-row gap-2 justify-center items-center border py-2 bg-warm text-light font-medium rounded-sm px-4 cursor-pointer hover:bg-warmer"
+                        >
+                            {{ $t("trip.edit_trip.edit_btn") }}
                         </button>
                     </a>
                 </div>

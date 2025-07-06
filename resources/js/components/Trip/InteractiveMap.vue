@@ -52,9 +52,7 @@ function displayRouteFromStore() {
         const storedGeoJsonLayer = L.geoJSON(trip.value.geojson, {style: geoStyler});
         displayedRoute.value = storedGeoJsonLayer;
         storedGeoJsonLayer.addTo(interactiveMap.value);
-    }
-
-    if (trip.value.stops && trip.value.stops.length >= 2) {
+    } else if (trip.value.stops && trip.value.stops.length >= 2) {
         getRoute();
     }
 }
@@ -109,6 +107,15 @@ function displayMarkersFromStore() {
                     hasNoMarker.value = false;
                 }
             });
+        } else if (stop.markers) {
+            const icon = createCustomMarkerIcon(stop.order_index);
+            const marker = L.marker({
+                lat: stop.latitude,
+                lng: stop.longitude,
+            });
+            marker.setIcon(icon);
+            marker.addTo(interactiveMap.value);
+            displayedMarkers.value.push(marker);
         }
     });
 }
@@ -219,14 +226,15 @@ watch(
 watch(
     () => trip.value.geojson,
     () => {
-        if (!trip.value.geojson) {
-            displayRouteFromStore();
-        }
+        displayRouteFromStore();
     }
 );
 
 onMounted(() => {
     initMap();
+    if (trip.value && trip.value.stops && trip.value.stops.length > 0) {
+        displayMarkersFromStore();
+    }
 });
 
 // TODO : Centrer la carte sur l'itinéraire

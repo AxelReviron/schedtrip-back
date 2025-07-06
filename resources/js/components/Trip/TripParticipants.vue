@@ -38,14 +38,6 @@ watch(
     }
 );
 
-watch(
-    () => trip.value.participants,
-    () => {
-        console.log(trip.value.participants)
-    },
-    {deep: true}
-);
-
 async function handleFriendSearch(e) {
     e.preventDefault();
     let tempFriends: UserInterface[]|[] = [];
@@ -127,7 +119,7 @@ function handlePermissionChange(friendId: string, newPermission: string) {
 
         <div v-if="trip.participants && trip.participants.length > 0" class="min-h-[40vh]">
             <div
-                v-for="(participant, index) in trip.participants" :key="participant.user_id"
+                v-for="(participant) in trip.participants" :key="participant.user_id"
             >
                 <ParticipantCard
                     :friend-id="participant.user_id"

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {MapPinned, Search, Globe, Grip, Trash2, CalendarArrowUp, CalendarArrowDown} from "lucide-vue-next";
+import {MapPinned, Search, Grip, Trash2, CalendarArrowUp, CalendarArrowDown} from "lucide-vue-next";
 import {useI18n} from "vue-i18n";
 import TitleIcon from "@/components/TitleIcon.vue";
 import {useTripFormStore} from "@/stores/tripFormStore";
@@ -13,8 +13,13 @@ import RemoveStopModal from "@/components/Trip/RemoveStopModal.vue";
 import SearchDestinationResultInterface from "@/interfaces/searchDestinationResultInterface";
 import useCreateStopForStore from "@/composables/useCreateStopForStore";
 
-const {t} = useI18n();
+const props = defineProps<{
+    errors: object
+}>();
 
+const { errors } = props;
+
+const {t} = useI18n();
 const { notification, showNotification } = useNotification();
 
 const tripFormStore = useTripFormStore();
@@ -133,6 +138,11 @@ function updateDate(event: Event, field: string, stop) {
     const target = event.target as HTMLInputElement;
     tripFormStore.updateStopDates(target.value, field, stop);
 }
+
+function updateLabel(event: Event, stop) {
+    const target = event.target as HTMLInputElement;
+    tripFormStore.updateStopLabel(target.value, stop);
+}
 </script>
 
 <template>
@@ -216,12 +226,24 @@ function updateDate(event: Event, field: string, stop) {
                     <div class="w-full">
                         <input
                             type="text"
-                            v-model="stop.label"
+                            :value="stop.label"
+                            @change="(e) => updateLabel(e, stop)"
                             :placeholder="t('trip.form.create_trip.destinations.destination_placeholder')"
                             class="bg-white/70 border border-warm p-2 rounded-sm text-dark focus:outline-warm w-full"
                             name="destination"
                             id="destination"
                         />
+                        <div
+                            v-if="props.errors && props.errors.trip_destinations && props.errors.trip_destinations.length > 0"
+                            v-for="(errors, errorIndex) in props.errors.trip_destinations"
+                        >
+                            <div
+                                v-if="errorIndex === index && errors.label"
+                                class="text-red-500 text-sm mt-1"
+                            >
+                                {{ errors.label }}
+                            </div>
+                        </div>
                         <div v-if="stop.notes && stop.notes.length > 0">
                             <div v-for="note in stop.notes" :key="note.id">
                             <textarea
@@ -235,13 +257,7 @@ function updateDate(event: Event, field: string, stop) {
                             </textarea>
                             </div>
                         </div>
-                        <div class="text-warm text-sm flex flex-row items-center gap-2">
-                            <Globe
-                                size="18"
-                            />
-                            <p>{{ stop.latitude }}, {{ stop.longitude }}</p>
-                        </div>
-                        <div class="mt-2 flex flex-row">
+                        <div class="mt-2 flex flex-row justify-between">
                             <div class="flex flex-row gap-2 items-center relative">
                                 <CalendarArrowDown
                                     size="18"
@@ -252,7 +268,7 @@ function updateDate(event: Event, field: string, stop) {
                                     type="date"
                                     :value="stop.arrival_date"
                                     @change="(e) => updateDate(e, 'arrival_date', stop)"
-                                    class="text-center text-sm text-warm date-input-custom cursor-pointer"
+                                    class="w-20 text-center text-sm text-warm date-input-custom cursor-pointer focus:outline-warm"
                                     @click="(e) => {openDatePicker(e, true)}"
                                 />
                             </div>
@@ -266,9 +282,20 @@ function updateDate(event: Event, field: string, stop) {
                                     type="date"
                                     :value="stop.departure_date"
                                     @change="(e) => updateDate(e, 'departure_date', stop)"
-                                    class="text-center text-warm text-sm date-input-custom cursor-pointer"
+                                    class="w-20 text-center text-warm text-sm date-input-custom cursor-pointer focus:outline-warm"
                                     @click="(e) => {openDatePicker(e, true)}"
                                 />
+                            </div>
+                        </div>
+                        <div
+                            v-if="props.errors && props.errors.trip_destinations && props.errors.trip_destinations.length > 0"
+                            v-for="(errors, errorIndex) in props.errors.trip_destinations"
+                        >
+                            <div
+                                v-if="errorIndex === index && errors.date"
+                                class="text-red-500 text-sm mt-1"
+                            >
+                                {{ errors.date }}
                             </div>
                         </div>
                     </div>
