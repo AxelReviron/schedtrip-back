@@ -35,8 +35,10 @@ function formatDate(dateStr: string) {
 
 function getTripDates(): void {
     const stopsCount = trip.stops.length;
-    tripArrivalDate.value = formatDate(trip.stops[0].arrivalDate);
-    tripDepartureDate.value = formatDate(trip.stops[stopsCount - 1].departureDate);
+    if (trip.stops[0]) {
+        tripArrivalDate.value = formatDate(trip.stops[0].arrivalDate);
+        tripDepartureDate.value = formatDate(trip.stops[stopsCount - 1].departureDate);
+    }
 }
 
 async function getTripAuthor() {
