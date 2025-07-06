@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {MapPinned, Search, Globe, Grip, Trash2} from "lucide-vue-next";
+import {MapPinned, Search, Globe, Grip, Trash2, CalendarArrowUp, CalendarArrowDown} from "lucide-vue-next";
 import {useI18n} from "vue-i18n";
 import TitleIcon from "@/components/TitleIcon.vue";
 import {useTripFormStore} from "@/stores/tripFormStore";
@@ -119,6 +119,20 @@ function addStopToTrip(searchResult: SearchDestinationResultInterface) {
     tripFormStore.addStop(stop);
 }
 
+function openDatePicker(e: any, isInputElement: bool) {
+    if (isInputElement) {
+        e.target.focus()
+        e.target.showPicker()
+    } else {
+        e.target.nextElementSibling.focus()
+        e.target.nextElementSibling.showPicker()
+    }
+}
+
+function updateDate(event: Event, field: string, stop) {
+    const target = event.target as HTMLInputElement;
+    tripFormStore.updateStopDates(target.value, field, stop);
+}
 </script>
 
 <template>
@@ -211,7 +225,7 @@ function addStopToTrip(searchResult: SearchDestinationResultInterface) {
                         <div v-if="stop.notes && stop.notes.length > 0">
                             <div v-for="note in stop.notes" :key="note.id">
                             <textarea
-                                rows="2"
+                                rows="3 "
                                 v-model="note.content"
                                 :placeholder="t('trip.form.create_trip.destinations.note_placeholder')"
                                 class="mt-2 w-full border border-warm p-2 rounded-lg text-dark focus:outline-warm resize-none"
@@ -226,6 +240,36 @@ function addStopToTrip(searchResult: SearchDestinationResultInterface) {
                                 size="18"
                             />
                             <p>{{ stop.latitude }}, {{ stop.longitude }}</p>
+                        </div>
+                        <div class="mt-2 flex flex-row">
+                            <div class="flex flex-row gap-2 items-center relative">
+                                <CalendarArrowDown
+                                    size="18"
+                                    class="text-warm cursor-pointer"
+                                    @click="(e) => {openDatePicker(e, false)}"
+                                />
+                                <input
+                                    type="date"
+                                    :value="stop.arrival_date"
+                                    @change="(e) => updateDate(e, 'arrival_date', stop)"
+                                    class="text-center text-sm text-warm date-input-custom cursor-pointer"
+                                    @click="(e) => {openDatePicker(e, true)}"
+                                />
+                            </div>
+                            <div class="flex flex-row gap-2 items-center">
+                                <CalendarArrowUp
+                                    size="18"
+                                    class="text-warm cursor-pointer"
+                                    @click="(e) => {openDatePicker(e, false)}"
+                                />
+                                <input
+                                    type="date"
+                                    :value="stop.departure_date"
+                                    @change="(e) => updateDate(e, 'departure_date', stop)"
+                                    class="text-center text-warm text-sm date-input-custom cursor-pointer"
+                                    @click="(e) => {openDatePicker(e, true)}"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -282,5 +326,14 @@ input[type="search"]::-webkit-search-cancel-button:hover {
     max-height: 220px; /* Ou une valeur plus grande, par exemple 500px, selon votre contenu max */
     opacity: 1;
 }
+.date-input-custom::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+}
 
+.date-input-custom::-webkit-inner-spin-button,
+.date-input-custom::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
 </style>
