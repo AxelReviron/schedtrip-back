@@ -65,7 +65,10 @@ class Trip extends Model
     ];
 
     protected $casts = [
+        'duration' => 'integer',
+        'distance' => 'integer',
         'is_public' => 'boolean',
+        'geojson' => 'string',
     ];
 
     public function author(): BelongsTo

@@ -38,8 +38,8 @@ class StoreTripRequest extends FormRequest
         return [
             'label' => 'required|string',
             'description' => 'nullable|string',
-            'distance' => 'nullable|integer',
-            'duration' => 'nullable|integer',
+            'distance' => 'nullable|numeric',
+            'duration' => 'nullable|numeric',
             'is_public' => 'boolean',
             'geojson' => 'nullable|json',
             'author_id' => ['required', 'exists:users,id', new MustBeCurrentUser()]
