@@ -11,7 +11,7 @@ export const useTripFormStore = defineStore('tripForm', () => {
         description: null,
         distance: null,
         duration: null,
-        isPublic: null,
+        isPublic: false,
         geojson: null,
         stops: [
             {
@@ -34,7 +34,7 @@ export const useTripFormStore = defineStore('tripForm', () => {
                 marker: {},
             },
         ],
-        author_id: null,
+        author: null,
         participants: [],
     });
 
@@ -62,12 +62,10 @@ export const useTripFormStore = defineStore('tripForm', () => {
     }
 
     function removeStop(stopToRemove: StopInterface) {
-        console.log(stopToRemove);
         trip.value.stops = trip.value.stops.filter(stop =>
             !(stop.latitude === stopToRemove.latitude && stop.longitude === stopToRemove.longitude)
         );
 
-        // Recalcul des index après suppression
         trip.value.stops.forEach((stop, index) => {
             stop.order_index = index + 1;
         });
@@ -115,8 +113,30 @@ export const useTripFormStore = defineStore('tripForm', () => {
         })
     }
 
+    function addGeoJson(geoJsonData) {
+        trip.value.geojson = geoJsonData;
+        trip.value.distance = Math.round(geoJsonData.features[0].properties.summary.distance);
+        trip.value.duration = Math.round(geoJsonData.features[0].properties.summary.duration);
+    }
+
     function removeGeoJson() {
         trip.value.geojson = null;
+    }
+
+    function setAuthor(userId: string) {
+        trip.value.author = `/api/users/${userId}`;
+    }
+
+    function updateStopDates(date, field: string, stopConcern: StopInterface) {
+        trip.value.stops.forEach((stop: StopInterface) => {
+            if (stop.longitude === stopConcern.longitude && stop.latitude === stopConcern.latitude) {
+                if (field === 'arrival_date') {
+                    stop.arrival_date = date;
+                } else if (field === 'departure_date') {
+                    stop.departure_date = date;
+                }
+            }
+        })
     }
 
     return {
@@ -124,11 +144,14 @@ export const useTripFormStore = defineStore('tripForm', () => {
         trip,
 
         // Actions
+        setAuthor,
         addStop,
         removeStop,
         updateStopOrder,
+        addGeoJson,
         removeGeoJson,
         addParticipant,
         updateParticipantPermission,
+        updateStopDates,
     }
 })
