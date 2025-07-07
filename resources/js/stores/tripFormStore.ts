@@ -98,9 +98,16 @@ export const useTripFormStore = defineStore('tripForm', () => {
     }
 
     function addParticipant(friend: UserInterface, permission: string) {
+        const alreadyExists = trip.value.participants.some(
+            participant => participant.user_id === friend.id
+        );
+
+        if (alreadyExists) return;
+
         trip.value.participants.push(
             {
                 user_id: friend.id,
+                user_pseudo: friend.pseudo,
                 permission: permission
             }
         );
