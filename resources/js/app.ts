@@ -6,6 +6,7 @@ import { createI18n } from "vue-i18n";
 import { createPinia } from 'pinia'
 import messages from './locales';
 import { ZiggyVue, route } from 'ziggy-js';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 createInertiaApp({
     resolve: name => {
@@ -14,6 +15,8 @@ createInertiaApp({
     },
     setup({ el, App, props, plugin }) {
         const pinia = createPinia()
+        pinia.use(piniaPluginPersistedstate)
+
         const i18n = createI18n({
             locale: props.initialPage.props.locale,
             fallbackLocale: "en",
@@ -21,6 +24,7 @@ createInertiaApp({
             legacy: false,
             globalInjection: true,
         })
+
         const app = createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(i18n)
