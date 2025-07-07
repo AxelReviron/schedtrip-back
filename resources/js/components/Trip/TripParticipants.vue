@@ -123,6 +123,7 @@ function handlePermissionChange(friendId: string, newPermission: string) {
             >
                 <ParticipantCard
                     :friend-id="participant.user_id"
+                    :friend-pseudo="participant.user_pseudo"
                     :permission="participant.permission"
                     @permission-changed="handlePermissionChange"
                 />
