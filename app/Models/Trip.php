@@ -80,6 +80,11 @@ class Trip extends Model
         'participants',
     ];
 
+    public function getDurationAttribute($value): string
+    {
+        return (string) $value;
+    }
+
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class);
