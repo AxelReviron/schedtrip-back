@@ -122,9 +122,6 @@ async function updateTrip(e: Event) {
 
 
         showNotification(t("trip.edit_trip.notification.success"), 'success');
-        setTimeout(() => {
-            window.location.href = '/trip';
-        }, 2000);
     } catch (error: any) {
         if (error.response && error.response.status === 422) {// Validation errors
             errors.value = error.response.data.errors;
