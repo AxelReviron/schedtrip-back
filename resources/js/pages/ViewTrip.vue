@@ -31,25 +31,25 @@ const errors = ref({
 const { notification, showNotification } = useNotification();
 
 function editTrip() {
-    //TODO: Redirect to edit trip view
+    //
 }
 
 onMounted(async () => {
     await tripFormStore.setTrip(page.props.trip);
 })
-//TODO: Rendre le btn de la heroBanner disable
 </script>
 
 <template>
     <Navbar/>
     <div class="bg-light flex flex-col items-center justify-center">
-        <div class="w-10/12 xl:w-8/12 mx-auto my-8">
+        <div class="w-11/12 md:w-10/12 xl:w-8/12 mx-auto my-8">
             <HeroBanner
                 :title="t('trip.view_trip.title')"
                 :subtitle="t('trip.view_trip.subtitle')"
                 :button-text="t('trip.view_trip.edit')"
                 :icon="ArrowUpRight"
                 @click="editTrip"
+                :is-btn-disabled="true"
             />
 
             <div class="flex flex-col items-center lg:flex-row justify-center lg:gap-2 w-full">

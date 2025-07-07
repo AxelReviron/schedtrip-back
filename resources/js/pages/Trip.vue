@@ -53,13 +53,14 @@ watch(
 <template>
     <Navbar/>
     <div class="bg-light flex flex-col items-center justify-center">
-        <div class="w-8/12 mx-auto my-8">
+        <div class="w-11/12 md:w-10/12 xl:w-8/12 mx-auto my-8">
             <HeroBanner
                 :title="t('trip.title')"
                 :subtitle="t('trip.subtitle')"
                 :button-text="t('trip.new_trip')"
                 :icon="MapPin"
                 button-link="/trip/create"
+                :is-btn-disabled="false"
             />
 
             <!--Trip-->
@@ -70,18 +71,18 @@ watch(
                         class="text-dark"
                     />
                     <div class="flex flex-row gap-2 items-center">
-                        <h3 class="text-dark font-medium text-[1.4rem]">
+                        <h3 class="text-dark font-medium text-[1.2rem] md:text-[1.4rem]">
                             {{ $t("trip.my_trips") }}
                         </h3>
                         <div
-                            class="relative inline-flex items-center justify-center w-6 h-6 overflow-hidden bg-warm rounded-full">
+                            class="relative inline-flex items-center justify-center w-5 h-5 md:w-6 md:h-6 overflow-hidden bg-warm rounded-full">
                             <span class="font-medium text-white text-sm">
                                 {{ trips ? trips.length : '0' }}
                             </span>
                         </div>
                     </div>
                 </div>
-                <div v-if="trips && trips.length > 0" class="flex flex-row justify-center gap-4 flex-wrap">
+                <div v-if="trips && trips.length > 0" class="flex flex-row justify-around gap-4 flex-wrap">
                     <div v-for="trip in trips" :key="trip.id" class="mt-4">
                         <TripCard :trip="trip"/>
                     </div>

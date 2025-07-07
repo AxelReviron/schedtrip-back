@@ -112,6 +112,10 @@ export const useUserStore = defineStore('user', () => {
         }
     }
 
+    function addFriends(newFriendsData: UserInterface[]) {
+        friendsUsers.value.push(newFriendsData);
+    }
+
     return {
         // States
         user,
@@ -124,5 +128,6 @@ export const useUserStore = defineStore('user', () => {
         removeUserFriendRequest,
         removeUserFriend,
         acceptFriendRequest,
+        addFriends,
     }
 })

@@ -47,6 +47,7 @@ const {
                 :button-text="t('friend.add_friend')"
                 :icon="UserRoundPlus"
                 :on-click="handleModalVisibility"
+                :is-btn-disabled="false"
             />
 
             <!--Friend Request-->

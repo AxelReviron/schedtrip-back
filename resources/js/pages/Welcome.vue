@@ -28,6 +28,8 @@ function handleLoginFormVisibility(newValue: boolean) {
             autoplay
             muted
             loop
+            playsinline
+            preload="auto"
             poster="../../assets/fallback-video.webp"
             class="absolute top-0 left-0 w-full h-full object-cover"
         >

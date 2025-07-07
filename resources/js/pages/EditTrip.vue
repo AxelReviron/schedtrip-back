@@ -161,6 +161,7 @@ watch(
                 :button-text="t('trip.form.create_trip.save')"
                 :icon="Save"
                 @click="updateTrip"
+                :is-btn-disabled="false"
             />
 
             <div class="flex flex-col items-center lg:flex-row justify-center lg:gap-2 w-full">

@@ -150,13 +150,14 @@ watch(
 <template>
     <Navbar/>
     <div class="bg-light flex flex-col items-center justify-center">
-        <div class="w-10/12 xl:w-8/12 mx-auto my-8">
+        <div class="w-11/12 md:w-10/12 xl:w-8/12 mx-auto my-8">
             <HeroBanner
                 :title="t('trip.form.create_trip.title')"
                 :subtitle="t('trip.form.create_trip.subtitle')"
                 :button-text="t('trip.form.create_trip.save')"
                 :icon="Save"
                 @click="createTrip"
+                :is-btn-disabled="false"
             />
 
             <div class="flex flex-col items-center lg:flex-row justify-center lg:gap-2 w-full">
