@@ -1,4 +1,5 @@
 import StopInterface from "@/interfaces/stopInterface";
+import ParticipantsInterface from "@/interfaces/participantsInterface";
 
 export default interface TripInterface {
     id: string;
@@ -10,7 +11,7 @@ export default interface TripInterface {
     geojson: [];// TODO: typer ça
     stops: StopInterface[];
     author_id: string;
-    participants: [];// TODO: typer ça
+    participantsList: ParticipantsInterface[];
     created_at: Date;
     updated_at: Date;
 }
