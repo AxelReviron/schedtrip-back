@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\EditTripController;
+use App\Http\Controllers\TripViewsController;
 use App\Http\Controllers\FriendController;
 use App\Http\Controllers\OpenRouteServiceController;
 use App\Http\Controllers\TripParticipantController;
@@ -32,7 +32,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', fn() => Inertia::render('Dashboard'));
     Route::get('/trip', fn() => Inertia::render('Trip'));
     Route::get('/trip/create', fn() => Inertia::render('CreateTrip'));
-    Route::get('/trip/edit/{tripId}', [EditTripController::class, 'edit']);
+    Route::get('/trip/view/{tripId}', [TripViewsController::class, 'view']);
+    Route::get('/trip/edit/{tripId}', [TripViewsController::class, 'edit']);
 
     Route::get('/friend', fn() => Inertia::render('Friend'));
     Route::get('/setting', fn() => Inertia::render('Setting'));

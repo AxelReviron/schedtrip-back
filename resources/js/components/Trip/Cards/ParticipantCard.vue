@@ -7,11 +7,12 @@ const props = defineProps<{
     friendId: string,
     friendPseudo: string,
     permission: string,
+    isEditable: boolean,
 }>();
 
 const isModalVisible = ref(false);
 
-const { friendId, friendPseudo, permission } = props;
+const { friendId, friendPseudo, permission, isEditable } = props;
 const friend = ref<UserInterface|null>(null);
 
 const localPermission = ref(permission);
@@ -22,7 +23,9 @@ function handlePermissionChange() {
 }
 
 function handleRemoveParticipantModalVisibility() {//TODO
-    isModalVisible.value = !isModalVisible.value;
+    if (isEditable) {
+        isModalVisible.value = !isModalVisible.value;
+    }
 }
 </script>
 
@@ -43,7 +46,8 @@ function handleRemoveParticipantModalVisibility() {//TODO
                 <div class="flex flex-row items-center text-dark gap-2 text-sm">
                     <p v-if="friendPseudo" class="font-medium">{{ friendPseudo }}</p>
                     <select
-                        class="font-normal border border-warm bg-warm text-light rounded-sm px-1"
+                        :disabled="!isEditable"
+                        class="font-normal border border-warm bg-warm text-light rounded-sm px-1 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:border-gray-200"
                         v-model="localPermission"
                         @change="handlePermissionChange"
                     >
@@ -52,10 +56,13 @@ function handleRemoveParticipantModalVisibility() {//TODO
                     </select>
                 </div>
             </div>
-            <button class="relative inline-flex items-center justify-center w-6 h-6 overflow-hidden bg-red-200 hover:bg-red-300 cursor-pointer rounded-lg">
+            <button
+                :disabled="!isEditable"
+                class="relative inline-flex items-center justify-center w-6 h-6 overflow-hidden bg-red-200 hover:bg-red-300 cursor-pointer rounded-lg disabled:cursor-not-allowed disabled:bg-gray-200 disabled:border-gray-200"
+            >
                 <X
                     @click="handleRemoveOrBlockModalVisibility"
-                    class="text-red-600"
+                    :class="isEditable ? 'text-red-600' : 'text-light'"
                     size="16"
                 />
             </button>

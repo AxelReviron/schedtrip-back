@@ -24,6 +24,11 @@ const interactiveMap = ref(undefined);
 const displayedMarkers = ref<L.Marker[]>([]);
 const displayedRoute = ref<L.geoJSON>(null);
 
+const props = defineProps<{
+    isEditable: boolean,
+}>();
+const { isEditable } = props;
+
 function roundCoord(value: number): number {
     return Number(value.toFixed(6));
 }
@@ -166,11 +171,13 @@ async function getRoute() {
 }
 
 async function handleMapClick(e: L.LeafletMouseEvent) {
-    const coords = e.latlng;
-    const marker = L.marker(coords);
+    if (isEditable) {
+        const coords = e.latlng;
+        const marker = L.marker(coords);
 
-    await addStopToTrip(coords, marker);
-    await getRoute();
+        await addStopToTrip(coords, marker);
+        await getRoute();
+    }
 }
 
 function getTileLayerByLocale(locale) {
@@ -193,7 +200,13 @@ function initMap() {
         zoom: 5,
         maxZoom: 18,
         minZoom: 2,
-        center: [45.7580032,4.7939244],
+        center: [45.7580032,4.7939244],// TODO: Se baser sur les coordonées du geojson
+        dragging: isEditable,
+        scrollWheelZoom: isEditable,
+        doubleClickZoom: isEditable,
+        touchZoom: isEditable,
+        boxZoom: isEditable,
+        keyboard: isEditable,
     })
 
     const locale = usePage().props.locale || 'en';

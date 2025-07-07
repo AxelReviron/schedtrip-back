@@ -6,17 +6,17 @@ import {useTripFormStore} from "@/stores/tripFormStore";
 import TitleIcon from "@/components/TitleIcon.vue";
 
 const props = defineProps<{
-    errors: object
+    errors: object,
+    isEditable: boolean
 }>();
 
-const { errors } = props;
+const { errors, isEditable } = props;
 
 const {t} = useI18n();
 
 const tripFormStore = useTripFormStore();
 const { trip } = storeToRefs(tripFormStore);
 
-// TODO: Recevoir les erreurs en props
 </script>
 
 <template>
@@ -30,10 +30,11 @@ const { trip } = storeToRefs(tripFormStore);
             <div class="flex flex-col mt-2 w-full">
                 <label for="label" class="p-1 font-medium text-lg">{{ $t("trip.form.create_trip.trip_details.label") }}</label>
                 <input
+                    :disabled="!isEditable"
                     type="text"
                     v-model="trip.label"
                     :placeholder="t('trip.form.create_trip.trip_details.label')"
-                    class="bg-white/70 border border-warm p-2 rounded-lg text-warm focus:outline-warm"
+                    class="bg-white/70 border border-warm p-2 rounded-lg text-warm focus:outline-warm disabled:cursor-not-allowed"
                     name="label" required
                     id="label"
                 >
@@ -44,10 +45,11 @@ const { trip } = storeToRefs(tripFormStore);
             <div class="flex flex-col mt-2 w-full">
                 <label for="description" class="p-1 font-medium text-lg">{{ $t("trip.form.create_trip.trip_details.description") }}</label>
                 <textarea
+                    :disabled="!isEditable"
                     rows="4"
                     v-model="trip.description"
                     :placeholder="t('trip.form.create_trip.trip_details.description')"
-                    class="bg-white/70 border border-warm p-2 rounded-lg text-warm focus:outline-warm resize-none"
+                    class="bg-white/70 border border-warm p-2 rounded-lg text-warm focus:outline-warm resize-none disabled:cursor-not-allowed"
                     name="description" required
                     id="description"
                 >
@@ -55,9 +57,10 @@ const { trip } = storeToRefs(tripFormStore);
             </div>
             <div class="flex flex-row gap-2 mt-2 w-full">
                 <input
+                    :disabled="!isEditable"
                     type="checkbox"
                     v-model="trip.is_public"
-                    class="bg-white/70 border border-warm p-2 rounded-lg text-warm focus:outline-warm resize-none"
+                    class="bg-white/70 border border-warm p-2 rounded-lg text-warm focus:outline-warm disabled:cursor-not-allowed"
                     name="is_public" required
                     id="is_public"
                 >

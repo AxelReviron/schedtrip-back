@@ -8,8 +8,14 @@ import {storeToRefs} from "pinia";
 import {useUserStore} from "@/stores/userStore";
 import {useNotification} from "@/composables/useNotification";
 import {useTripFormStore} from "@/stores/tripFormStore";
-import ParticipantCard from "@/components/Trip/ParticipantCard.vue";
-import AddParticipantModal from "@/components/Trip/AddParticipantModal.vue";
+import ParticipantCard from "@/components/Trip/Cards/ParticipantCard.vue";
+import AddParticipantModal from "@/components/Trip/Modals/AddParticipantModal.vue";
+
+const props = defineProps<{
+    isEditable: boolean
+}>();
+
+const { isEditable } = props;
 
 const {t} = useI18n();
 const { notification, showNotification } = useNotification();
@@ -71,7 +77,7 @@ function handlePermissionChange(friendId: string, newPermission: string) {
 <template>
     <AddParticipantModal
         :participant="selectedParticipantToAdd"
-        v-if="isModalVisible"
+        v-if="isModalVisible && isEditable"
         @toggle-visibility="handleAddParticipantModalVisibility"
     />
     <div class="bg-white border border-gray-200 mt-8 rounded-sm px-4 py-4 shadow-xs w-full h-[22.25rem]">
@@ -82,15 +88,17 @@ function handlePermissionChange(friendId: string, newPermission: string) {
 
         <form class="mt-4 flex flex-row gap-2" name="searchPlace" method="GET" @submit="handleFriendSearch">
             <input
+                :disabled="!isEditable"
                 type="search"
                 v-model="friendSearched"
                 :placeholder="t('trip.form.create_trip.participants.search_placeholder')"
-                class="bg-white/70 border border-warm p-2 rounded-sm text-warm focus:outline-warm w-full"
+                class="bg-white/70 border border-warm p-2 rounded-sm text-warm focus:outline-warm w-full disabled:cursor-not-allowed"
                 name="search" required
                 id="search"
             >
             <button
-                class="flex flex-row gap-2 items-center border border-warm py-2 bg-warm font-medium rounded-sm px-4 cursor-pointer hover:bg-warmer"
+                :disabled="!isEditable"
+                class="flex flex-row gap-2 items-center border border-warm py-2 bg-warm font-medium rounded-sm px-4 cursor-pointer hover:bg-warmer disabled:cursor-not-allowed disabled:bg-gray-200 disabled:border-gray-200"
                 @click="handleFriendSearch"
             >
                 <Search
@@ -122,6 +130,7 @@ function handlePermissionChange(friendId: string, newPermission: string) {
                 v-for="(participant) in trip.participants" :key="participant.user_id"
             >
                 <ParticipantCard
+                    :isEditable="isEditable"
                     :friend-id="participant.user_id"
                     :friend-pseudo="participant.user_pseudo"
                     :permission="participant.permission"

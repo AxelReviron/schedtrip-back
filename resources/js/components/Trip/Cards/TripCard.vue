@@ -83,7 +83,7 @@ watch(
 
         <div class="relative">
             <img
-                src="../../../assets/trip_card_cover.jpg" alt="Trip card cover"
+                src="../../../../assets/trip_card_cover.jpg" alt="Trip card cover"
                 class="w-full h-50 object-cover"
             />
         </div>
@@ -171,7 +171,7 @@ watch(
                         <button
                             class="w-full flex flex-row gap-2 justify-center items-center border py-2 bg-warm text-light font-medium rounded-sm px-4 cursor-pointer hover:bg-warmer"
                         >
-                            {{ $t("trip.view_trip") }}
+                            {{ $t("trip.view_btn") }}
                         </button>
                     </a>
                 </div>

@@ -11,11 +11,16 @@ export default {
         participant: "Participant",
         participants: "Participants",
         date: "Date",
-        view_trip: "View",
+        view_btn: "View",
         quit_trip: "Quit",
         delete_trip: "Delete",
         public: "public",
         private: "private",
+        view_trip: {
+            title: "View trip",
+            subtitle: "See trip details, destinations and participants",
+            edit: "Edit"
+        },
         edit_trip: {
             title: "Edit trip",
             subtitle: "Update trip details, destinations and participants",

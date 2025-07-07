@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Trip;
 
 use App\Models\Trip;
 use Illuminate\Foundation\Http\FormRequest;
 
-class EditTripRequest extends FormRequest
+class ViewTripViewRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,7 +15,7 @@ class EditTripRequest extends FormRequest
         $tripId = $this->route()->parameters()['tripId'];
         $trip = Trip::findOrFail($tripId);
 
-        return $this->user()->can('update', $trip);
+        return $this->user()->can('view', $trip);
     }
 
     /**

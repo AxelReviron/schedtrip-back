@@ -6,8 +6,8 @@ import {useI18n} from "vue-i18n";
 import {ref, watch} from "vue";
 import {storeToRefs} from "pinia";
 import {useUserStore} from "@/stores/userStore";
-import InteractiveMap from "@/components/Trip/InteractiveMap.vue";
-import Destinations from "@/components/Trip/Destinations.vue";
+import InteractiveMap from "@/components/Trip/TripInteractiveMap.vue";
+import Destinations from "@/components/Trip/TripDestinations.vue";
 import TripDetails from "@/components/Trip/TripDetails.vue";
 import TripParticipants from "@/components/Trip/TripParticipants.vue";
 import {useNotification} from "@/composables/useNotification";
@@ -160,12 +160,12 @@ watch(
             />
 
             <div class="flex flex-col items-center lg:flex-row justify-center lg:gap-2 w-full">
-                <TripDetails :errors="errors"/>
-                <TripParticipants />
+                <TripDetails :isEditable="true" :errors="errors"/>
+                <TripParticipants :isEditable="true"/>
             </div>
             <div class="flex flex-col items-start lg:flex-row justify-center lg:gap-2 w-full">
-                <InteractiveMap />
-                <Destinations :errors="errors"/>
+                <InteractiveMap :isEditable="true"/>
+                <Destinations :isEditable="true" :errors="errors"/>
             </div>
 
         </div>

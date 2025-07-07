@@ -9,15 +9,16 @@ import {ref, watch} from "vue";
 import axios from "axios";
 import {useNotification} from "@/composables/useNotification";
 import Notification from "@/components/Notification.vue";
-import RemoveStopModal from "@/components/Trip/RemoveStopModal.vue";
+import RemoveStopModal from "@/components/Trip/Modals/RemoveStopModal.vue";
 import SearchDestinationResultInterface from "@/interfaces/searchDestinationResultInterface";
 import useCreateStopForStore from "@/composables/useCreateStopForStore";
 
 const props = defineProps<{
-    errors: object
+    errors: object,
+    isEditable: boolean,
 }>();
 
-const { errors } = props;
+const { errors, isEditable } = props;
 
 const {t} = useI18n();
 const { notification, showNotification } = useNotification();
@@ -31,8 +32,10 @@ const selectedStopToRemove = ref(null);
 const searchResults = ref<SearchDestinationResultInterface[]|[]>([]);
 
 function handleRemoveStopModalVisibility(stop = null) {
-    selectedStopToRemove.value = stop;
-    isModalVisible.value = !!stop;
+    if (isEditable) {
+        selectedStopToRemove.value = stop;
+        isModalVisible.value = !!stop;
+    }
 }
 
 /**
@@ -102,6 +105,8 @@ function filterSearchResult(results: SearchDestinationResultInterface): SearchDe
 
 async function handlePlaceSearch(e) {
     e.preventDefault();
+    if (!placeSearched.value || placeSearched.value === '') return;
+
     try {
         const response = await axios.get(`/api/ors/search/${placeSearched.value}`);
         searchResults.value = filterSearchResult(response.data);
@@ -125,12 +130,14 @@ function addStopToTrip(searchResult: SearchDestinationResultInterface) {
 }
 
 function openDatePicker(e: any, isInputElement: bool) {
-    if (isInputElement) {
-        e.target.focus()
-        e.target.showPicker()
-    } else {
-        e.target.nextElementSibling.focus()
-        e.target.nextElementSibling.showPicker()
+    if (isEditable) {
+        if (isInputElement) {
+            e.target.focus()
+            e.target.showPicker()
+        } else {
+            e.target.nextElementSibling.focus()
+            e.target.nextElementSibling.showPicker()
+        }
     }
 }
 
@@ -159,15 +166,17 @@ function updateLabel(event: Event, stop) {
 
         <form class="mt-4 flex flex-row gap-2" name="searchPlace" method="GET" @submit="handlePlaceSearch">
             <input
+                :disabled="!isEditable"
                 type="search"
                 v-model="placeSearched"
                 :placeholder="t('trip.form.create_trip.destinations.search_placeholder')"
-                class="bg-white/70 border border-warm p-2 rounded-sm text-warm focus:outline-warm w-full"
+                class="bg-white/70 border border-warm p-2 rounded-sm text-warm focus:outline-warm w-full disabled:cursor-not-allowed"
                 name="search" required
                 id="search"
             >
             <button
-                class="flex flex-row gap-2 items-center border border-warm py-2 bg-warm font-medium rounded-sm px-4 cursor-pointer hover:bg-warmer"
+                :disabled="!isEditable"
+                class="flex flex-row gap-2 items-center border border-warm py-2 bg-warm font-medium rounded-sm px-4 cursor-pointer hover:bg-warmer disabled:cursor-not-allowed disabled:bg-gray-200 disabled:border-gray-200"
                 @click="handlePlaceSearch"
             >
                 <Search
@@ -204,7 +213,7 @@ function updateLabel(event: Event, stop) {
             >
                 <RemoveStopModal
                     :stop="selectedStopToRemove"
-                    v-if="isModalVisible"
+                    v-if="isModalVisible && isEditable"
                     @toggle-visibility="handleRemoveStopModalVisibility"
                 />
                 <div
@@ -213,23 +222,24 @@ function updateLabel(event: Event, stop) {
                 >
                     <div class="flex flex-col items-center gap-4">
                         <Grip
-                            class="text-dark hover:text-dark/50 cursor-grab handle"
+                            :class="isEditable ? 'handle text-dark hover:text-dark/50 cursor-grab' : 'cursor-not-allowed text-gray-200'"
                         />
                         <div class="relative w-7 h-7 bg-dark text-cream font-bold border border-warm rounded-full flex items-center justify-center text-[1rem]">
                             <span class="relative z-20">{{ stop.order_index }}</span>
                         </div>
                         <Trash2
-                            class="text-red-500 hover:text-red-600 cursor-pointer"
+                            :class="isEditable ? 'text-red-500 hover:text-red-600 cursor-pointer' : 'cursor-not-allowed text-gray-200'"
                             @click="handleRemoveStopModalVisibility(stop)"
                         />
                     </div>
                     <div class="w-full">
                         <input
+                            :disabled="!isEditable"
                             type="text"
                             :value="stop.label"
                             @change="(e) => updateLabel(e, stop)"
                             :placeholder="t('trip.form.create_trip.destinations.destination_placeholder')"
-                            class="bg-white/70 border border-warm p-2 rounded-sm text-dark focus:outline-warm w-full"
+                            class="bg-white/70 border border-warm p-2 rounded-sm text-dark focus:outline-warm w-full disabled:cursor-not-allowed"
                             name="destination"
                             id="destination"
                         />
@@ -247,10 +257,11 @@ function updateLabel(event: Event, stop) {
                         <div v-if="stop.notes && stop.notes.length > 0">
                             <div v-for="note in stop.notes" :key="note.id">
                             <textarea
+                                :disabled="!isEditable"
                                 rows="3 "
                                 v-model="note.content"
                                 :placeholder="t('trip.form.create_trip.destinations.note_placeholder')"
-                                class="mt-2 w-full border border-warm p-2 rounded-lg text-dark focus:outline-warm resize-none"
+                                class="mt-2 w-full border border-warm p-2 rounded-lg text-dark focus:outline-warm resize-none disabled:cursor-not-allowed"
                                 name="note" required
                                 id="note"
                             >
@@ -261,28 +272,30 @@ function updateLabel(event: Event, stop) {
                             <div class="flex flex-row gap-2 items-center relative">
                                 <CalendarArrowDown
                                     size="18"
-                                    class="text-warm cursor-pointer"
+                                    :class="isEditable ? 'text-warm cursor-pointer' : 'cursor-not-allowed text-gray-200'"
                                     @click="(e) => {openDatePicker(e, false)}"
                                 />
                                 <input
+                                    :disabled="!isEditable"
                                     type="date"
                                     :value="stop.arrival_date"
                                     @change="(e) => updateDate(e, 'arrival_date', stop)"
-                                    class="w-20 text-center text-sm text-warm date-input-custom cursor-pointer focus:outline-warm"
+                                    class="w-18 md:w-20 text-center text-xs md:text-sm text-warm date-input-custom cursor-pointer focus:outline-warm disabled:cursor-not-allowed"
                                     @click="(e) => {openDatePicker(e, true)}"
                                 />
                             </div>
                             <div class="flex flex-row gap-2 items-center">
                                 <CalendarArrowUp
                                     size="18"
-                                    class="text-warm cursor-pointer"
+                                    :class="isEditable ? 'text-warm cursor-pointer' : 'cursor-not-allowed text-gray-200'"
                                     @click="(e) => {openDatePicker(e, false)}"
                                 />
                                 <input
+                                    :disabled="!isEditable"
                                     type="date"
                                     :value="stop.departure_date"
                                     @change="(e) => updateDate(e, 'departure_date', stop)"
-                                    class="w-20 text-center text-warm text-sm date-input-custom cursor-pointer focus:outline-warm"
+                                    class="w-18 md:w-20 text-center text-warm text-xs md:text-sm date-input-custom cursor-pointer focus:outline-warm disabled:cursor-not-allowed"
                                     @click="(e) => {openDatePicker(e, true)}"
                                 />
                             </div>

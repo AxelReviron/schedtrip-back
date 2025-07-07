@@ -2,10 +2,8 @@
 import {Trash2, X} from "lucide-vue-next";
 import {useI18n} from "vue-i18n";
 import {ref} from "vue";
-import axios from "axios";
 import {usePage} from "@inertiajs/vue3";
 import Notification from "@/components/Notification.vue";
-import {useUserStore} from "@/stores/userStore";
 import {storeToRefs} from "pinia";
 import {useNotification} from "@/composables/useNotification";
 import {useTripFormStore} from "@/stores/tripFormStore";

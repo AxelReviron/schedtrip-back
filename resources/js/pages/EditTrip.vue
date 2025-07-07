@@ -6,8 +6,8 @@ import {useI18n} from "vue-i18n";
 import {onMounted, ref, watch} from "vue";
 import {storeToRefs} from "pinia";
 import {useUserStore} from "@/stores/userStore";
-import InteractiveMap from "@/components/Trip/InteractiveMap.vue";
-import Destinations from "@/components/Trip/Destinations.vue";
+import InteractiveMap from "@/components/Trip/TripInteractiveMap.vue";
+import Destinations from "@/components/Trip/TripDestinations.vue";
 import TripDetails from "@/components/Trip/TripDetails.vue";
 import TripParticipants from "@/components/Trip/TripParticipants.vue";
 import {useNotification} from "@/composables/useNotification";
@@ -33,7 +33,6 @@ const { notification, showNotification } = useNotification();
 
 onMounted(async () => {
     await tripFormStore.setTrip(page.props.trip);
-    console.log(trip.value);
 })
 
 function isTripDetailsValid(): void {
@@ -67,7 +66,6 @@ function isTripDestinationsValid(): void {
     })
 }// TODO: Composable
 
-//TODO: Update
 async function updateTrip(e: Event) {
     e.preventDefault();
     errors.value = {
@@ -156,7 +154,7 @@ watch(
 <template>
     <Navbar/>
     <div class="bg-light flex flex-col items-center justify-center">
-        <div class="w-10/12 xl:w-8/12 mx-auto my-8">
+        <div class="w-11/12 md:w-10/12 xl:w-8/12 mx-auto my-8">
             <HeroBanner
                 :title="t('trip.edit_trip.title')"
                 :subtitle="t('trip.edit_trip.subtitle')"
@@ -166,12 +164,12 @@ watch(
             />
 
             <div class="flex flex-col items-center lg:flex-row justify-center lg:gap-2 w-full">
-                <TripDetails :errors="errors"/>
-                <TripParticipants />
+                <TripDetails :isEditable="true" :errors="errors"/>
+                <TripParticipants :isEditable="true"/>
             </div>
             <div class="flex flex-col items-start lg:flex-row justify-center lg:gap-2 w-full">
-                <InteractiveMap />
-                <Destinations :errors="errors"/>
+                <InteractiveMap :isEditable="true"/>
+                <Destinations :isEditable="true" :errors="errors"/>
             </div>
 
         </div>
