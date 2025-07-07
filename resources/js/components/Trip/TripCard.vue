@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {MapPinned, UsersRound, CalendarArrowDown, CalendarArrowUp, Eye} from "lucide-vue-next";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import TripInterface from "@/interfaces/tripInterface";
 import {useI18n} from "vue-i18n";
 import axios from "axios";
@@ -40,18 +40,42 @@ function getTripDates(): void {
     }
 }
 
-async function getTripAuthor() {
-    const response = await axios.get(trip.author);
-    return response.data;
+function canEditTrip() {
+    const authorId = trip.author.split('/').pop();
+
+    if (user.value && authorId === user.value.id) {
+        return true;
+    } else if (trip.participantsList && trip.participantsList.length > 0) {
+        for (const participant of trip.participantsList) {
+            if (participant.id === user.value?.id && participant.permission === 'update') {
+                return true;
+            }
+        }
+    } else {
+        return false;
+    }
 }
 
 onMounted(async () => {
     getTripParticipantsCount();
-    tripAuthor.value = await getTripAuthor();
     getTripDates();
 })
 
-// TODO: Bouton pour voir les details du trip
+watch(
+    () => user.value,
+    async (newUser) => {
+        if (!trip.author) return;
+
+        const authorId = trip.author.split('/').pop();
+        if (newUser && authorId !== newUser.id) {
+            const response = await axios.get(trip.author);
+            tripAuthor.value = response.data;
+        } else {
+            tripAuthor.value = newUser;
+        }
+    },
+    { immediate: true }
+);
 </script>
 
 <template>
@@ -136,19 +160,18 @@ onMounted(async () => {
 
 
                 <div class="flex flex-row justify-center items-center gap-2 mt-6 w-full" v-if="tripAuthor">
-                    <a :href="`/trip/view/${trip.id}`" class="w-full">
-                        <button
-                            class="w-full flex flex-row gap-2 justify-center items-center border py-2 bg-warm text-light font-medium rounded-sm px-4 cursor-pointer hover:bg-warmer"
-                        >
-                            {{ $t("trip.view_trip") }}
-                        </button>
-                    </a>
-                    <!--TODO: Check permission, if user can't edit trip, disable btn-->
-                    <a :href="`/trip/edit/${trip.id}`" class="w-full">
+                    <a v-if="canEditTrip()" :href="`/trip/edit/${trip.id}`" class="w-full">
                         <button
                             class="w-full flex flex-row gap-2 justify-center items-center border py-2 bg-warm text-light font-medium rounded-sm px-4 cursor-pointer hover:bg-warmer"
                         >
                             {{ $t("trip.edit_trip.edit_btn") }}
+                        </button>
+                    </a>
+                    <a v-else :href="`/trip/view/${trip.id}`" class="w-full">
+                        <button
+                            class="w-full flex flex-row gap-2 justify-center items-center border py-2 bg-warm text-light font-medium rounded-sm px-4 cursor-pointer hover:bg-warmer"
+                        >
+                            {{ $t("trip.view_trip") }}
                         </button>
                     </a>
                 </div>
