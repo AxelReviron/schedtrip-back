@@ -118,18 +118,16 @@ async function createTrip(e: Event) {
 
 
         showNotification(t("trip.form.create_trip.notification.success"), 'success');
-        //TODO: Redirect to edit page
+        setTimeout(() => {
+            window.location.href = '/trip';
+        }, 2000);
     } catch (error: any) {
-        console.log(error);
-        //TODO: Manage errors
-        // if (error.response && error.response.status === 422) {// Validation errors
-        //    errors.value = error.response.data.errors;
-        //    showNotification(t("trip.form.create_trip.notification.error.form"), 'error');
-        // } else if (error.response && error.response.status === 401) {// TODO: error user not found
-        //    showNotification(t("form.auth.notification.error.credentials"), 'error');
-        // } else {// Other errors
-        //    showNotification(t("friend.form.add_friend.notification.error.server"), 'error');
-        // }
+        if (error.response && error.response.status === 422) {// Validation errors
+           errors.value = error.response.data.errors;
+           showNotification(t("trip.form.create_trip.notification.error.form"), 'error');
+        } else {// Other errors
+           showNotification(t("trip.form.create_trip.notification.error.server"), 'error');
+        }
     }
 }
 
