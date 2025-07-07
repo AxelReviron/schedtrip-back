@@ -71,6 +71,15 @@ class Trip extends Model
         'geojson' => 'string',
     ];
 
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var list<string>
+     */
+    protected $hidden = [
+        'participants',
+    ];
+
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -89,5 +98,23 @@ class Trip extends Model
     public function luggage(): HasMany
     {
         return $this->hasMany(Luggage::class);
+    }
+
+    protected $appends = ['participantsList'];
+
+    public function getParticipantsListAttribute(): array
+    {
+        return $this->participants()
+            ->withPivot('permission')
+            ->get()
+            ->map(function (User $user) {
+                return [
+                    'id' => $user->getKey(),
+                    'pseudo' => $user->pseudo,
+                    'permission' => $user->pivot->permission,
+                ];
+            })
+            ->values()
+            ->all();
     }
 }
