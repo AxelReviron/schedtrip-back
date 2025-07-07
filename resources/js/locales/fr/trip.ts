@@ -12,7 +12,6 @@ export default {
         participants: "Participants",
         date: "Date",
         view_btn: "Voir",
-        edit_trip: "Editer",
         quit_trip: "Quitter",
         delete_trip: "Supprimer",
         public: "publique",
