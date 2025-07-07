@@ -57,6 +57,8 @@ function displayRouteFromStore() {
         const storedGeoJsonLayer = L.geoJSON(trip.value.geojson, {style: geoStyler});
         displayedRoute.value = storedGeoJsonLayer;
         storedGeoJsonLayer.addTo(interactiveMap.value);
+
+        interactiveMap.value.fitBounds(storedGeoJsonLayer.getBounds());
     } else if (trip.value.stops && trip.value.stops.length >= 2) {
         getRoute();
     }
@@ -95,17 +97,19 @@ function displayMarkersFromStore() {
         const hasNoMarker = ref(false);
         if (stop.markers && stop.markers.length > 0) {
             stop.markers.forEach(marker => {
+                const coords = {
+                    lat: stop.latitude,
+                    lng: stop.longitude,
+                }
                 const icon = createCustomMarkerIcon(stop.order_index);
                 if (!marker) {// Stops added from search bar (Destinations) doesn't have marker
-                    marker = L.marker({
-                        lat: stop.latitude,
-                        lng: stop.longitude,
-                    });
+                    marker = L.marker(coords);
                     hasNoMarker.value = true;
                 }
                 marker.setIcon(icon);
                 marker.addTo(interactiveMap.value);
                 displayedMarkers.value.push(marker);
+                interactiveMap.value.setView(coords, 5);
                 if (hasNoMarker.value && !hasCalculatedRoute.value) {// We need to get only once the route
                     displayRouteFromStore();
                     hasCalculatedRoute.value = true;
@@ -114,13 +118,15 @@ function displayMarkersFromStore() {
             });
         } else if (stop.markers) {
             const icon = createCustomMarkerIcon(stop.order_index);
-            const marker = L.marker({
+            const coords = {
                 lat: stop.latitude,
                 lng: stop.longitude,
-            });
+            }
+            const marker = L.marker(coords);
             marker.setIcon(icon);
             marker.addTo(interactiveMap.value);
             displayedMarkers.value.push(marker);
+            interactiveMap.value.setView(coords, 5);
         }
     });
 }
@@ -177,6 +183,8 @@ async function handleMapClick(e: L.LeafletMouseEvent) {
 
         await addStopToTrip(coords, marker);
         await getRoute();
+
+        interactiveMap.value.setView(coords, 5);
     }
 }
 
