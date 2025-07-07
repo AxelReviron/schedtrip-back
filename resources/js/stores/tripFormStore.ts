@@ -159,10 +159,11 @@ export const useTripFormStore = defineStore('tripForm', () => {
         }
 
         const participants = [];
-        newTrip.participants.forEach((participant: UserInterface) => {
+        newTrip.participantsList.forEach((participant) => {
             participants.push({
                 user_id: participant.id,
-                permission: participant.pivot.permission
+                user_pseudo: participant.pseudo,
+                permission: participant.permission
             })
         })
         newTrip.participants = participants;
