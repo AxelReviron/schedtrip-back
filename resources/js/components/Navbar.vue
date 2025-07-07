@@ -5,6 +5,7 @@ import {computed, onMounted, ref, nextTick} from "vue";
 import axios from "axios";
 import {useUserStore} from "@/stores/userStore";
 import {useI18n} from "vue-i18n";
+import {storeToRefs} from "pinia";
 
 const {t} = useI18n();
 const page = usePage()
@@ -15,7 +16,7 @@ const isUserMenuOpen = ref(false)
 const isMobileMenuOpen = ref(false)
 
 const userStore = useUserStore();
-const user = computed(() => userStore.user);
+const { user } = storeToRefs(userStore);
 
 function toggleUserMenu(): void {
     isUserMenuOpen.value = !isUserMenuOpen.value
@@ -34,8 +35,10 @@ async function logout(): void {
 
 onMounted(async () => {
     const userId = page.props.auth.user.id;
-    const response = await axios.get(`/api/users/${userId}`);
-    await userStore.setUser(response.data);
+    if (!user.value || !user.value.pseudo) {
+        const response = await axios.get(`/api/users/${userId}`);
+        await userStore.setUser(response.data);
+    }
 });
 
 </script>
