@@ -66,10 +66,10 @@ async function handleFriendSearch(e) {
 function handleAddParticipantModalVisibility(participant = null) {
     selectedParticipantToAdd.value = participant;
     isModalVisible.value = !!participant;
+    friendSearched.value = null;
 }
 
 function handlePermissionChange(friendId: string, newPermission: string) {
-    console.log('permission changed')
     tripFormStore.updateParticipantPermission(friendId, newPermission);
 }
 </script>

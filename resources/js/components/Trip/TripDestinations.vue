@@ -127,6 +127,7 @@ function addStopToTrip(searchResult: SearchDestinationResultInterface) {
     const label = `${searchResult.locality ? searchResult.locality : searchResult.name},  ${searchResult.region},  ${searchResult.country}`;
     const stop = useCreateStopForStore(label, searchResult.latitude, searchResult.longitude);
     tripFormStore.addStop(stop);
+    placeSearched.value = null;
 }
 
 function openDatePicker(e: any, isInputElement: bool) {
