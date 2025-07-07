@@ -1,21 +1,17 @@
 <script setup lang="ts">
 import { X } from "lucide-vue-next";
 import UserInterface from "@/interfaces/userInterface";
-import {ref, watch} from "vue";
-import {storeToRefs} from "pinia";
-import {useUserStore} from "@/stores/userStore";
+import {ref} from "vue";
 
 const props = defineProps<{
     friendId: string,
+    friendPseudo: string,
     permission: string,
 }>();
 
 const isModalVisible = ref(false);
 
-const userStore = useUserStore();
-const {friendsUsers} = storeToRefs(userStore);
-
-const { friendId, permission } = props;
+const { friendId, friendPseudo, permission } = props;
 const friend = ref<UserInterface|null>(null);
 
 const localPermission = ref(permission);
@@ -25,39 +21,27 @@ function handlePermissionChange() {
     emit('permission-changed', friendId, localPermission.value);
 }
 
-watch(
-    () => friendsUsers.value,
-    () => {
-        if (friendsUsers.value) {
-            friend.value = friendsUsers.value.find((f) => {
-                return f.id === friendId;
-            });
-        }
-    },
-    { deep: true, immediate: true }
-);
-
-function handleRemoveOrBlockModalVisibility() {//TODO
+function handleRemoveParticipantModalVisibility() {//TODO
     isModalVisible.value = !isModalVisible.value;
 }
 </script>
 
 <template>
-<!--    <RemoveFriendModal-->
+<!--    <RemoveParticipantModal-->
 <!--        :friend-id="friendId"-->
 <!--        v-if="isModalVisible"-->
-<!--        @toggle-visibility="handleRemoveOrBlockModalVisibility"-->
+<!--        @toggle-visibility="RemoveParticipantModal"-->
 <!--    />-->
     <div class="bg-gray-100/20 border border-gray-200 rounded-sm px-2 py-2 shadow-xs w-90 w-full">
         <div class="flex flex-row justify-between items-center">
             <div class="flex justify-start w-full gap-4 items-center">
                 <div class="relative inline-flex items-center justify-center w-8 h-8 overflow-hidden bg-cream rounded-full">
-                    <span v-if="friend && friend.pseudo" class="font-medium text-dark text-sm">
-                        {{ friend.pseudo.charAt(0).toUpperCase() }}
+                    <span v-if="friendPseudo" class="font-medium text-dark text-sm">
+                        {{ friendPseudo.charAt(0).toUpperCase() }}
                     </span>
                 </div>
                 <div class="flex flex-row items-center text-dark gap-2 text-sm">
-                    <p v-if="friend" class="font-medium">{{ friend.pseudo }}</p>
+                    <p v-if="friendPseudo" class="font-medium">{{ friendPseudo }}</p>
                     <select
                         class="font-normal border border-warm bg-warm text-light rounded-sm px-1"
                         v-model="localPermission"
