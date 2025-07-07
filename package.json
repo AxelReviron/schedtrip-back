@@ -24,6 +24,7 @@
         "leaflet": "^1.9.4",
         "lucide-vue-next": "^0.525.0",
         "pinia": "^3.0.3",
+        "pinia-plugin-persistedstate": "^4.4.1",
         "vue-draggable-plus": "^0.6.0",
         "vue-i18n": "^11.1.7",
         "ziggy-js": "^2.5.3"
