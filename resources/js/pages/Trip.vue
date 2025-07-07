@@ -22,20 +22,31 @@ const tripStore = useTripStore();
 const { user } = storeToRefs(userStore);
 const { trips } = storeToRefs(tripStore);
 
-onMounted(async () => {
-    const stopWatcher = watch(user, async (newUser) => {
-        let tempTrip: TripInterface[]|[] = [];
+watch(
+    () => user.value?.trips,
+    async (newTrips) => {
+        if (!newTrips) return;
 
-        if (newUser && newUser.trips) {
-            for (const trip of newUser.trips) {
-                const response = await axios.get(trip);
-                tempTrip.push(response.data);
-            }
-            await tripStore.setTrips(tempTrip);
-            stopWatcher();
+        const currentTripIds = trips.value.map(trip => trip.id);
+
+        const missingTripUrls = newTrips.filter((url: string) => {
+            const tripId = url.split('/').pop();
+            return !currentTripIds.includes(tripId);
+        });
+
+        if (missingTripUrls.length === 0) return;
+
+        const newTripsData: TripInterface[] = [];
+
+        for (const url of missingTripUrls) {
+            const response = await axios.get(url);
+            newTripsData.push(response.data);
         }
-    });
-})
+
+        tripStore.addTrip(newTripsData);
+    },
+    { immediate: true }
+);
 
 </script>
 
@@ -70,7 +81,7 @@ onMounted(async () => {
                         </div>
                     </div>
                 </div>
-                <div v-if="trips && trips.length > 0" class="flex flex-row justify-between flex-wrap">
+                <div v-if="trips && trips.length > 0" class="flex flex-row justify-center gap-4 flex-wrap">
                     <div v-for="trip in trips" :key="trip.id" class="mt-4">
                         <TripCard :trip="trip"/>
                     </div>
