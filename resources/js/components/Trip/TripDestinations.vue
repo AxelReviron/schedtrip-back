@@ -161,7 +161,7 @@ function updateLabel(event: Event, stop) {
                 :icon="MapPinned"
             />
             <h4 class="text-dark text-[1rem]">
-                {{ localStops[0].latitude ? trip.stops.length : '0' }} {{ $t("trip.form.create_trip.destinations.stops") }}
+                {{ localStops[0] && localStops[0].latitude ? trip.stops.length : '0' }} {{ $t("trip.form.create_trip.destinations.stops") }}
             </h4>
         </div>
 
