@@ -11,8 +11,6 @@
   <img src="https://img.shields.io/badge/MySQL-8.x-white?logo=mysql&logoColor=white" alt=""/>
 </p>
 
----
-
 ## ✨ Features
 
 - Create **public or private trips**
@@ -23,7 +21,6 @@
 - Add **notes** to each stop
 - **Add / Remove / Block** friends
 
----
 
 ## 🗒️ TODO
 
@@ -32,7 +29,6 @@
 - [ ] Real-time collaboration and notifications
 - [ ] More languages + ability to switch (currently English-only)
 
----
 
 ## 🤝 Contributing
 SchedTrip is a personal project, while it’s not yet open to external contributions, I welcome feedback and bug reports to improve it.
@@ -41,7 +37,6 @@ If you find a bug or want to submit a feature idea, feel free to open an [issue]
 
 Contributions support will be opened once the project reaches a more stable version.
 
----
 
 ## 💻 Installation
 
