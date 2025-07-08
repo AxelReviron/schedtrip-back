@@ -15,6 +15,7 @@ import {useTripFormStore} from "@/stores/tripFormStore";
 import {usePage} from "@inertiajs/vue3";
 import Notification from "@/components/Notification.vue";
 import axios from "axios";
+import Footer from "@/components/Footer.vue";
 
 const page = usePage();
 const {t} = useI18n();
@@ -166,6 +167,7 @@ watch(
 
         </div>
     </div>
+    <Footer />
     <Notification :notification="notification"/>
 
 </template>

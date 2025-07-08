@@ -37,7 +37,7 @@ async function handleSubmit(e: Event) {
             remember_me: false
         };
 
-        window.location.href = '/dashboard';
+        window.location.href = '/discover';
     } catch (error: any) {
         if (error.response && error.response.status === 422) {// Validation errors
             errors.value = error.response.data.errors;

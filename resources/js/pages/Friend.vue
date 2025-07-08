@@ -10,6 +10,7 @@ import {useI18n} from "vue-i18n";
 import {useUserStore} from "@/stores/userStore";
 import {storeToRefs} from "pinia";
 import HeroBanner from "@/components/HeroBanner.vue";
+import Footer from "@/components/Footer.vue";
 
 const {t} = useI18n();
 const page = usePage();
@@ -115,6 +116,7 @@ const {
             </div>
         </div>
     </div>
+    <Footer />
 </template>
 
 <style scoped>

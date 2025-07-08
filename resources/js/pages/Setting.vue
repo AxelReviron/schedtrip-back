@@ -3,6 +3,7 @@
 import {usePage} from "@inertiajs/vue3";
 import {computed} from "vue";
 import Navbar from "@/components/Navbar.vue";
+import Footer from "@/components/Footer.vue";
 
 const page = usePage()
 const user = computed(() => page.props.auth.user)
@@ -16,6 +17,7 @@ const user = computed(() => page.props.auth.user)
             Setting
         </h1>
     </div>
+    <Footer />
 </template>
 
 <style scoped>

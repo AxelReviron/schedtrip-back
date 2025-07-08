@@ -14,6 +14,7 @@ import {useNotification} from "@/composables/useNotification";
 import {useTripFormStore} from "@/stores/tripFormStore";
 import {usePage} from "@inertiajs/vue3";
 import Notification from "@/components/Notification.vue";
+import Footer from "@/components/Footer.vue";
 
 const page = usePage();
 const {t} = useI18n();
@@ -63,6 +64,7 @@ onMounted(async () => {
 
         </div>
     </div>
+    <Footer />
     <Notification :notification="notification"/>
 
 </template>

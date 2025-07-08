@@ -27,9 +27,10 @@ Route::middleware(['guest'])->group(function () {
 
 Route::get('/terms-of-service', fn() => Inertia::render('TermsOfService'));
 Route::get('/privacy-policy', fn() => Inertia::render('PrivacyPolicy'));
+Route::get('/about', fn() => Inertia::render('About'));
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', fn() => Inertia::render('Dashboard'));
+    Route::get('/discover', fn() => Inertia::render('Discover'));
     Route::get('/trip', fn() => Inertia::render('Trip'));
     Route::get('/trip/create', fn() => Inertia::render('CreateTrip'));
     Route::get('/trip/view/{tripId}', [TripViewsController::class, 'view']);

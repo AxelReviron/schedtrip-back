@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {TreePalm, CircleUserRound, Globe, MapPin, UsersRound, Settings, LogOut} from "lucide-vue-next";
 import {Head, usePage} from "@inertiajs/vue3";
-import {computed, onMounted, ref, nextTick} from "vue";
+import {computed, onMounted, ref} from "vue";
 import axios from "axios";
 import {useUserStore} from "@/stores/userStore";
 import {useI18n} from "vue-i18n";
@@ -50,7 +50,7 @@ onMounted(async () => {
         <link href="https://fonts.googleapis.com/css2?family=Agbalumo&display=swap" rel="stylesheet">
     </Head>
 
-    <nav class="bg-white border-gray-200">
+    <nav class="bg-white border-gray-200 ">
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
             <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
                 <TreePalm
@@ -109,7 +109,7 @@ onMounted(async () => {
                 <ul class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white">
                     <li>
                         <a
-                            href="/dashboard"
+                            href="/discover"
                             :class="{
                                 'bg-warm md:text-dark': currentPage === 'dashboard',
                                 'md:hover:text-warm': currentPage !== 'dashboard'

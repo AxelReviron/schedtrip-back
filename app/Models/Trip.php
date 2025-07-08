@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use ApiPlatform\Laravel\Eloquent\Filter\OrderFilter;
+use ApiPlatform\Laravel\Eloquent\Filter\BooleanFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -35,7 +35,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
     ],
     normalizationContext: ['groups' => ['trip:read']]
 )]
-#[QueryParameter(key: 'sort[:property]', filter: OrderFilter::class)]
+#[QueryParameter(key: 'is_public', filter: BooleanFilter::class)]
 #[Groups(['trip:read'])]
 class Trip extends Model
 {
@@ -79,11 +79,6 @@ class Trip extends Model
     protected $hidden = [
         'participants',
     ];
-
-    public function getDurationAttribute($value): string
-    {
-        return (string) $value;
-    }
 
     public function author(): BelongsTo
     {
