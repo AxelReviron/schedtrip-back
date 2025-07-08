@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="/storage/app/public/schedtrip-logo.png" alt="SchedTrip logo" width="412" />
+  <img src="/resources/assets/schedtrip-logo.png" alt="SchedTrip logo" width="412" />
   <br>
   <img src="https://img.shields.io/badge/status-work%20in%20progress-yellow" alt="Status badge" />
   <img src="https://img.shields.io/badge/license-MIT-green" alt="License badge" />
