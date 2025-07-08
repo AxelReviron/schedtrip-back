@@ -26,7 +26,7 @@ onMounted(async () => {
 <template>
     <Navbar/>
     <div class="bg-light flex flex-col items-center justify-center">
-        <div class="w-8/12 mx-auto my-8">
+        <div class="w-8/12 mx-auto my-8 min-h-[70vh]">
             <HeroBanner
                 :title="t('discover.title')"
                 :subtitle="t('discover.subtitle')"
