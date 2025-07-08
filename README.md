@@ -11,6 +11,12 @@
   <img src="https://img.shields.io/badge/MySQL-8.x-white?logo=mysql&logoColor=white" alt=""/>
 </p>
 
+## 🌴 SchedTrip
+
+**SchedTrip** is an open-source trip planning app built with Laravel and Vue 3 (via Inertia).  
+It allows you to organize solo or group adventures using interactive maps, personalized notes, and packing lists.
+
+
 ## ✨ Features
 
 - Create **public or private trips**
@@ -23,23 +29,36 @@
 
 
 ## 🗒️ TODO
-
-- [ ] User settings page (change info, add OpenRouteService API key)
+### v1
+- [ ] Refactor API calls into dedicated services
+- [ ] Use composables for UI or component-related logic
+- [ ] Centralize store management (avoid direct state changes in pages/components)
+- [ ] Handle 429 (Rate Limiting)
+- [ ] Settings Page (change user info, add OpenRouteService API key)
+- [ ] Privacy Policy Page
+- [ ] Terms Of Service Page
+- [ ] About Page
 - [ ] Packing list management (items + quantity)
-- [ ] Real-time collaboration and notifications
-- [ ] More languages + ability to switch (currently English-only)
+- [ ] Refactor locale file structure
+- [ ] Define local based on browser
+- [ ] Ability to switch languages (currently English-only)
+- [ ] Use MySQL container for CI and enable code coverage
 
+### v2
+- [ ] Frontend tests
+- [ ] Add more languages
+- [ ] Real-time collaboration and notifications (Websockets)
+- [ ] Media support (images for trips and users)
 
 ## 🤝 Contributing
 SchedTrip is a personal project, while it’s not yet open to external contributions, I welcome feedback and bug reports to improve it.
 
 If you find a bug or want to submit a feature idea, feel free to open an [issue](https://github.com/AxelReviron/schedtrip/issues).
 
-Contributions support will be opened once the project reaches a more stable version.
+> Contributions will be opened once the project reaches a more stable version.
 
 
 ## 💻 Installation
-
 
 #### 1. Clone the repository
 ```bash
@@ -68,3 +87,10 @@ docker exec app php artisan migrate
 ```bash
 docker exec app php artisan db:seed
 ```
+
+## 💚 Credits & Thanks
+
+SchedTrip wouldn't be possible without the following great projects :
+
+- [Leaflet](https://leafletjs.com) — for the interactive maps and marker system
+- [OpenRouteService](https://openrouteservice.org/) — for route calculations and geolocation search
