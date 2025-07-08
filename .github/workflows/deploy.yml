@@ -48,4 +48,7 @@ jobs:
             echo "Creating storage link..."
             docker compose -f compose.prod.yaml exec -T frankenphp php artisan storage:link
 
+            echo "Clearubg docker build cache"
+            docker builder prune -f --filter "until=72h"
+
             echo "Deployment complete!"
