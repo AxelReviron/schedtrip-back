@@ -99,8 +99,8 @@ onMounted(async () => {
                                     @click="changeLocale(loc.code)"
                                     type="button"
                                     :class="[
-                                      'flex flex-row gap-2 items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer',
-                                      locale === loc.code ? 'bg-cream font-semibold' : ''
+                                      'flex flex-row gap-2 items-center w-full px-4 py-2 text-sm text-gray-700 cursor-pointer',
+                                      locale === loc.code ? 'bg-cream font-semibold' : 'hover:bg-gray-100'
                                     ]"
                                 >
                                     <span :class="['fi', loc.flag]"></span>
