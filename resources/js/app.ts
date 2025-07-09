@@ -7,6 +7,7 @@ import { createPinia } from 'pinia'
 import messages from './locales';
 import { ZiggyVue, route } from 'ziggy-js';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+import "flag-icons/css/flag-icons.min.css";
 
 createInertiaApp({
     resolve: name => {
