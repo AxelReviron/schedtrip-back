@@ -86,7 +86,7 @@ watch(
                 src="../../../../assets/trip_card_cover.jpg" alt="Trip card cover"
                 class="w-full h-50 object-cover"
             />
-            <div class="absolute right-3 top-3 flex flex-row items-center gap-2 md:mt-4 border-1 border-warm bg-white/90 px-2 rounded-sm px-2 shadow-sm">
+            <div class="absolute right-3 top-0 flex flex-row items-center gap-2 md:mt-4 border-1 border-warm bg-white/90 rounded-sm px-2 shadow-sm">
                 <Eye
                     size="16"
                     class="text-warm"

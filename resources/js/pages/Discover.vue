@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar.vue";
 import Footer from "@/components/Footer.vue";
 import {useI18n} from "vue-i18n";
 import {MapPin} from "lucide-vue-next";
-import HeroBanner from "@/components/HeroBanner.vue";
+import HeroBannerButton from "@/components/HeroBannerButton.vue";
 import TripCard from "@/components/Trip/Cards/TripCard.vue";
 import {storeToRefs} from "pinia";
 import {usePublicTripStore} from "@/stores/publicTripStore";
@@ -27,7 +27,7 @@ onMounted(async () => {
     <Navbar/>
     <div class="bg-light flex flex-col items-center justify-center">
         <div class="w-8/12 mx-auto my-8 min-h-[70vh]">
-            <HeroBanner
+            <HeroBannerButton
                 :title="t('discover.title')"
                 :subtitle="t('discover.subtitle')"
                 :button-text="t('trip.new_trip')"

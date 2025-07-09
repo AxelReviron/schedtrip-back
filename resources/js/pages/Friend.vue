@@ -9,7 +9,7 @@ import AddFriendModal from "@/components/Friends/AddFriendModal.vue";
 import {useI18n} from "vue-i18n";
 import {useUserStore} from "@/stores/userStore";
 import {storeToRefs} from "pinia";
-import HeroBanner from "@/components/HeroBanner.vue";
+import HeroBannerButton from "@/components/HeroBannerButton.vue";
 import Footer from "@/components/Footer.vue";
 
 const {t} = useI18n();
@@ -42,7 +42,7 @@ const {
     />
     <div class="bg-light flex flex-col items-center justify-center">
         <div class="w-8/12 mx-auto my-8 min-h-[70vh]">
-            <HeroBanner
+            <HeroBannerButton
                 :title="t('friend.title')"
                 :subtitle="t('friend.subtitle')"
                 :button-text="t('friend.add_friend')"

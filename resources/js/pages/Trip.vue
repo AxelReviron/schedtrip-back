@@ -9,7 +9,7 @@ import {watch} from "vue";
 import TripCard from "@/components/Trip/Cards/TripCard.vue";
 import {useTripStore} from "@/stores/tripStore";
 import axios from "axios";
-import HeroBanner from "@/components/HeroBanner.vue";
+import HeroBannerButton from "@/components/HeroBannerButton.vue";
 import {useI18n} from "vue-i18n";
 import TripInterface from "@/interfaces/tripInterface";
 import Footer from "@/components/Footer.vue";
@@ -55,7 +55,7 @@ watch(
     <Navbar/>
     <div class="bg-light flex flex-col items-center justify-center">
         <div class="w-11/12 md:w-10/12 xl:w-8/12 mx-auto my-8">
-            <HeroBanner
+            <HeroBannerButton
                 :title="t('trip.title')"
                 :subtitle="t('trip.subtitle')"
                 :button-text="t('trip.new_trip')"

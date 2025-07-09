@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Navbar from "@/components/Navbar.vue";
 import { ArrowUpRight  } from "lucide-vue-next";
-import HeroBanner from "@/components/HeroBanner.vue";
+import HeroBannerButton from "@/components/HeroBannerButton.vue";
 import {useI18n} from "vue-i18n";
 import {onMounted, ref} from "vue";
 import {storeToRefs} from "pinia";
@@ -44,7 +44,7 @@ onMounted(async () => {
     <Navbar/>
     <div class="bg-light flex flex-col items-center justify-center">
         <div class="w-11/12 md:w-10/12 xl:w-8/12 mx-auto my-8">
-            <HeroBanner
+            <HeroBannerButton
                 :title="t('trip.view_trip.title')"
                 :subtitle="t('trip.view_trip.subtitle')"
                 :button-text="t('trip.view_trip.edit')"

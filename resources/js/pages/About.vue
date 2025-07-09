@@ -13,8 +13,8 @@ const {t} = useI18n();
     <div class="bg-light flex flex-col items-center justify-center">
         <div class="w-8/12 mx-auto my-8 min-h-[70vh]">
             <HeroBanner
-                :title="t('privacy_policy.title')"
-                :subtitle="t('privacy_policy.subtitle')"
+                :title="t('about.title')"
+                :subtitle="t('about.subtitle')"
             />
         </div>
     </div>
