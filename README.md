@@ -31,8 +31,8 @@ It allows you to organize solo or group adventures using interactive maps, perso
 ## 🗒️ TODO
 ### v1
 - [x] Ability to switch languages (currently English-only)
-- [ ] Handle 429 (Rate Limiting)
-- [ ] Settings Page (change user info, add OpenRouteService API key)
+- [x] Handle 429 (Rate Limiting)
+- [x] Settings Page (change user info, add OpenRouteService API key)
 - [ ] Refactor API calls into dedicated services
 - [ ] Use composables for UI or component-related logic
 - [ ] Centralize store management (avoid direct state changes in pages/components)
