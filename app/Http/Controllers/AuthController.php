@@ -47,7 +47,11 @@ class AuthController extends Controller
 
         $user = User::create($data);
         $user->assignRole('user');
-        return response('User registered successfully', 201);
+
+        Auth::login($user);
+        $request->session()->regenerate();
+
+        return response('User registered and logged in successfully', 201);
     }
 
     public function update(UpdateUserRequest $request): Response

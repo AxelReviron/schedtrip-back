@@ -26,7 +26,6 @@ const { notification, showNotification } = useNotification();
 
 
 async function handleSubmit(e: Event) {
-    console.log('test');
     e.preventDefault();
     errors.value = {};
 
@@ -44,10 +43,10 @@ async function handleSubmit(e: Event) {
             consent: false
         };
 
-        showNotification(t("form.auth.notification.register_success"), 'success');
+        showNotification(t("form.auth.notification.register_success"), 'success', 4000);
         setTimeout(() => {
-            emit('toggle-visibility', true);
-        }, 5000);
+            window.location.href = '/discover';
+        }, 4000);
     } catch (error: any) {
         if (error.response && error.response.status === 422) {// Validation errors
             errors.value = error.response.data.errors;
@@ -155,12 +154,12 @@ async function handleSubmit(e: Event) {
                 <label for="consent" class="p-1 font-medium text-xs md:text-[1rem]">
                     <i18n-t keypath="form.auth.register_consent" tag="span">
                         <template #terms_of_service>
-                            <a href="/terms-of-service">
+                            <a href="/terms-of-service" target="_blank">
                                 <span class="underline font-bold">{{ t('terms_of_service.title') }}</span>
                             </a>
                         </template>
                         <template #privacy_policy>
-                            <a href="/privacy-policy">
+                            <a href="/privacy-policy" target="_blank">
                                 <span class="underline font-bold">{{ t('privacy_policy.title') }}</span>
                             </a>
                         </template>
