@@ -7,6 +7,7 @@ import frNavbar from './fr/navbar';
 import frFooter from './fr/footer';
 import frDiscover from './fr/discover';
 import frAbout from './fr/about';
+import frSetting from './fr/setting';
 
 import enHome from './en/home'
 import enPrivacyPolicy from './en/privacyPolicy';
@@ -17,6 +18,7 @@ import enNavbar from './en/navbar';
 import enFooter from './en/footer';
 import enDiscover from './en/discover';
 import enAbout from './en/about';
+import enSetting from './en/setting';
 
 
 export default {
@@ -30,6 +32,7 @@ export default {
         ...frFooter,
         ...frDiscover,
         ...frAbout,
+        ...frSetting,
     },
     en: {
         ...enHome,
@@ -41,5 +44,6 @@ export default {
         ...enFooter,
         ...enDiscover,
         ...enAbout,
+        ...enSetting,
     }
 }

@@ -92,6 +92,7 @@ export default {
                         no_trip_label: "A trip must have a label",
                         no_stop_label: "A stop must have a label",
                         no_stop_dates: "A stop must have arrival and departure dates",
+                        rate_limit: "You have exceeded the requests limit, you can increase it (for free) in your account settings."
                     }
                 }
             },

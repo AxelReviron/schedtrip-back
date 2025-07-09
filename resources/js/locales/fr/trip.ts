@@ -92,6 +92,7 @@ export default {
                         no_trip_label: "Un voyage doit avoir un label",
                         no_stop_label: "A arrêt doit avoir un label",
                         no_stop_dates: "Un arrêt doit avoir des dates d'arrivée et de départ",
+                        rate_limit: "Vous avez dépassé la limite de requêtes, vous pouvez l'augmenter (gratuitement) dans les paramètres de votre compte."
                     }
                 }
             },
