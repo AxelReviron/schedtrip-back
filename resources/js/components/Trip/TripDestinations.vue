@@ -117,6 +117,8 @@ async function handlePlaceSearch(e) {
         if (error.response && error.response.status === 422) {// Validation errors
             errors.value = error.response.data.errors;
             showNotification(t("trip.form.create_trip.notification.error.form"), 'error', 5000);
+        } else if (error.response && error.response.status === 429) {// Rate Limit
+            showNotification(t("trip.form.create_trip.notification.error.rate_limit"), 'error', 10000);
         } else {// Other errors
             showNotification(t("trip.form.create_trip.notification.error.server"), 'error', 5000);
         }

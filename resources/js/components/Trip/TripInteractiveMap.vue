@@ -145,8 +145,9 @@ async function addStopToTrip(coords: L.LatLng, marker: L.Marker) {
 
         tripFormStore.addStop(stop);
         if (error.response && error.response.status === 422) {// Validation errors
-            errors.value = error.response.data.errors;
             showNotification(t("trip.form.create_trip.notification.error.form"), 'error', 5000);
+        } else if (error.response && error.response.status === 429) {// Rate Limit
+            showNotification(t("trip.form.create_trip.notification.error.rate_limit"), 'error', 10000);
         } else {// Other errors
             showNotification(t("trip.form.create_trip.notification.error.reverse_search_error"), 'error', 5000);
         }
@@ -172,7 +173,11 @@ async function getRoute() {
         newRouteLayer.addTo(interactiveMap.value);
         displayedRoute.value = newRouteLayer;
     } catch (error:any) {
-        showNotification(t("trip.form.create_trip.notification.error.route_error"), 'error', 5000);
+        if (error.response && error.response.status === 429) {// Rate Limit
+            showNotification(t("trip.form.create_trip.notification.error.rate_limit"), 'error', 10000);
+        } else {// Other errors
+            showNotification(t("trip.form.create_trip.notification.error.route_error"), 'error', 5000);
+        }
     }
 }
 
