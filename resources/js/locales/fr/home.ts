@@ -25,7 +25,7 @@ export default {
             have_account: "Déjà un compte ?",
             notification: {
                 login_success: "Connexion réussie !",
-                register_success: "Inscription réussie ! Vous allez être redirigé pour vous connecter.",
+                register_success: "Inscription réussie ! Vous allez être redirigé.",
                 error: {
                     form: "Corriger les erreurs dans le formulaire.",
                     server: "Une erreur inattendue s'est produite. Veuillez réessayer.",

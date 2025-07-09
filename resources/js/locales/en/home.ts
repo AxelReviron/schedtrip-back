@@ -25,7 +25,7 @@ export default {
             have_account: "Already have an account ?",
             notification: {
                 login_success: "Sign in successfully !",
-                register_success: "Sign up successfully ! You will be redirected to sign in",
+                register_success: "Sign up successfully ! You will be redirected.",
                 error: {
                     form: "Please correct the errors in the form.",
                     server: "An unexpected error occurred. Please try again.",

@@ -6,6 +6,7 @@ import frTrip from './fr/trip';
 import frNavbar from './fr/navbar';
 import frFooter from './fr/footer';
 import frDiscover from './fr/discover';
+import frAbout from './fr/about';
 
 import enHome from './en/home'
 import enPrivacyPolicy from './en/privacyPolicy';
@@ -15,6 +16,7 @@ import enTrip from './en/trip';
 import enNavbar from './en/navbar';
 import enFooter from './en/footer';
 import enDiscover from './en/discover';
+import enAbout from './en/about';
 
 
 export default {
@@ -27,6 +29,7 @@ export default {
         ...frNavbar,
         ...frFooter,
         ...frDiscover,
+        ...frAbout,
     },
     en: {
         ...enHome,
@@ -37,5 +40,6 @@ export default {
         ...enNavbar,
         ...enFooter,
         ...enDiscover,
+        ...enAbout,
     }
 }
