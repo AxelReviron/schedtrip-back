@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\TripViewsController;
 use App\Http\Controllers\FriendController;
 use App\Http\Controllers\OpenRouteServiceController;
 use App\Http\Controllers\TripParticipantController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -21,13 +23,16 @@ Route::prefix('auth')->group(function () {
 });
 
 // ---- Views ----
-Route::middleware(['guest'])->group(function () {
-    Route::get('/', fn() => Inertia::render('Welcome'));
+Route::get('/', function () {
+    if (Auth::check()) return redirect('/discover');
+    return Inertia::render('Welcome');
 });
 
 Route::get('/terms-of-service', fn() => Inertia::render('TermsOfService'));
 Route::get('/privacy-policy', fn() => Inertia::render('PrivacyPolicy'));
 Route::get('/about', fn() => Inertia::render('About'));
+
+Route::post('/locale/change', [LocaleController::class, 'change']);
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/discover', fn() => Inertia::render('Discover'));
