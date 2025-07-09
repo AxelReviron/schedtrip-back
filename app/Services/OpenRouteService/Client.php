@@ -32,7 +32,7 @@ class Client
      * @throws ConnectionException
      * @throws RequestException
      */
-    public function get(string $endpoint, array $params = [], string $acceptHeader = 'application/json')
+    public function get(string $endpoint, array $params = [], string $acceptHeader = 'application/json'): mixed
     {
         return Http::withHeaders([
             'Authorization' => $this->apiKey,
@@ -51,7 +51,7 @@ class Client
      * @throws ConnectionException
      * @throws RequestException
      */
-    public function post(string $endpoint, array $data = [], string $acceptHeader = 'application/json')
+    public function post(string $endpoint, array $data = [], string $acceptHeader = 'application/json'): mixed
     {
         return Http::withHeaders([
             'Authorization' => $this->apiKey,
@@ -70,6 +70,6 @@ class Client
         return $this->get(
             endpoint: '/elevation/point',
             params: ['geometry' => '13.349762,38.11295']
-        )->throw();
+        );
     }
 }
