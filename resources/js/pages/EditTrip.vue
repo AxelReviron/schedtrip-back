@@ -84,8 +84,8 @@ async function updateTrip(e: Event) {
             label: trip.value.label,
             description: trip.value.description,
             is_public: trip.value.isPublic,
-            distance: trip.value.distance,
-            duration: trip.value.duration,
+            distance: null,/*trip.value.distance TODO: Bug here*/
+            duration: null,/*trip.value.duration TODO: Bug here*/
             geojson: JSON.stringify(trip.value.geojson),
         }, {
             headers: {
