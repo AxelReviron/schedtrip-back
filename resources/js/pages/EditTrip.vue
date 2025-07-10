@@ -63,7 +63,6 @@ function isTripDestinationsValid(): void {
                 ...destinationErrors
             });
         }
-        console.log(errors.value)
     })
 }// TODO: Composable
 

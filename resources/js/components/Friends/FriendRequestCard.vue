@@ -45,7 +45,6 @@ async function handleFriendRequestAccepted() {
             acceptFriendRequest(friendRequest.id);
         }, 2000);
     } catch (error: any) {
-        console.log(error)
         showNotification(t("friend.form.notification.error.server"), 'error');
     }
 }

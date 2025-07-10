@@ -18,8 +18,12 @@ const publicTripStore = usePublicTripStore();
 const { trips } = storeToRefs(publicTripStore);
 
 onMounted(async () => {
-    const response = await axios.get('/api/trips?is_public=1');
-    publicTripStore.setTrips(response.data.member);
+    try {
+        const response = await axios.get('/api/trips?is_public=1');
+        publicTripStore.setTrips(response.data.member);
+    } catch (error: any) {
+        //
+    }
 })
 </script>
 
