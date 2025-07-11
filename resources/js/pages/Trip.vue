@@ -86,6 +86,7 @@ watch(// TODO: Refactor this (State Provider ?)
         });
 
         if (missingTripUrls.length === 0) {
+            tripStore.addTrip(newTripsData);
             isReady.value = true;
             return;
         }
