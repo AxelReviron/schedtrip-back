@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Events\ParticipantAddedToTrip;
+use App\Http\Requests\Trip\TripsByParticipantIdRequest;
 use App\Http\Requests\User\TripParticipantsRequest;
 use App\Models\Trip;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Event;
 
 class TripParticipantController extends Controller
 {
-    public function store(TripParticipantsRequest $request, string $id)
+    public function store(TripParticipantsRequest $request, string $id): JsonResponse
     {
         $trip = Trip::findOrFail($id);
         $participants = $request->validated()['participants'];
@@ -38,7 +40,7 @@ class TripParticipantController extends Controller
         return response()->json(['message' => 'Participants added successfully'], 201);
     }
 
-    public function updatePermissions(TripParticipantsRequest $request, string $id)
+    public function updatePermissions(TripParticipantsRequest $request, string $id): JsonResponse
     {
         $trip = Trip::findOrFail($id);
         $participants = $request->validated()['participants'];
@@ -53,7 +55,7 @@ class TripParticipantController extends Controller
         return response()->json(['message' => 'Participant\'s permissions updated'], 200);
     }
 
-    public function destroy(TripParticipantsRequest $request, string $id)
+    public function destroy(TripParticipantsRequest $request, string $id): JsonResponse
     {
         $trip = Trip::findOrFail($id);
         $participants = $request->validated()['participants'];
@@ -62,6 +64,16 @@ class TripParticipantController extends Controller
         $trip->participants()->detach($userIds);
 
         return response()->json(['message' => 'Participants removed successfully'], 200);
+    }
+
+    public function getTripsByParticipantId(TripsByParticipantIdRequest $request): JsonResponse
+    {
+        $participantId = $request->validated()['participantId'];
+        $trips = Trip::with('stops')->whereHas('participants', function ($query) use ($participantId) {
+            $query->where('users.id', $participantId);
+        })->get();
+
+        return response()->json($trips);
     }
 
 }

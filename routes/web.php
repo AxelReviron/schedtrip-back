@@ -51,6 +51,7 @@ Route::prefix('/api')->middleware(['auth'])->group(function () {
         Route::post('/{id}/participants', [TripParticipantController::class, 'store']);
         Route::patch('/{id}/participants', [TripParticipantController::class, 'updatePermissions']);
         Route::delete('/{id}/participants', [TripParticipantController::class, 'destroy']);
+        Route::get('/participant/{participantId}', [TripParticipantController::class, 'getTripsByParticipantId']);
     });
 
     Route::prefix('/users')->group(function () {

@@ -19,7 +19,6 @@ const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 
 const tripParticipantsCount = ref(1);
-const tripAuthor: UserInterface|null = ref(null);
 const tripArrivalDate = ref(null);
 const tripDepartureDate = ref(null);
 
@@ -35,14 +34,14 @@ function formatDate(dateStr: string) {
 function getTripDates(): void {
     const stopsCount = trip.stops.length;
     if (trip.stops[0]) {
-        tripArrivalDate.value = formatDate(trip.stops[0].arrivalDate);
-        tripDepartureDate.value = formatDate(trip.stops[stopsCount - 1].departureDate);
+        tripArrivalDate.value = formatDate(trip.stops[0].arrivalDate ?? trip.stops[0].arrival_date);
+        tripDepartureDate.value = formatDate(trip.stops[stopsCount - 1].departureDate ?? trip.stops[stopsCount - 1].departure_date);
     }
 }
 
 function canEditTrip() {
-    const authorId = trip.author.split('/').pop();
 
+    const authorId = trip.author.id;
     if (user.value && authorId === user.value.id) {
         return true;
     } else if (trip.participantsList && trip.participantsList.length > 0) {
@@ -56,26 +55,10 @@ function canEditTrip() {
     }
 }
 
-onMounted(async () => {
+onMounted(() => {
     getTripParticipantsCount();
     getTripDates();
 })
-
-watch(
-    () => user.value,
-    async (newUser) => {
-        if (!trip.author) return;
-
-        const authorId = trip.author.split('/').pop();
-        if (newUser && authorId !== newUser.id) {
-            const response = await axios.get(trip.author);
-            tripAuthor.value = response.data;
-        } else {
-            tripAuthor.value = newUser;
-        }
-    },
-    { immediate: true }
-);
 </script>
 
 <template>
@@ -150,17 +133,17 @@ watch(
                     </div>
                 </div>
 
-                <div class="flex flex-row items-center gap-2 mt-4 md:mt-6" v-if="tripAuthor">
+                <div class="flex flex-row items-center gap-2 mt-4 md:mt-6" v-if="trip.author">
                     <div class="relative inline-flex items-center justify-center w-8 h-8 overflow-hidden bg-cream rounded-full">
-                        <span class="font-medium text-dark text-lg">{{ tripAuthor.pseudo.charAt(0).toUpperCase() }}</span>
+                        <span class="font-medium text-dark text-lg">{{ trip.author.pseudo.charAt(0).toUpperCase() }}</span>
                     </div>
                     <h4 class="text-[1.2rem] font-medium text-dark">
-                        {{ tripAuthor.pseudo }}
+                        {{ trip.author.pseudo }}
                     </h4>
                 </div>
 
 
-                <div class="flex flex-row justify-center items-center gap-2 mt-4 md:mt-6 w-full" v-if="tripAuthor">
+                <div class="flex flex-row justify-center items-center gap-2 mt-4 md:mt-6 w-full" v-if="trip.author">
                     <a v-if="canEditTrip()" :href="`/trip/edit/${trip.id}`" class="w-full">
                         <button
                             class="w-full flex flex-row gap-2 justify-center items-center border py-2 bg-warm text-light font-medium rounded-sm px-4 cursor-pointer hover:bg-warmer"

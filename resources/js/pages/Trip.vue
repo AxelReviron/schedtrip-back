@@ -2,10 +2,10 @@
 
 import {usePage} from "@inertiajs/vue3";
 import Navbar from "@/components/Navbar.vue";
-import { MapPin } from "lucide-vue-next";
+import {MapPin} from "lucide-vue-next";
 import {useUserStore} from "@/stores/userStore";
 import {storeToRefs} from "pinia";
-import {watch} from "vue";
+import {ref, watch} from "vue";
 import TripCard from "@/components/Trip/Cards/TripCard.vue";
 import {useTripStore} from "@/stores/tripStore";
 import axios from "axios";
@@ -13,6 +13,8 @@ import HeroBannerButton from "@/components/HeroBannerButton.vue";
 import {useI18n} from "vue-i18n";
 import TripInterface from "@/interfaces/tripInterface";
 import Footer from "@/components/Footer.vue";
+import TripCardSkeleton from "@/components/Trip/Cards/TripCardSkeleton.vue";
+import UserInterface from "@/interfaces/userInterface";
 
 const page = usePage()
 const {t} = useI18n();
@@ -23,28 +25,76 @@ const tripStore = useTripStore();
 const { user } = storeToRefs(userStore);
 const { trips } = storeToRefs(tripStore);
 
-watch(
+const isReady = ref<boolean>(false);
+
+async function getMissingTrips(missingTripUrls: string[]): Promise<TripInterface[]> {
+    const newTripsData: TripInterface[] = [];
+
+    for (const url of missingTripUrls) {
+        const response = await axios.get(url);
+        const author = await getAuthorInfos(response.data);
+
+        response.data.author = {
+            id: author.id,
+            pseudo: author.pseudo,
+            email: author.email,
+        };
+        newTripsData.push(response.data);
+    }
+    return newTripsData;
+}
+
+async function getMissingTripsWhereUserIsParticipant(): Promise<TripInterface[]> {
+    const response = await axios.get(`/api/trips/participant/${user.value?.id}`);
+
+    for (const trip of response.data) {
+        const author = await getAuthorInfos(trip);
+        trip.author = {
+            id: author.id,
+            pseudo: author.pseudo,
+            email: author.email,
+        };
+    }
+
+    return response.data;
+}
+
+async function getAuthorInfos(trip: TripInterface): UserInterface {
+    const authorId = trip.author ? trip.author.split('/').pop() : trip.author_id.split('/').pop();
+
+    if (user.value && authorId !== user.value.id) {
+        const response = await axios.get(trip.author ? trip.author : `/api/users/${trip.author_id}`);
+        return response.data;
+    } else {
+        return user.value;
+    }
+}
+
+watch(// TODO: Refactor this (State Provider ?)
     () => user.value?.trips,
     async (newTrips) => {
         if (!newTrips) return;
+        isReady.value = false;
+
+        const tripsUserParticipant = await getMissingTripsWhereUserIsParticipant();
+        const newTripsData: TripInterface[] = tripsUserParticipant ? tripsUserParticipant : [];
 
         const currentTripIds = trips.value.map(trip => trip.id);
-
         const missingTripUrls = newTrips.filter((url: string) => {
             const tripId = url.split('/').pop();
             return !currentTripIds.includes(tripId);
         });
 
-        if (missingTripUrls.length === 0) return;
-
-        const newTripsData: TripInterface[] = [];
-
-        for (const url of missingTripUrls) {
-            const response = await axios.get(url);
-            newTripsData.push(response.data);
+        if (missingTripUrls.length === 0) {
+            isReady.value = true;
+            return;
         }
 
+        const missingTrips = await getMissingTrips(missingTripUrls);
+        newTripsData.push(...missingTrips);
+
         tripStore.addTrip(newTripsData);
+        isReady.value = true;
     },
     { immediate: true }
 );
@@ -83,7 +133,12 @@ watch(
                         </div>
                     </div>
                 </div>
-                <div v-if="trips && trips.length > 0" class="flex flex-row justify-around gap-4 flex-wrap">
+                <div v-if="!isReady" class="flex flex-row justify-around gap-4 flex-wrap">
+                    <div v-for="n in 3" class="mt-4">
+                        <TripCardSkeleton />
+                    </div>
+                </div>
+                <div v-else-if="trips && trips.length > 0" class="flex flex-row justify-around gap-4 flex-wrap">
                     <div v-for="trip in trips" :key="trip.id" class="mt-4">
                         <TripCard :trip="trip"/>
                     </div>
