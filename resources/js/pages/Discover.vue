@@ -30,7 +30,7 @@ onMounted(async () => {
 <template>
     <Navbar/>
     <div class="bg-light flex flex-col items-center justify-center">
-        <div class="w-8/12 mx-auto my-8 min-h-[70vh]">
+        <div class="w-11/12 md:w-10/12 xl:w-8/12 mx-auto my-8 min-h-[70vh]">
             <HeroBannerButton
                 :title="t('discover.title')"
                 :subtitle="t('discover.subtitle')"
