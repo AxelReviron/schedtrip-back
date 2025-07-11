@@ -92,7 +92,7 @@ function handlePermissionChange(friendId: string, newPermission: string) {
                 type="search"
                 v-model="friendSearched"
                 :placeholder="t('trip.form.create_trip.participants.search_placeholder')"
-                class="bg-white/70 border border-warm p-2 rounded-sm text-warm focus:outline-warm w-full disabled:cursor-not-allowed"
+                class="bg-white/70 border border-warm p-2 rounded-sm text-dark focus:outline-warm w-full disabled:cursor-not-allowed"
                 name="search" required
                 id="search"
             >

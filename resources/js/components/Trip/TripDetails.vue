@@ -34,7 +34,7 @@ const { trip } = storeToRefs(tripFormStore);
                     type="text"
                     v-model="trip.label"
                     :placeholder="t('trip.form.create_trip.trip_details.label')"
-                    class="bg-white/70 border border-warm p-2 rounded-lg text-warm focus:outline-warm disabled:cursor-not-allowed"
+                    class="bg-white/70 border border-warm p-2 rounded-lg text-dark focus:outline-warm disabled:cursor-not-allowed"
                     name="label" required
                     id="label"
                 >
@@ -49,7 +49,7 @@ const { trip } = storeToRefs(tripFormStore);
                     rows="4"
                     v-model="trip.description"
                     :placeholder="t('trip.form.create_trip.trip_details.description')"
-                    class="bg-white/70 border border-warm p-2 rounded-lg text-warm focus:outline-warm resize-none disabled:cursor-not-allowed"
+                    class="bg-white/70 border border-warm p-2 rounded-lg text-dark focus:outline-warm resize-none disabled:cursor-not-allowed"
                     name="description" required
                     id="description"
                 >
@@ -59,8 +59,8 @@ const { trip } = storeToRefs(tripFormStore);
                 <input
                     :disabled="!isEditable"
                     type="checkbox"
-                    v-model="trip.is_public"
-                    class="bg-white/70 border border-warm p-2 rounded-lg text-warm focus:outline-warm disabled:cursor-not-allowed"
+                    v-model="trip.isPublic"
+                    class="bg-white/70 border border-warm p-2 rounded-lg text-dark focus:outline-warm disabled:cursor-not-allowed"
                     name="is_public" required
                     id="is_public"
                 >
