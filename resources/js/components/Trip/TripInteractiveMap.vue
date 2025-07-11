@@ -19,6 +19,8 @@ const { notification, showNotification } = useNotification();
 const tripFormStore = useTripFormStore();
 const { trip } = storeToRefs(tripFormStore);
 
+const isLoading = ref(false);
+
 const mapEl = ref<HTMLElement>();
 const interactiveMap = ref(undefined);
 const displayedMarkers = ref<L.Marker[]>([]);
@@ -182,14 +184,19 @@ async function getRoute() {
 }
 
 async function handleMapClick(e: L.LeafletMouseEvent) {
-    if (isEditable) {
+    if (isEditable && !isLoading.value) {
+        isLoading.value = true;
         const coords = e.latlng;
         const marker = L.marker(coords);
 
-        await addStopToTrip(coords, marker);
-        await getRoute();
+        try {
+            await addStopToTrip(coords, marker);
+            await getRoute();
 
-        interactiveMap.value.setView(coords, 5);
+            interactiveMap.value.setView(coords, 5);
+        } finally {
+            isLoading.value = false;
+        }
     }
 }
 
@@ -233,6 +240,27 @@ function initMap() {
     displayMarkersFromStore();
 }
 
+function setMapInteractivity(enabled: boolean) {
+    const map = interactiveMap.value;
+    if (!map) return;
+
+    const action = enabled ? 'enable' : 'disable';
+
+    map.dragging[action]();
+    map.scrollWheelZoom[action]();
+    map.doubleClickZoom[action]();
+    map.touchZoom[action]();
+    map.boxZoom[action]();
+    map.keyboard[action]();
+}
+
+/**
+ * Trigger when user clicked on the map
+ */
+watch(() => isLoading.value, (val) => {
+    setMapInteractivity(!val);
+});
+
 /**
  * Trigger when marker is added to the map.
  * Initially the store contains a stop with null values.
@@ -263,7 +291,6 @@ onMounted(() => {
     }
 });
 
-// TODO : Centrer la carte sur l'itinéraire
 </script>
 
 <template>
@@ -272,9 +299,15 @@ onMounted(() => {
             :title="t('trip.form.create_trip.interactive_map.title')"
             :icon="Map"
         />
-
-        <div ref="mapEl" class="h-[40vh] lg:h-[70vh] mt-4 rounded-sm"></div>
-
+        <div class="relative">
+            <div ref="mapEl" class="h-[40vh] lg:h-[70vh] mt-4 rounded-sm"></div>
+            <div
+                v-if="isLoading"
+                class="z-999 absolute inset-0 z-50 bg-white/70 flex items-center justify-center pointer-events-none"
+            >
+                <div class="w-16 h-16 border-4 border-dark border-t-transparent rounded-full animate-spin"></div>
+            </div>
+        </div>
     </div>
     <Notification :notification="notification"/>
 </template>
